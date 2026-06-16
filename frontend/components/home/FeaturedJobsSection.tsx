@@ -5,7 +5,7 @@ import { Briefcase } from 'lucide-react';
 import { EmptyState, Skeleton } from '../ui';
 import { SectionContainer } from '../layout/SectionContainer';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { featuredJobs, featuredJobsMetadata } from '../../lib/data/home';
+import { featuredJobs, featuredJobsMetadata } from '@/lib/data/home';
 import { FeaturedJobCard } from './cards/FeaturedJobCard';
 
 export function FeaturedJobsSection() {

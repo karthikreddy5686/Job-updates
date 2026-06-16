@@ -6,7 +6,7 @@ import { Button } from '../ui/Button';
 import { SearchInput } from '../ui/SearchInput';
 import { SectionContainer } from '../layout/SectionContainer';
 import { StatCard } from './cards/StatCard';
-import { heroContent } from '../../lib/data/home';
+import { heroContent } from '@/lib/data/home';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { HeroLoadingState } from './HeroLoadingState';
 

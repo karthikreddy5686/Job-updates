@@ -4,7 +4,7 @@ import { Star } from 'lucide-react';
 import { EmptyState, Skeleton } from '../ui';
 import { SectionContainer } from '../layout/SectionContainer';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { testimonials, testimonialsMetadata } from '../../lib/data/home';
+import { testimonials, testimonialsMetadata } from '@/lib/data/home';
 import { TestimonialCard } from './cards/TestimonialCard';
 
 export function TestimonialsSection() {

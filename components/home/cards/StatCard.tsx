@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import type { HeroStat } from '../../../types/home';
+import type { HeroStat } from '@/types/home';
 import { Card } from '../../ui/Card';
 
 export function StatCard({ icon: Icon, label, value }: HeroStat) {

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import type { CompanyProfile } from '../../../types/home';
+import type { CompanyProfile } from '@/types/home';
 import { Button } from '../../ui/Button';
 import { Card } from '../../ui/Card';
 

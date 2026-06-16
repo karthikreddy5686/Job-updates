@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { MapPin, Sparkles } from 'lucide-react';
-import type { FeaturedJob } from '../../../types/home';
+import type { FeaturedJob } from '@/types/home';
 import { Button } from '../../ui/Button';
 import { Card } from '../../ui/Card';
 

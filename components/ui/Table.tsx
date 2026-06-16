@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { ArrowUpDown, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Search } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 
 export interface Column<T> {
   header: string;

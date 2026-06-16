@@ -4,7 +4,7 @@ import { LayoutGrid } from 'lucide-react';
 import { EmptyState, Skeleton } from '../ui';
 import { SectionContainer } from '../layout/SectionContainer';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { categories, categoriesMetadata } from '../../lib/data/home';
+import { categories, categoriesMetadata } from '@/lib/data/home';
 import { CategoryCard } from './cards/CategoryCard';
 
 export function CategoriesSection() {

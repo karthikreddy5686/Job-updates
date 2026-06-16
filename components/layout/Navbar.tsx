@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { SectionContainer } from './SectionContainer';
 import { useTheme, useNotifications } from '../../app/providers';
-import { useAuth } from '../../lib/auth-context';
+import { useAuth } from '@/lib/auth-context';
 import { SearchInput } from '../ui/SearchInput';
 import StudentAuthModal from '@/components/StudentAuthModal';
 import { getStudentSession, logoutStudent } from '@/lib/student-auth';

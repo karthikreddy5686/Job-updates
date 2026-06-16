@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import type { CategoryItem } from '../../../types/home';
+import type { CategoryItem } from '@/types/home';
 import { Card } from '../../ui/Card';
 
 export function CategoryCard({ label, accent, icon: Icon }: CategoryItem) {

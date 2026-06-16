@@ -5,7 +5,7 @@ import { Users } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { EmptyState, Skeleton } from '../ui';
 import { SectionContainer } from '../layout/SectionContainer';
-import { companies, companiesMetadata } from '../../lib/data/home';
+import { companies, companiesMetadata } from '@/lib/data/home';
 import { CompanyCard } from './cards/CompanyCard';
 
 export function CompaniesSection() {

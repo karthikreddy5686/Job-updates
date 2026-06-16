@@ -4,7 +4,7 @@ import './globals.css';
 import { ThemeProvider, AuthProvider, NotificationProvider } from './providers';
 import Navbar from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
-import { metadata as defaultMetadata } from '../lib/seo';
+import { metadata as defaultMetadata } from '@/lib/seo';
 
 const inter = Inter({ subsets: ['latin'] });
 

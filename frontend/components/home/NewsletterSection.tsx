@@ -5,7 +5,7 @@ import { Mail } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { EmptyState } from '../ui/EmptyState';
 import { SectionContainer } from '../layout/SectionContainer';
-import { newsletterContent } from '../../lib/data/home';
+import { newsletterContent } from '@/lib/data/home';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { NewsletterLoadingState } from './NewsletterLoadingState';
 

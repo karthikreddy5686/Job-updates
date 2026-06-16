@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
-import type { TestimonialItem } from '../../../types/home';
+import type { TestimonialItem } from '@/types/home';
 import { Card } from '../../ui/Card';
 
 export function TestimonialCard({ quote, name, role, company, rating }: TestimonialItem) {
