@@ -6,7 +6,8 @@ export const ADMIN_SESSION_COOKIE = 'jobupdate_admin_session';
 export const DEFAULT_ADMIN_EMAIL = 'admin@portal.com';
 export const DEFAULT_ADMIN_PASSWORD = 'Admin@123';
 
-const dataDir = path.join(process.cwd(), 'data');
+const isVercel = process.env.VERCEL === '1' || process.env.NEXT_PUBLIC_VERCEL_ENV;
+const dataDir = isVercel ? '/tmp/data' : path.join(process.cwd(), 'backend', 'data');
 const adminsPath = path.join(dataDir, 'admins.json');
 const adminSessionsPath = path.join(dataDir, 'admin-sessions.json');
 const HASH_ITERATIONS = 120_000;
