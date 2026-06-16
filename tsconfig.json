@@ -39,8 +39,14 @@
       "@/components/ui/*": [
         "components/ui/*"
       ],
+      "@/data/*": [
+        "backend/data/*"
+      ],
       "@/lib/*": [
-        "lib/*"
+        "backend/lib/*"
+      ],
+      "@/types/*": [
+        "backend/types/*"
       ],
       "@/app/*": [
         "app/*"
