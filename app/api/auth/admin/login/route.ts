@@ -1,4 +1,3 @@
-'use server';
 
 import { NextResponse } from 'next/server';
 import { ensureSeededAdmin, getAdminByEmail, verifyPassword, createAdminSession, ADMIN_SESSION_COOKIE } from '@/lib/admin-auth';

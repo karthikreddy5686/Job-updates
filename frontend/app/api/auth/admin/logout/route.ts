@@ -1,4 +1,3 @@
-'use server';
 
 import { NextResponse } from 'next/server';
 import { invalidateAdminSession, getSessionTokenFromRequest, ADMIN_SESSION_COOKIE } from '@/lib/admin-auth';
