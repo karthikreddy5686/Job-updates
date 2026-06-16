@@ -43,6 +43,6 @@ next-env.d.ts
 # Admin data files
 /data/admin-jobs.json
 /data/admin-logs.json
-data/
+/data/
 .env
 .env.local

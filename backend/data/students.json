@@ -1,0 +1,22 @@
+[
+  {
+    "id": "student_1780123531225_lvo6bd3",
+    "name": "Test User",
+    "email": "test@example.com",
+    "phone": "1234567890",
+    "whatsapp": "1234567890",
+    "collegeName": "Test College",
+    "registeredAt": "2026-05-30T06:45:31.225Z",
+    "passwordHash": "c2VjcmV0MTIz"
+  },
+  {
+    "id": "student_1780123831997_fg8sr6k",
+    "name": "karthik",
+    "email": "lokiesh19@gmail.com",
+    "phone": "9087654321",
+    "whatsapp": "9087654321",
+    "collegeName": "aits",
+    "registeredAt": "2026-05-30T06:50:31.997Z",
+    "passwordHash": "MDk4NzY1NDMyMQ=="
+  }
+]
