@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 import type { JobNotification, JobNotificationCategory } from '@/types';
 
 type CategoryAlias = JobNotificationCategory;

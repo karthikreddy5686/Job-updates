@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 import { getStudents } from '@/lib/admin-storage';
 
 export async function GET(request: Request) {

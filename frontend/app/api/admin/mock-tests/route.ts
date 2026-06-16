@@ -1,30 +1,10 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-// Define a global cache so it persists across hot-reloads and works safely in deployment without writing to disk
-// Force cache reset round 9 for Real Coding Section
-let globalMockTestsCache: any[] | null = null;
-
-const getDataFilePath = () => {
-  return path.join(process.cwd(), 'data', 'mockTestsData.json');
-};
-
-function getMockTests() {
-  if (globalMockTestsCache) return globalMockTestsCache;
-
-  const filePath = getDataFilePath();
-  if (fs.existsSync(filePath)) {
-    const data = fs.readFileSync(filePath, 'utf8');
-    globalMockTestsCache = JSON.parse(data);
-    return globalMockTestsCache;
-  }
-  return [];
-}
+export const dynamic = 'force-dynamic';
+import { getStoreData, setStoreData } from '@/lib/db';
 
 export async function GET() {
   try {
-    const data = getMockTests();
+    const data = await getStoreData('mock-tests', []);
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error reading mock tests data:', error);
@@ -40,7 +20,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Missing required fields: id, logoUrl' }, { status: 400 });
     }
 
-    const mockTests = getMockTests();
+    const mockTests = await getStoreData('mock-tests', []);
     if (!mockTests || mockTests.length === 0) {
       return NextResponse.json({ error: 'Mock tests data not loaded' }, { status: 404 });
     }
@@ -51,11 +31,9 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Mock test not found' }, { status: 404 });
     }
 
-    // Update the in-memory cache
+    // Update the record
     mockTests[testIndex].logoUrl = logoUrl;
-    globalMockTestsCache = mockTests;
-
-    // We do NOT write back to fs.writeFileSync to avoid deployment crashes on serverless environments!
+    await setStoreData('mock-tests', mockTests);
     
     return NextResponse.json({ success: true, message: 'Logo updated successfully', test: mockTests[testIndex] });
   } catch (error) {
