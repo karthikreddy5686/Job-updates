@@ -1,0 +1,3736 @@
+
+--- NEW REQUEST ---
+<USER_REQUEST>
+run this and provide local host
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T18:37:26+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Claude Opus 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+run this and provide local host
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T18:40:09+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Claude Opus 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+## Error Type
+Runtime PageNotFoundError
+
+## Error Message
+Cannot find module for page: route not found /_not-found/page
+
+Next.js version: 16.2.6 (Turbopack)
+fix this error
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T18:41:10+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T18:41:48+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T18:43:21+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T18:46:35+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Claude Opus 4.6 (Thinking) to Claude Sonnet 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T18:47:01+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Claude Sonnet 4.6 (Thinking) to GPT-OSS 120B (Medium). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+http://localhost:3001/  it is not loading
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T18:52:14+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+## Error Type
+Build Error
+
+## Error Message
+Module not found: Can't resolve '../../lib/utils'
+
+## Build Output
+./frontend/components/ui/Button.tsx:5:1
+Module not found: Can't resolve '../../lib/utils'
+  3 | import * as React from 'react';
+  4 | import { motion, type HTMLMotionProps } from 'framer-motion';
+> 5 | import { cn } from '../../lib/utils';
+    | ^
+  6 |
+  7 | type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+  8 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./frontend/components/layout/Navbar.tsx
+
+Next.js version: 16.2.6 (Webpack)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T18:54:14+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Unsafe attempt to load URL http://localhost:3000/ from frame with URL chrome-error://chromewebdata/. Domains, protocols and ports must match.
+
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T19:03:36+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+[{
+	"resource": "/c:/Job updates/tsconfig.json",
+	"owner": "typescript",
+	"severity": 8,
+	"message": "Option 'baseUrl' is deprecated and will stop functioning in TypeScript 7.0. Specify compilerOption '\"ignoreDeprecations\": \"6.0\"' to silence this error.\n  Visit https://aka.ms/ts6 for migration information.",
+	"source": "ts",
+	"startLineNumber": 27,
+	"startColumn": 5,
+	"endLineNumber": 27,
+	"endColumn": 14,
+	"origin": "extHost1"
+}]
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T19:10:26+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from GPT-OSS 120B (Medium) to Gemini 3.1 Pro (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+## Error Type
+Build Error
+
+## Error Message
+Module not found: Can't resolve '../lib/seo'
+
+## Build Output
+./frontend/app/layout.tsx:7:1
+Module not found: Can't resolve '../lib/seo'
+   5 | import Navbar from '../components/layout/Navbar';
+   6 | import { Footer } from '../components/layout/Footer';
+>  7 | import { metadata as defaultMetadata } from '../lib/seo';
+     | ^
+   8 |
+   9 | import { headers } from 'next/headers';
+  10 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Next.js version: 16.2.6 (Webpack)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T19:11:49+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+## Error Type
+Runtime Error
+
+## Error Message
+Functions cannot be passed directly to Client Components unless you explicitly expose it by marking it with "use server". Or maybe you meant to call this function rather than return it.
+  <... parallelRouterKey=... error={function ErrorPage} errorStyles=... errorScripts=... template=... templateStyles=... templateScripts=... notFound=... forbidden=... unauthorized=... segmentViewBoundaries=...>
+                                   ^^^^^^^^^^^^^^^^^^^^
+
+
+    at stringify (<anonymous>:1:18)
+
+Next.js version: 16.2.6 (Webpack)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T19:12:46+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+JobUpdate
+Your career edge, one update at a time.
+
+Main
+Application Tracker
+Deadline Alerts
+Referral Hub
+Saved Jobs
+
+
+karthikreddy5686
+Page not found
+The page you are looking for does not exist or has been moved.
+
+Return to Job Updates                     it showing in my web page fix this
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T19:15:31+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+## Error Type
+Build Error
+
+## Error Message
+Module not found: Can't resolve '../../../app/providers'
+
+## Build Output
+./components/layout/Navbar.tsx:9:1
+Module not found: Can't resolve '../../../app/providers'
+   7 | import { Button } from '../ui/Button';
+   8 | import { SectionContainer } from './SectionContainer';
+>  9 | import { useTheme, useNotifications } from '../../../app/providers';
+     | ^
+  10 | import { useAuth } from '../../../lib/auth-context';
+  11 | import { SearchInput } from '../ui/SearchInput';
+  12 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Next.js version: 16.2.6 (Webpack)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T19:20:12+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+My Next.js JobUpdate portal is broken at /job-updates — 
+showing "Page not found" after adding admin dashboard files.
+
+SYMPTOMS:
+- /job-updates shows "Page not found" 
+- Navbar still renders (main layout works)
+- Dark background 404 page showing with 
+  "Return to Job Updates" button
+- This started after adding admin dashboard files
+
+ROOT CAUSES TO FIX:
+1. app/not-found.tsx may be incorrectly structured 
+   and catching valid routes
+2. app/admin/layout.tsx with <html><body> tags 
+   is conflicting with main app/layout.tsx
+3. Possible file naming/location errors from 
+   admin dashboard setup
+
+════════════════════════════════════════
+FIX 1 — REWRITE app/not-found.tsx
+════════════════════════════════════════
+
+The not-found.tsx MUST NOT include <html><body> tags
+when it lives inside app/ that already has a layout.tsx.
+Only global-error.tsx needs those.
+
+OVERWRITE app/not-found.tsx:
+
+export default function NotFound() {
+  return (
+    <div className="min-h-screen flex items-center 
+                    justify-center bg-white">
+      <div className="text-center px-6">
+        <h1 className="text-6xl font-bold text-blue-600 mb-4">
+          404
+        </h1>
+        <h2 className="text-xl font-semibold text-gray-800 mb-2">
+          Page not found
+        </h2>
+        <p className="text-gray-500 text-sm mb-6">
+          The page you are looking for does not exist.
+        </p>
+        <a href="/"
+          className="inline-block px-6 py-2.5 bg-blue-600 
+                     text-white rounded-xl text-sm font-semibold 
+                     hover:bg-blue-700 transition-colors">
+          Back to Home
+        </a>
+      </div>
+    </div>
+  )
+}
+
+NO html/body tags — the parent layout.tsx provides those.
+
+════════════════════════════════════════
+FIX 2 — REWRITE app
+<truncated 5605 bytes>
+irect(
+      new URL('/admin/login', req.url)
+    )
+  }
+
+  return NextResponse.next()
+}
+
+════════════════════════════════════════
+FIX 8 — CLEAR AND RESTART
+════════════════════════════════════════
+
+After making all above changes, run:
+
+Windows:
+rd /s /q .next
+npm run dev
+
+Mac/Linux:
+rm -rf .next && npm run dev
+
+════════════════════════════════════════
+COMPLETE FILE LIST — WHAT EACH SHOULD BE:
+════════════════════════════════════════
+
+app/layout.tsx
+  → UNCHANGED from before admin setup
+  → Has <html><body> Navbar etc
+  → DO NOT add html/body to this
+
+app/not-found.tsx
+  → NO html/body tags
+  → Just a <div> with 404 message
+  → Styled with Tailwind
+
+app/error.tsx
+  → 'use client'
+  → NO html/body tags
+  → Just a <div>
+
+app/global-error.tsx
+  → 'use client'  
+  → HAS <html><body> (this one needs them)
+  → This is the only file that needs html/body
+    outside of app/layout.tsx and app/admin/layout.tsx
+
+app/admin/layout.tsx
+  → NO <html><body> tags ← THIS WAS THE BUG
+  → Just: <div className="min-h-screen bg-gray-950">
+  → Let root layout.tsx handle html/body
+
+app/admin/not-found.tsx
+  → NO html/body tags
+  → Just a <div>
+
+app/admin/login/page.tsx
+  → NO html/body tags
+  → Just <div> wrappers with Tailwind
+
+middleware.ts (root)
+  → Only matches /admin/:path*
+  → Does NOT touch /job-updates or any other route
+
+CRITICAL RULE:
+Only ONE file in your entire app/ tree should have
+<html> and <body> tags — that is app/layout.tsx.
+Any other file with <html><body> breaks 
+Next.js route resolution and causes 404s on 
+unrelated pages like /job-updates.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T19:31:24+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Internal Server Error  local host showing this
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T19:33:59+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Failed to load resource: the server responded with a status of 404 (Not Found)
+react-refresh.js:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+_app.js:1 Uncaught ReferenceError: __turbopack_load_page_chunks__ is not defined
+    at _app.js:1:1
+_error.js:1 Uncaught ReferenceError: __turbopack_load_page_chunks__ is not defined
+    at _error.js:1:1
+(index):1  Failed to load resource: the server responded with a status of 404 (Not Found)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-26T20:03:47+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+GET /dashboard 200 in 90ms (next.js: 5ms, application-code: 85ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /api/dashboard/summary 200 in 2.8s (next.js: 1812ms, application-code: 1015ms)
+ GET /api/dashboard/summary 200 in 350ms (next.js: 6ms, application-code: 344ms)
+ GET /job-updates 200 in 267ms (next.js: 153ms, application-code: 114ms)
+ GET /api/jobs/daily?category=banking&date=today 200 in 1257ms (next.js: 1041ms, application-code: 216ms)
+ GET /api/jobs/daily?category=startup&date=today 200 in 1251ms (next.js: 1035ms, application-code: 216ms)
+ GET /api/jobs/daily?category=cat-mba&date=today 200 in 1253ms (next.js: 1036ms, application-code: 216ms)
+ GET /api/jobs/daily?category=mnc&date=today 200 in 1259ms (next.js: 1041ms, application-code: 218ms)
+ GET /api/jobs/daily?category=banking&date=today 200 in 66ms (next.js: 6ms, application-code: 60ms)
+ GET /api/jobs/daily?category=startup&date=today 200 in 50ms (next.js: 5ms, application-code: 44ms)
+ GET /api/jobs/daily?category=cat-mba&date=today 200 in 52ms (next.js: 6ms, application-code: 46ms)
+ GET /api/jobs/daily?category=mnc&date=today 200 in 59ms (next.js: 7ms, application-code: 52ms)
+ GET /api/jobs/daily?category=internships&date=today 200 in 1856ms (next.js: 1078ms, application-code: 777ms)
+ GET /api/jobs/daily?category=internships&date=today 200 in 284ms (next.js: 6ms, application-code: 278ms)
+ GET /api/jobs/daily?category=government&date=today 200 in 2.3s (next.js: 1038ms, application-code: 1270ms)
+ GET /api/jobs/daily?category=government&date=today 200 in 450ms (next.js: 4ms, application-code: 446ms)
+ GET /api/saved-jobs/arbeitnow-strategy-operations-intern-mannheim-358561 404 in 903ms (next.js: 822ms, application-code: 80ms)
+ GET /api/saved-jobs/arbeitnow-growth-intern-mannheim-205800 404 in 904ms (next.js: 821ms, applica
+<truncated 2253 bytes>
+duct-engineer-heartbeat-hamburg-498496 404 in 46ms (next.js: 5ms, application-code: 40ms)
+ GET /job-updates/tracker 200 in 2.1s (next.js: 1986ms, application-code: 129ms)
+ GET /api/applications 200 in 1217ms (next.js: 1182ms, application-code: 35ms)
+ GET /api/applications 200 in 33ms (next.js: 8ms, application-code: 25ms)
+ GET /job-updates/alerts 200 in 1770ms (next.js: 1689ms, application-code: 81ms)
+⨯ RangeError: Invalid time value
+    at Date1.toISOString (<anonymous>)
+    at buildDailyJob (backend\lib\jobSources.ts:149:38)
+    at eval (backend\lib\jobSources.ts:278:14)
+    at Array.map (<anonymous>)
+    at fetchArbeitNowJobs (backend\lib\jobSources.ts:271:6)
+    at async fetchJobsWithDeadlines (backend\lib\jobSources.ts:351:22)
+    at async GET (app\api\deadline-alerts\route.ts:150:20)
+  147 |     category: category ?? 'startup',
+  148 |     salary,
+> 149 |     postedDate: new Date(postedDate).toISOString(),
+      |                                      ^
+  150 |     deadline: deadline?.trim() || undefined,
+  151 |     applyLink: applyLink.trim(),
+  152 |     isNew,
+ GET /api/deadline-alerts 500 in 2.9s (next.js: 1237ms, application-code: 1691ms)
+⨯ RangeError: Invalid time value
+    at Date1.toISOString (<anonymous>)
+    at buildDailyJob (backend\lib\jobSources.ts:149:38)
+    at eval (backend\lib\jobSources.ts:278:14)
+    at Array.map (<anonymous>)
+    at fetchArbeitNowJobs (backend\lib\jobSources.ts:271:6)
+    at async fetchJobsWithDeadlines (backend\lib\jobSources.ts:351:22)
+    at async GET (app\api\deadline-alerts\route.ts:150:20)
+  147 |     category: category ?? 'startup',
+  148 |     salary,
+> 149 |     postedDate: new Date(postedDate).toISOString(),
+      |                                      ^
+  150 |     deadline: deadline?.trim() || undefined,
+  151 |     applyLink: applyLink.trim(),
+  152 |     isNew,
+ GET /api/deadline-alerts 500 in 499ms (next.js: 10ms, application-code: 489ms)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T14:35:41+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Fix two critical issues in my Next.js JobUpdate portal:
+
+ISSUE 1: All jobs fetching from European sources (Germany)
+  - Arbeitnow returns only German jobs
+  - Need India-specific job sources
+  
+ISSUE 2: Job cards too narrow — Apply button cut off
+  - Cards in the 3-column grid are too small
+  - "Apply Now" button not fully visible
+  - Content overflowing card boundaries
+
+════════════════════════════════════════
+FIX 1 — REPLACE API SOURCES WITH INDIA JOBS
+════════════════════════════════════════
+
+OVERWRITE app/api/jobs/daily/route.ts COMPLETELY:
+
+import { NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
+
+// ── Timeout fetch helper ──────────────────────
+async function safeFetch(url: string, timeout = 10000) {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeout)
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 JobUpdatePortal/1.0',
+        'Accept': 'application/json',
+      },
+      next: { revalidate: 1800 }, // 30 min cache
+    })
+    clearTimeout(timer)
+    if (!res.ok) return null
+    return await res.json()
+  } catch {
+    clearTimeout(timer)
+    return null
+  }
+}
+
+// ── Standard job interface ────────────────────
+interface Job {
+  id: string
+  title: string
+  company: string
+  location: string
+  jobType: string
+  category: string
+  salary?: string
+  postedDate: string
+  deadline?: string
+  applyLink: string
+  isNew: boolean
+  source: string
+  description?: string
+  logo?: string
+}
+
+function makeJob(
+  id: string,
+  title: string,
+  company: string,
+  location: string,
+  jobType: string,
+  category: string,
+  applyLink: string,
+  source: string,
+  salary?: string,
+  postedDate?: string,
+  d
+<truncated 33428 bytes>
+Name="text-xs font-bold tracking-widest 
+                    text-blue-600 uppercase truncate">
+        {category.label}
+      </p>
+      <p className="text-xs text-gray-400 truncate">
+        {category.subtitle}
+      </p>
+    </div>
+  </div>
+  <button onClick={toggleCollapse}
+    className="flex items-center gap-1 text-xs 
+               text-gray-500 hover:text-gray-700 
+               flex-shrink-0 ml-2 mt-1">
+    {isCollapsed ? 'Expand' : 'Collapse'}
+    <ChevronUp className={`w-3 h-3 transition-transform 
+      ${isCollapsed ? 'rotate-180' : ''}`} />
+  </button>
+</div>
+
+{/* HEADER ROW 2: Badge + Refresh — always visible */}
+<div className="flex items-center justify-between 
+                px-4 pb-3 gap-2 border-b border-gray-100">
+  <span className="inline-flex items-center px-2.5 py-1 
+                   rounded-full text-xs font-semibold 
+                   bg-gray-900 text-white whitespace-nowrap 
+                   flex-shrink-0">
+    {newCount} new today
+  </span>
+  <button onClick={handleRefresh}
+    disabled={refreshing}
+    className="flex items-center gap-1.5 px-3 py-1.5 
+               rounded-lg text-xs font-medium 
+               bg-gray-900 text-white hover:bg-gray-700 
+               disabled:opacity-50 transition-colors 
+               whitespace-nowrap flex-shrink-0">
+    <RefreshCw className={`w-3 h-3 
+      ${refreshing ? 'animate-spin' : ''}`} />
+    Refresh
+  </button>
+</div>
+
+════════════════════════════════════════
+FILES TO MODIFY:
+════════════════════════════════════════
+
+OVERWRITE:
+- app/api/jobs/daily/route.ts     (India-focused sources)
+
+UPDATE:
+- components/CategorySection.tsx  (2-col grid, header fix)
+- components/JobCard.tsx          (full-width Apply button)
+
+After changes run:
+rm -rf .next && npm run dev
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T14:51:14+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+In my Next.js JobUpdate portal, do TWO things:
+
+1. Add admin dashboard as a MODAL/POPUP on the main page
+   (NOT a separate route — exactly like the reference image)
+2. Fix Referral Hub to show real Indian companies
+
+════════════════════════════════════════
+PART 1 — ADMIN DASHBOARD AS MODAL
+════════════════════════════════════════
+
+IMPORTANT: Do NOT create app/admin/ folder or any 
+separate admin routes. The admin panel is a MODAL 
+that opens from the navbar "Admin ↗" button.
+
+HOW IT WORKS (from reference image):
+- Navbar has "Admin ↗" button (already exists)
+- Clicking it opens a modal/drawer on the right side
+- Modal has: Login form at top, then job management below
+- After login, shows posted jobs with Edit/Feature/Delete
+- No page navigation — everything in one modal
+
+════════════════════════════════════════
+STEP 1 — ADMIN CONFIG (no database)
+════════════════════════════════════════
+
+CREATE lib/admin-config.ts:
+
+export const ADMIN_EMAIL = 'admin@jobupdate.com'
+export const ADMIN_PASSWORD = 'Admin@123'
+export const ADMIN_KEY = 'jobupdate_admin_auth'
+
+CREATE lib/admin-storage.ts:
+// Runs only server-side in API routes
+
+import fs from 'fs'
+import path from 'path'
+
+const DATA_DIR = path.join(process.cwd(), 'data')
+
+function ensureDir() {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true })
+  }
+}
+
+export interface AdminJob {
+  id: string
+  title: string
+  company: string
+  location: string
+  jobType: string
+  category: string
+  salary: string
+  applyLink: string
+  deadline: string
+  description: string
+  isActive: boolean
+  isPinned: boolean
+  isFeatured: boolean
+  createdAt: string
+}
+
+export function getJobs(): AdminJob[] {
+  ensureDir()
+  con
+<truncated 45215 bytes>
+     transition-colors ${
+              activeTab === tab.key
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-gray-600 hover:text-gray-800'
+            }`}>
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── TAB 1: FIND REFERRERS ── */}
+      {activeTab === 'find' && (
+        <div className="space-y-3">
+          {REAL_REFERRAL_COMPANIES.map(co => (
+            <div key={co.id}
+              className="bg-white rounded-2xl border border-gray-100 
+                         shadow-sm p-5 hover:shadow-md 
+                         transition-shadow">
+              <div className="flex items-start 
+                              justify-between gap-4">
+
+                <div className="flex items-center gap-4 
+                                min-w-0 flex-1">
+                  {/* Logo */}
+                  <div className={`w-12 h-12 rounded-xl 
+                    flex items-center justify-center 
+                    font-bold text-lg flex-shrink-0 
+                    ${co.color}`}>
+                    {co.logo}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gray-900">
+                      {co.company}
+                    </p>
+                    <p className="text-sm text-gray-500 truncate">
+                      {co.role}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-xs text-gray-400">
+                        📍 {co.location}
+                      </span>
+                      <span className="px-1.5 py-0.5 bg-green-50 
+                                       text-green-600 rounded text-xs 
+                                       font-medium uppercase">
+                        Referrals Available
+                      </span>
+    
+<truncated 12873 bytes>
+
+NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.
+--- NEW REQUEST ---
+<USER_REQUEST>
+[{
+	"resource": "/c:/Job updates/app/admin/AdminDashboardView.tsx",
+	"owner": "typescript",
+	"code": "2307",
+	"severity": 8,
+	"message": "Cannot find module '@/app/components' or its corresponding type declarations.",
+	"source": "ts",
+	"startLineNumber": 30,
+	"startColumn": 37,
+	"endLineNumber": 30,
+	"endColumn": 55,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Job updates/app/admin/AdminDashboardView.tsx",
+	"owner": "typescript",
+	"code": "2307",
+	"severity": 8,
+	"message": "Cannot find module '@/components/ui/Table' or its corresponding type declarations.",
+	"source": "ts",
+	"startLineNumber": 31,
+	"startColumn": 23,
+	"endLineNumber": 31,
+	"endColumn": 46,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Job updates/app/admin/AdminDashboardView.tsx",
+	"owner": "typescript",
+	"code": "2307",
+	"severity": 8,
+	"message": "Cannot find module '@/components/ui/Table' or its corresponding type declarations.",
+	"source": "ts",
+	"startLineNumber": 32,
+	"startColumn": 29,
+	"endLineNumber": 32,
+	"endColumn": 52,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Job updates/app/admin/AdminDashboardView.tsx",
+	"owner": "typescript",
+	"code": "2307",
+	"severity": 8,
+	"message": "Cannot find module '@/lib/mockAdminData' or its corresponding type declarations.",
+	"source": "ts",
+	"startLineNumber": 43,
+	"startColumn": 8,
+	"endLineNumber": 43,
+	"endColumn": 29,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Job updates/app/admin/AdminDashboardView.tsx",
+	"owner": "typescript",
+	"code": "7006",
+	"severity": 8,
+	"message": "Parameter 'row' implicitly has an 'any' type.",
+	"source": "ts",
+	"startLineNumber": 275,
+	"startColumn": 14,
+	"endLineNumber": 275,
+	"endColumn": 17,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Job updates/app/admin/AdminDashboardView.tsx",
+	"owner": "typescript",
+	"code": "7006",
+	"severity": 8,
+	"message": "Parameter 'row' implicitly has an 'any' type.",
+	"source": "ts",
+	"startLineNumber": 291,
+	"s
+<truncated 5520 bytes>
+er": "typescript",
+	"code": "7006",
+	"severity": 8,
+	"message": "Parameter 'row' implicitly has an 'any' type.",
+	"source": "ts",
+	"startLineNumber": 524,
+	"startColumn": 14,
+	"endLineNumber": 524,
+	"endColumn": 17,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Job updates/app/admin/AdminDashboardView.tsx",
+	"owner": "typescript",
+	"code": "7006",
+	"severity": 8,
+	"message": "Parameter 'row' implicitly has an 'any' type.",
+	"source": "ts",
+	"startLineNumber": 530,
+	"startColumn": 14,
+	"endLineNumber": 530,
+	"endColumn": 17,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Job updates/app/admin/AdminDashboardView.tsx",
+	"owner": "typescript",
+	"code": "7006",
+	"severity": 8,
+	"message": "Parameter 'row' implicitly has an 'any' type.",
+	"source": "ts",
+	"startLineNumber": 535,
+	"startColumn": 14,
+	"endLineNumber": 535,
+	"endColumn": 17,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Job updates/app/admin/AdminDashboardView.tsx",
+	"owner": "typescript",
+	"code": "7006",
+	"severity": 8,
+	"message": "Parameter 'row' implicitly has an 'any' type.",
+	"source": "ts",
+	"startLineNumber": 541,
+	"startColumn": 14,
+	"endLineNumber": 541,
+	"endColumn": 17,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Job updates/app/admin/AdminDashboardView.tsx",
+	"owner": "typescript",
+	"code": "7006",
+	"severity": 8,
+	"message": "Parameter 'row' implicitly has an 'any' type.",
+	"source": "ts",
+	"startLineNumber": 552,
+	"startColumn": 14,
+	"endLineNumber": 552,
+	"endColumn": 17,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Job updates/app/admin/AdminDashboardView.tsx",
+	"owner": "typescript",
+	"code": "7006",
+	"severity": 8,
+	"message": "Parameter 'item' implicitly has an 'any' type.",
+	"source": "ts",
+	"startLineNumber": 811,
+	"startColumn": 76,
+	"endLineNumber": 811,
+	"endColumn": 80,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+}]
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T15:21:01+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+admin dashboard page is too small make it spacious and did not change/modify any other sections 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T15:51:12+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+you updated width along with that i want to increase length also make it without any changes/modify of remaning sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T15:54:23+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+see admin dashboard is too small according to length wise width is okay make it lengthy without modifying /changing other sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T15:58:09+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+[Fast Refresh] done in 701ms
+api/saved-jobs/muse-21760591:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/muse-21756047:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/tcs-careers-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/infosys-careers-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/wipro-careers-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/unstop-intern-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/hdfc-bank-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/icici-bank-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/axis-bank-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/nps-permanent-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/muse-govt-21628780:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/muse-govt-21679146:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/iima-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/hul-mt-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/itc-mt-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/zepto-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/groww-2025:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/meesho-2025:1  Failed to load resource: the server responded with a status of
+<truncated 29522 bytes>
+ith a status of 404 (Not Found)
+api/saved-jobs/muse-govt-19221635:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-2090885:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-2088711:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-1680495:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-2086540:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-1185979:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-1749306:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-2090002:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-2090887:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-2090885:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-2088711:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-1680495:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-2086540:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-1185979:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-1749306:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+api/saved-jobs/remotive-govt-2090002:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T16:12:29+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in my admin dashboard  i add geonixa job posting in government section but it didnt visible in those section make it work properly without changing modifying other sections 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T16:28:27+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in application tracker section remove screening offered rejected interview remove all these 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T17:10:27+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in jobs fetching section everything works properly except government jobs section it fetches other jobs rather than government jobs so please rectify that and also make sure it fecthes all government jobs in india and dont change/modify other sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T17:19:30+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in jobs fetching section everything works properly except government jobs section it fetches other jobs rather than government jobs so please rectify that and also make sure it fecthes all government jobs in india and dont change/modify other sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T17:25:27+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in my government jobs section one notification also not showing why is this happening one recently rrb notification released and also sc cgl notification also released add all govt jobs in india including central
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T17:29:57+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in my government job section it shows no notifications please rectify it
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T17:37:31+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-27T17:57:06+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Add a complete ATS Resume Matcher feature to my Next.js 
+JobUpdate portal. This uses the Anthropic Claude API 
+(already available in artifacts) to analyze resumes.
+
+MY STACK:
+- Next.js App Router, TypeScript, Tailwind CSS
+- Lucide React, Framer Motion
+- NO database — use localStorage for history
+- Claude API available via fetch to Anthropic endpoint
+
+════════════════════════════════════════
+WHAT IT DOES:
+════════════════════════════════════════
+
+User uploads their resume (PDF/text) + pastes a job 
+description → Claude AI analyzes and returns:
+
+1. ATS Score (0–100)
+2. Matched keywords found in resume
+3. Missing keywords from job description
+4. Section-by-section analysis
+5. Specific improvement suggestions
+6. Formatted resume tips
+
+════════════════════════════════════════
+STEP 1 — API ROUTE (Claude AI)
+════════════════════════════════════════
+
+CREATE app/api/resume-match/route.ts:
+
+import { NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
+
+// Allow larger payloads for resume text
+export const maxDuration = 30
+
+export async function POST(req: Request) {
+  try {
+    const { resumeText, jobDescription } = await req.json()
+
+    if (!resumeText?.trim()) {
+      return NextResponse.json(
+        { error: 'Resume text is required' },
+        { status: 400 }
+      )
+    }
+    if (!jobDescription?.trim()) {
+      return NextResponse.json(
+        { error: 'Job description is required' },
+        { status: 400 }
+      )
+    }
+    if (resumeText.length < 100) {
+      return NextResponse.json(
+        { error: 'Resume text is too short. Please paste more content.' },
+        { status: 400 }
+      )
+    }
+    if (jobDescription.length < 50) {
+      return NextRespon
+<truncated 41066 bytes>
+ ATS score instantly',
+  color: 'blue'
+}
+
+════════════════════════════════════════
+STEP 5 — ADD RESUME MATCH TO JOB CARDS
+════════════════════════════════════════
+
+In components/JobCard.tsx, add a "Match My Resume"
+button that pre-fills the job description:
+
+<Link
+  href={`/resume-match?jd=${encodeURIComponent(
+    job.description || job.title + ' at ' + job.company
+  )}`}
+  className="flex items-center gap-1 text-xs text-purple-600 
+             hover:underline mt-1">
+  <Target className="w-3 h-3" />
+  Match Resume
+</Link>
+
+Then in app/resume-match/page.tsx, read the 
+query param on mount:
+
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search)
+  const jd = params.get('jd')
+  if (jd) setJobDescription(decodeURIComponent(jd))
+}, [])
+
+════════════════════════════════════════
+FILES TO CREATE:
+════════════════════════════════════════
+
+CREATE:
+- app/resume-match/page.tsx     (main matcher page)
+- app/api/resume-match/route.ts (Claude AI API route)
+
+MODIFY:
+- components/Navbar.tsx         (add Resume Match link)
+- app/dashboard/page.tsx        (add to quick actions)
+- components/JobCard.tsx        (add Match Resume button)
+
+NO new packages needed.
+Uses only: framer-motion, lucide-react (already installed)
+Claude API called server-side in API route.
+
+════════════════════════════════════════
+ADMIN CREDENTIALS UNCHANGED:
+Email:    admin@jobupdate.com  
+Password: Admin@123
+════════════════════════════════════════
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T14:39:23+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+ Fix ONLY the resume-match feature in my Next.js JobUpdate portal.
+The error is "AI analysis failed" because PDF files are being 
+read as raw binary/PostScript code instead of readable text.
+
+DO NOT modify any other files or features.
+ONLY fix these 2 files:
+1. app/api/resume-match/route.ts
+2. app/resume-match/page.tsx (PDF reading part only)
+
+════════════════════════════════════════
+ROOT CAUSE:
+════════════════════════════════════════
+
+The current code does FileReader.readAsText() on PDF files.
+This reads raw PDF binary — PostScript commands like:
+"PDF-1.4 ReportLab obj F1 2 0 R /F2 3 0 R endobj..."
+
+This raw binary gets sent to Claude which cannot extract
+meaningful resume data from PostScript code → AI fails.
+
+Also the Claude API call may be missing the API key header
+which causes authentication failure.
+
+════════════════════════════════════════
+FIX 1 — OVERWRITE app/api/resume-match/route.ts
+════════════════════════════════════════
+
+import { NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
+export const maxDuration = 60
+
+export async function POST(req: Request) {
+  try {
+    const { resumeText, jobDescription } = await req.json()
+
+    // ── Validation ──────────────────────────────
+    if (!resumeText?.trim()) {
+      return NextResponse.json(
+        { error: 'Resume text is required' },
+        { status: 400 }
+      )
+    }
+    if (!jobDescription?.trim()) {
+      return NextResponse.json(
+        { error: 'Job description is required' },
+        { status: 400 }
+      )
+    }
+
+    // ── Detect if resume is raw PDF binary ───────
+    // Raw PDF binary contains these Pos
+<truncated 14625 bytes>
+V (Paste)
+
+Example format:
+John Doe | Software Engineer
+john@email.com | +91 98765 43210 | LinkedIn
+
+EXPERIENCE
+Software Engineer — TCS (2022–2024)
+- Built REST APIs using Node.js and Express
+- Improved performance by 40% using Redis caching
+- Led team of 4 engineers on payments module
+
+EDUCATION
+B.Tech Computer Science — VIT University (2022)
+CGPA: 8.5/10
+
+SKILLS
+JavaScript, TypeScript, React, Node.js, Python,
+AWS, Docker, MongoDB, PostgreSQL, Git"
+
+════════════════════════════════════════
+SUMMARY OF CHANGES:
+════════════════════════════════════════
+
+ONLY modify these 2 files:
+1. app/api/resume-match/route.ts   — FULL OVERWRITE
+2. app/resume-match/page.tsx       — PARTIAL update:
+   a. Replace handleFile() function
+   b. Replace error display JSX
+   c. Update textarea placeholder text
+
+DO NOT touch:
+- app/layout.tsx
+- components/Navbar.tsx
+- middleware.ts
+- Any other pages or components
+- Any admin files
+- Any job fetching files
+
+════════════════════════════════════════
+ROOT CAUSE EXPLAINED:
+════════════════════════════════════════
+
+PDFs are binary files. When FileReader.readAsText()
+reads a binary PDF, it gets PostScript commands:
+  "PDF-1.4 obj F1 2 0 R endobj /MediaBox..."
+
+This garbage text is then sent to Claude which 
+cannot analyze it as a resume → "AI analysis failed"
+
+THE FIX:
+1. Detect binary PDF content → show clear error
+2. Tell user to manually copy-paste text from PDF
+3. Add proper Claude API error handling with 
+   specific messages per error code (401, 429, 400)
+4. Add JSON parse fallback methods (3 attempts)
+5. Validate Claude response has required fields
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T15:06:26+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Fix ONLY the Claude API authentication in my resume matcher.
+Error: "AI service authentication failed" = HTTP 401 from Claude API.
+
+DO NOT modify any other files except these:
+1. app/api/resume-match/route.ts
+2. .env.local (create if not exists)
+
+════════════════════════════════════════
+ROOT CAUSE:
+════════════════════════════════════════
+
+The API route calls Claude without an API key.
+Claude API requires the header:
+  "x-api-key": "your-anthropic-api-key"
+
+Without it → 401 Unauthorized → "auth failed" error.
+
+════════════════════════════════════════
+FIX 1 — CREATE .env.local (root of project)
+════════════════════════════════════════
+
+Create a file called .env.local in your project 
+root (same folder as package.json):
+
+ANTHROPIC_API_KEY=your_actual_api_key_here
+
+HOW TO GET YOUR FREE API KEY:
+1. Go to https://console.anthropic.com/
+2. Sign up / Log in
+3. Click "API Keys" in left sidebar
+4. Click "Create Key"
+5. Copy the key (starts with "sk-ant-...")
+6. Paste it in .env.local replacing "your_actual_api_key_here"
+
+Example .env.local:
+ANTHROPIC_API_KEY=sk-ant-api03-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+IMPORTANT: 
+- No quotes around the key
+- No spaces around the = sign
+- Add .env.local to .gitignore (never commit API keys)
+- Restart npm run dev after creating this file
+
+════════════════════════════════════════
+FIX 2 — OVERWRITE app/api/resume-match/route.ts
+════════════════════════════════════════
+
+import { NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
+export const maxDuration = 60
+
+export async fu
+<truncated 10889 bytes>
+════
+FIX 3 — VERIFY .env.local IS CORRECT
+════════════════════════════════════════
+
+Your .env.local file should look EXACTLY like this:
+(no quotes, no spaces, just key=value)
+
+ANTHROPIC_API_KEY=sk-ant-api03-AbCdEfGhIjKlMnOpQrStUvWxYz...
+
+WRONG formats (will cause 401):
+ANTHROPIC_API_KEY="sk-ant-..."     ← no quotes needed
+ANTHROPIC_API_KEY = sk-ant-...    ← no spaces around =
+anthropic_api_key=sk-ant-...      ← must be uppercase
+
+════════════════════════════════════════
+FIX 4 — ADD TO .gitignore
+════════════════════════════════════════
+
+Make sure .gitignore contains:
+.env.local
+.env
+data/
+
+════════════════════════════════════════
+AFTER MAKING CHANGES:
+════════════════════════════════════════
+
+1. Create .env.local with your API key
+2. Overwrite app/api/resume-match/route.ts
+3. RESTART the dev server (mandatory!):
+   
+   Press Ctrl+C to stop current server
+   Then run: npm run dev
+
+   Next.js only loads .env.local on startup.
+   Without restart, the API key won't be loaded.
+
+4. Test at http://localhost:3000/resume-match
+
+════════════════════════════════════════
+ONLY MODIFY THESE FILES:
+════════════════════════════════════════
+
+1. .env.local                          ← CREATE (add API key)
+2. app/api/resume-match/route.ts       ← OVERWRITE
+3. .gitignore                          ← ADD .env.local line
+
+DO NOT touch any other files.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T15:12:34+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Fix only the Resume Match API key validation issue.
+
+Current issue:
+The Resume Match section throws:
+"API key format is invalid. The key should start with sk-ant-"
+
+Requirements:
+- Do NOT modify UI
+- Do NOT change layout
+- Do NOT touch navbar, dashboard, tracker, alerts, or any other sections
+- Only fix environment variable validation logic
+- Support both Anthropic keys (sk-ant-) and OpenAI keys (sk-)
+- Preserve all existing functionality
+
+Tasks:
+1. Find Resume Match backend/API route
+2. Locate API key validation logic
+3. Replace strict validation with:
+   - accept sk-ant-
+   - accept sk-
+4. Add proper fallback error handling
+5. Ensure app does not crash if key missing
+6. Keep all existing styling untouched
+7. Ensure Resume Match analyze button works correctly
+
+Expected validation:
+```ts
+if (
+  !apiKey ||
+  (!apiKey.startsWith("sk-ant-") &&
+   !apiKey.startsWith("sk-"))
+) {
+  throw new Error("Invalid API key")
+}
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T15:17:12+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T15:45:02+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Gemini 3.1 Pro (Low) to Claude Opus 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+you do it
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T15:46:02+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+its asking money
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T15:48:03+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+AIzaSyBMVbgdE_RgvPZOyzC6_uuP5vqqTPdDAYw
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T15:50:22+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T15:55:07+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+i will just clicke 1 time but its showing rate limit reached
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T15:56:01+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+i will just clicke 1 time but its showing rate limit reached
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T15:56:49+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Claude Opus 4.6 (Thinking) to Gemini 3.1 Pro (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+AI error (404). Please try again.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T15:58:35+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+AI response format error. Please try again. If this persists, try shorter resume text.
+
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T16:06:45+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in the refferral hub section by the time of requesting referral in the message section by using their resume automatically fill the referral request message based on resume Note:use free api keys if required and also dont change/modify other sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T17:56:47+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+after writing your code it shows genetare message but not generating after hitting auto generate with ai
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T18:11:06+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+i pasted successfully but it showing same problem
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T18:13:36+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+yeah its working but it generates  Hello, I hope you are doing well. 
+
+I came across the Frontend Developer opening at    ,upto this what about remaining please rectify it
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-28T18:17:03+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+check whether my jobs  automatically fetching system is working properly or not is today updated new jobs
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T14:25:56+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Gemini 3.1 Pro (High) to Claude Opus 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Add a real working free API (like JSearch from RapidAPI free tier) to pull genuinely fresh daily jobs
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T14:28:17+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T14:34:36+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Claude Sonnet 4.6 (Thinking) to GPT-OSS 120B (Medium). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Unsafe attempt to load URL http://localhost:3000/ from frame with URL chrome-error://chromewebdata/. Domains, protocols and ports must match.
+
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T14:45:35+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Claude Sonnet 4.6 (Thinking) to GPT-OSS 120B (Medium). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Failed to Load Page
+ERR_CONNECTION_REFUSED (-102)
+URL: http://localhost:3000/
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T14:47:08+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Unsafe attempt to load URL http://localhost:3000/ from frame with URL chrome-error://chromewebdata/. Domains, protocols and ports must match.
+
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T14:51:45+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Failed to Load Page
+ERR_CONNECTION_REFUSED (-102)
+URL: http://localhost:3000/
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T14:52:59+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from GPT-OSS 120B (Medium) to Claude Opus 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in registration from remove resume and add candidate phone number and whatsapp number and also their college name note:dont change/modify oyher sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T14:57:02+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+and also in same section remove recruiter
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T15:00:07+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+and also in same section remove recruiter
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T15:00:58+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+and also in same section remove recruiter
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T15:01:28+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Claude Opus 4.6 (Thinking) to Gemini 3.1 Pro (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+## Error Type
+Build Error
+
+## Error Message
+  x Expected ';', '}' or <eof>
+
+## Build Output
+./app/auth/register/page.tsx
+Error:   x Expected ';', '}' or <eof>
+     ,-[C:\Job updates\app\auth\register\page.tsx:137:1]
+ 134 |         }
+ 135 |       };
+ 136 |     
+ 137 | ,->         <form noValidate onSubmit={handleSubmit} className="mt-8 space-y-6">
+ 138 | |             {errors.form ? <p className="text-sm text-red-500">{errors.form}</p> : null}
+ 139 | |   
+ 140 | |             <div className="grid gap-6 sm:grid-cols-2">
+ 141 | |               <div className="space-y-2">
+ 142 | |                 <label htmlFor="register-full-name" className="text-sm font-medium text-slate-700">
+ 143 | |                   Full Name
+ 144 | |                 </label>
+ 145 | |                 <input
+ 146 | |                   id="register-full-name"
+ 147 | |                   name="fullName"
+ 148 | |                   type="text"
+ 149 | |                   value={formData.fullName}
+ 150 | |                   onChange={handleInputChange}
+ 151 | |                   placeholder="Jane Doe"
+ 152 | |                   className={fieldClass('fullName')}
+ 153 | |                   aria-invalid={Boolean(errors.fullName)}
+ 154 | |                   aria-describedby={errors.fullName ? 'register-full-name-error' : undefined}
+ 155 | |                 />
+ 156 | |                 {errors.fullName ? <p id="register-full-name-error" className="text-xs text-red-500">{errors.fullName}</p> : null}
+ 157 | |               </div>
+ 158 | |               <div className="space-y-2">
+ 159 | |                 <label htmlFor="register-email" className="text-sm font-medium text-slate-700">
+ 160 | |                   Email address
+ 161 | |                 </label>
+ 162 | |                 <input
+ 163 | |                   id="register-email"
+ 164 | |                   name="email"
+ 165 | |                   type="email"
+ 166 | |                   value={formData.email}
+ 167 | |                   onChange={handleInputChange}
+ 168 | |                   p
+<truncated 7202 bytes>
+|                     : 'Strong password ✓'}
+ 288 | |                 </p>
+ 289 | |               </div>
+ 290 | |             ) : null}
+ 291 | |   
+ 292 | |             <div className="flex items-start gap-3">
+ 293 | |               <label className="inline-flex items-center gap-2 text-sm text-slate-600">
+ 294 | |                 <input
+ 295 | |                   type="checkbox"
+ 296 | |                   checked={acceptedTerms}
+ 297 | |                   onChange={(event) => setAcceptedTerms(event.target.checked)}
+ 298 | |                   className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+ 299 | |                 />
+ 300 | |                 I agree to the Terms and Conditions.
+ 301 | |               </label>
+ 302 | |             </div>
+ 303 | |             {errors.terms ? <p role="alert" className="text-xs text-red-500">{errors.terms}</p> : null}
+ 304 | |   
+ 305 | |             <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full rounded-xl py-3 font-semibold">
+ 306 | |               {isSubmitting ? (
+ 307 | |                 <span className="inline-flex items-center gap-2">
+ 308 | |                   <Loader2 className="h-4 w-4 animate-spin" />
+ 309 | |                   Creating account...
+ 310 | |                 </span>
+ 311 | |               ) : (
+ 312 | |                 'Create account'
+ 313 | |               )}
+ 314 | |             </Button>
+ 315 | |           </form>
+ 316 | |   
+ 317 | |->         <p className="mt-4 text-center text-sm text-slate-500">
+     : `---           ^^^^^^^^^
+     : `---- This is the expression part of an expression statement
+ 318 |               Already have an account?{' '}
+ 319 |               <Link href="/auth/login" className="font-semibold text-blue-600 transition hover:text-blue-700">
+ 319 |                 Sign in
+     `----
+
+Caused by:
+    Syntax Error
+
+Next.js version: 16.2.6 (Webpack)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T15:03:26+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+In my Next.js JobUpdate portal, make these EXACT changes:
+
+CHANGE 1: Navbar buttons
+- Remove "Login" button
+- Remove "Register" button  
+- Keep "Admin ↗" button exactly as is
+- Add "Student" button next to Admin
+
+CHANGE 2: Hide all content behind login
+- Before login: show only a beautiful landing/hero page
+- After login as Student: show all job content (Main, 
+  Application Tracker, Deadline Alerts, Referral Hub, 
+  Saved Jobs, Resume Match)
+- After login as Admin: show admin modal as before
+
+DO NOT modify:
+- Admin modal logic
+- Any API routes
+- Any job fetching logic
+- middleware.ts
+- Any other pages
+
+ONLY modify:
+- components/Navbar.tsx (button changes)
+- app/job-updates/page.tsx or app/page.tsx (gate content)
+- Create components/StudentAuthModal.tsx (student login/register)
+- Create components/LandingGate.tsx (shown before login)
+
+════════════════════════════════════════
+STEP 1 — STUDENT AUTH (localStorage based)
+════════════════════════════════════════
+
+No database needed. Use localStorage to store 
+student session. Simple email + password stored 
+locally (this is a demo portal).
+
+CREATE lib/student-auth.ts:
+
+export interface Student {
+  name: string
+  email: string
+  registeredAt: string
+}
+
+const KEY = 'jobupdate_student'
+const SESSION_KEY = 'jobupdate_student_session'
+
+// Register new student
+export function registerStudent(
+  name: string,
+  email: string,
+  password: string
+): { success: boolean; error?: string } {
+  if (!name.trim() || !email.trim() || !password.trim()) {
+    return { success: false, error: 'All fields are required' }
+  }
+  if (!email.includes('@')) {
+    return { success: false, error: 'Enter a valid email' }
+  }
+  if (password.length < 6) {
+    return { 
+      success: false, 
+      error: 'Password must be at least 6 characters' 
+    }
+  }
+
+  // Check if already registered
+  try {
+    const existing = localS
+<truncated 34014 bytes>
+*/}
+    </div>
+  )
+}
+
+════════════════════════════════════════
+FILES TO CREATE:
+════════════════════════════════════════
+
+CREATE (new files only):
+- lib/student-auth.ts
+- components/StudentAuthModal.tsx
+- components/LandingGate.tsx
+
+MODIFY (targeted changes only):
+- components/Navbar.tsx
+    → Remove Login button
+    → Remove Register button
+    → Keep Admin ↗ button unchanged
+    → Add Student button
+    → Add student dropdown when logged in
+    → Add StudentAuthModal import + usage
+
+- app/job-updates/page.tsx
+    → Add auth gate at top
+    → Keep ALL existing content unchanged
+    → Show LandingGate if not logged in
+
+- app/page.tsx (if it exists as home)
+    → Same auth gate as above
+
+DO NOT TOUCH:
+- middleware.ts
+- Any API routes
+- Any job fetching files
+- Admin modal or admin files
+- lib/admin-config.ts
+- lib/admin-storage.ts
+- app/admin/* anything
+- components/AdminModal.tsx
+- Any CSS or Tailwind config
+- next.config.js
+- package.json
+
+════════════════════════════════════════
+RESULT AFTER THESE CHANGES:
+════════════════════════════════════════
+
+Navbar shows:
+[Main] [App Tracker] [Deadline Alerts] [Referral Hub] 
+[Saved Jobs] [Resume Match] [🌙] [🔔] [Admin ↗] [Student]
+
+When Student clicks "Student" → modal opens with 
+Login / Register tabs
+
+After login:
+[Admin ↗] [👤 Karthik ▾] ← dropdown with logout
+
+Before login visiting /job-updates:
+→ Shows LandingGate (beautiful hero + features)
+→ "Get Started Free" opens register modal
+→ After login → job content appears
+
+After login visiting /job-updates:
+→ Shows all job categories immediately
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T15:19:56+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+i logged in using admin but inside it showing login to access for free resolve this
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T15:27:50+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+give admin access to see all data inside webpage after login as a admin and also add student phone number and whatsapp number and college name while registering . after logged in a a admin it shows like in the photo
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T15:31:36+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T15:39:05+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+i want student data who is registered in the for website for that add https://forms.gle/cJfGne7FhhpHvQR6A this link in registaer section and make it as mandatory field and also while registering phone number and whats app number will be mandatory
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T16:01:34+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in mandatory field remove check box and create seperate name as google from and make it as compulsory field
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T16:04:27+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T16:05:13+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Gemini 3.1 Pro (Low) to Claude Opus 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+remove name/email used in google form just place google form link
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T16:07:55+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in registration from make all fields as mandatory fields
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T16:10:25+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+make all fields in registration from as mandatory fields with * mark
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T16:12:20+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+this page looks like ai generated so i want change it all buttons to black colour and also i want ui looks like human created
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T16:22:20+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T16:24:53+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+remove google from section in my registrations from 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T16:34:14+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Claude Opus 4.6 (Thinking) to GPT-OSS 120B (Medium). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+In my Next.js JobUpdate portal, save ALL student registration 
+data and make it accessible in the Admin modal.
+
+CURRENT SITUATION:
+- Students register with: name, email, password, phone, 
+  whatsapp, college name
+- Data is saved in localStorage only on the student's browser
+- Admin cannot see any student data
+
+GOAL:
+- Save student data to a JSON file on the server (like admin jobs)
+- Admin modal shows all registered students with their details
+- No database needed — use the same JSON file storage pattern
+
+DO NOT modify:
+- Any job fetching logic
+- middleware.ts
+- Any other pages except the ones listed below
+
+════════════════════════════════════════
+STEP 1 — UPDATE lib/admin-storage.ts
+════════════════════════════════════════
+
+ADD these student storage functions to your 
+existing lib/admin-storage.ts file:
+
+// ── ADD at the bottom of admin-storage.ts ──
+
+export interface StudentRecord {
+  id: string
+  name: string
+  email: string
+  phone: string
+  whatsapp: string
+  college: string
+  registeredAt: string
+  lastLoginAt: string
+  loginCount: number
+}
+
+export function getStudents(): StudentRecord[] {
+  ensureDir()
+  const file = path.join(DATA_DIR, 'students.json')
+  try {
+    if (!fs.existsSync(file)) return []
+    return JSON.parse(fs.readFileSync(file, 'utf-8'))
+  } catch { return [] }
+}
+
+export function saveStudents(students: StudentRecord[]): void {
+  ensureDir()
+  fs.writeFileSync(
+    path.join(DATA_DIR, 'students.json'),
+    JSON.stringify(students, null, 2)
+  )
+}
+
+export function registerStudentServer(data: {
+  name: string
+  email: string
+  phone: string
+  whatsapp: string
+  college: string
+  passwordHash: string
+}): { success: boolean; error?: string; student?: StudentRecord } {
+  const students = getStudents()
+
+  // Check duplicate email
+  const exists = students.find(
+    s => s.email.toLowerCase() === data.email.toLowerC
+<truncated 22541 bytes>
+═════════════════════════
+
+CREATE:
+- app/api/student/register/route.ts
+- app/api/student/login/route.ts
+- app/api/admin/students/route.ts
+
+MODIFY:
+- lib/admin-storage.ts
+    (add StudentRecord interface + student functions)
+- components/StudentAuthModal.tsx
+    (update handleRegister + handleLogin to call API)
+    (update regForm state to include phone/whatsapp/college)
+    (add phone, whatsapp, college input fields)
+- components/AdminModal.tsx
+    (add Students tab with full student data display)
+
+DO NOT TOUCH:
+- middleware.ts
+- Any job API routes
+- Any job fetching logic
+- Navbar.tsx
+- LandingGate.tsx
+- lib/admin-config.ts
+- next.config.js
+
+════════════════════════════════════════
+DATA STORAGE LOCATION:
+════════════════════════════════════════
+
+Students are saved in:
+  data/students.json       ← full student records
+  data/student-auth.json   ← password hashes only
+
+Admin can view at:
+  Admin Modal → Students tab
+  (visible after admin login)
+
+Direct file access:
+  Open data/students.json in VS Code to see all 
+  student records in JSON format
+
+════════════════════════════════════════
+WHAT ADMIN SEES PER STUDENT:
+════════════════════════════════════════
+
+For each registered student:
+✓ Serial number (#1, #2, #3...)
+✓ Full name (with avatar initial)
+✓ Registration date
+✓ Email address
+✓ Phone number (with Call link)
+✓ WhatsApp number (with WhatsApp direct link)
+✓ College name
+✓ Total login count
+✓ Last login date
+✓ Delete student button
+
+Stats at top:
+✓ Total students registered
+✓ Students joined this week
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:01:43+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+In my Next.js JobUpdate portal, save ALL student registration 
+data and make it accessible in the Admin modal.
+
+CURRENT SITUATION:
+- Students register with: name, email, password, phone, 
+  whatsapp, college name
+- Data is saved in localStorage only on the student's browser
+- Admin cannot see any student data
+
+GOAL:
+- Save student data to a JSON file on the server (like admin jobs)
+- Admin modal shows all registered students with their details
+- No database needed — use the same JSON file storage pattern
+
+DO NOT modify:
+- Any job fetching logic
+- middleware.ts
+- Any other pages except the ones listed below
+
+════════════════════════════════════════
+STEP 1 — UPDATE lib/admin-storage.ts
+════════════════════════════════════════
+
+ADD these student storage functions to your 
+existing lib/admin-storage.ts file:
+
+// ── ADD at the bottom of admin-storage.ts ──
+
+export interface StudentRecord {
+  id: string
+  name: string
+  email: string
+  phone: string
+  whatsapp: string
+  college: string
+  registeredAt: string
+  lastLoginAt: string
+  loginCount: number
+}
+
+export function getStudents(): StudentRecord[] {
+  ensureDir()
+  const file = path.join(DATA_DIR, 'students.json')
+  try {
+    if (!fs.existsSync(file)) return []
+    return JSON.parse(fs.readFileSync(file, 'utf-8'))
+  } catch { return [] }
+}
+
+export function saveStudents(students: StudentRecord[]): void {
+  ensureDir()
+  fs.writeFileSync(
+    path.join(DATA_DIR, 'students.json'),
+    JSON.stringify(students, null, 2)
+  )
+}
+
+export function registerStudentServer(data: {
+  name: string
+  email: string
+  phone: string
+  whatsapp: string
+  college: string
+  passwordHash: string
+}): { success: boolean; error?: string; student?: StudentRecord } {
+  const students = getStudents()
+
+  // Check duplicate email
+  const exists = students.find(
+    s => s.email.toLowerCase() === data.email.toLowerC
+<truncated 22541 bytes>
+═════════════════════════
+
+CREATE:
+- app/api/student/register/route.ts
+- app/api/student/login/route.ts
+- app/api/admin/students/route.ts
+
+MODIFY:
+- lib/admin-storage.ts
+    (add StudentRecord interface + student functions)
+- components/StudentAuthModal.tsx
+    (update handleRegister + handleLogin to call API)
+    (update regForm state to include phone/whatsapp/college)
+    (add phone, whatsapp, college input fields)
+- components/AdminModal.tsx
+    (add Students tab with full student data display)
+
+DO NOT TOUCH:
+- middleware.ts
+- Any job API routes
+- Any job fetching logic
+- Navbar.tsx
+- LandingGate.tsx
+- lib/admin-config.ts
+- next.config.js
+
+════════════════════════════════════════
+DATA STORAGE LOCATION:
+════════════════════════════════════════
+
+Students are saved in:
+  data/students.json       ← full student records
+  data/student-auth.json   ← password hashes only
+
+Admin can view at:
+  Admin Modal → Students tab
+  (visible after admin login)
+
+Direct file access:
+  Open data/students.json in VS Code to see all 
+  student records in JSON format
+
+════════════════════════════════════════
+WHAT ADMIN SEES PER STUDENT:
+════════════════════════════════════════
+
+For each registered student:
+✓ Serial number (#1, #2, #3...)
+✓ Full name (with avatar initial)
+✓ Registration date
+✓ Email address
+✓ Phone number (with Call link)
+✓ WhatsApp number (with WhatsApp direct link)
+✓ College name
+✓ Total login count
+✓ Last login date
+✓ Delete student button
+
+Stats at top:
+✓ Total students registered
+✓ Students joined this week
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:04:26+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:06:07+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+where  do i can see registered student data
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:14:37+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+there is no student tab to see registered student data
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:23:47+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+## Error Type
+Build Error
+
+## Error Message
+  x Unterminated string constant
+
+## Build Output
+./components/AdminModal.tsx
+Error:   x Unterminated string constant
+     ,-[C:\Job updates\components\AdminModal.tsx:669:1]
+ 666 |                   )}
+ 667 |                 </div>
+ 668 |                 {showStudents && (
+ 669 |                   <div className=\"px-6 py-6 md:px-8 md:py-8 border-t border-gray-100 dark:border-slate-800\">
+     :                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 670 |                     <h2 className=\"text-lg font-bold mb-4 text-gray-900 dark:text-white\">Registered Students</h2>
+ 671 |                     {studentsLoading ? (
+ 672 |                       <p className=\"text-gray-500 dark:text-gray-400\">Loading...</p>
+     `----
+  x Expected unicode escape
+     ,-[C:\Job updates\components\AdminModal.tsx:669:1]
+ 666 |                   )}
+ 667 |                 </div>
+ 668 |                 {showStudents && (
+ 669 |                   <div className=\"px-6 py-6 md:px-8 md:py-8 border-t border-gray-100 dark:border-slate-800\">
+     :                                  ^
+ 670 |                     <h2 className=\"text-lg font-bold mb-4 text-gray-900 dark:text-white\">Registered Students</h2>
+ 671 |                     {studentsLoading ? (
+ 672 |                       <p className=\"text-gray-500 dark:text-gray-400\">Loading...</p>
+     `----
+  x Expected '</', got 'string literal'
+     ,-[C:\Job updates\components\AdminModal.tsx:669:1]
+ 666 |                   )}
+ 667 |                 </div>
+ 668 |                 {showStudents && (
+ 669 |                   <div className=\"px-6 py-6 md:px-8 md:py-8 border-t border-gray-100 dark:border-slate-800\">
+     :                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 670 |                     <h2 className=\"text-lg font-bold mb-4 text-gray-900 dark:text-white\">Registered Students</h2>
+ 671 |                     {studentsLoading ? (
+ 672 |                       <p className=\"text-gray-500 dark:text-gray-400\">Loading...</p>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/AdminModal.tsx
+./components/layout/Navbar.tsx
+
+Next.js version: 16.2.6 (Webpack)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:25:18+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+## Error Type
+Build Error
+
+## Error Message
+  x Unterminated string constant
+
+## Build Output
+./components/AdminModal.tsx
+Error:   x Unterminated string constant
+     ,-[C:\Job updates\components\AdminModal.tsx:670:1]
+ 667 |                 </div>
+ 668 |                 {showStudents && (
+ 669 |                   <div className="px-6 py-6 md:px-8 md:py-8 border-t border-gray-100 dark:border-slate-800">
+ 670 |                     <h2 className=\"text-lg font-bold mb-4 text-gray-900 dark:text-white\">Registered Students</h2>
+     :                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 671 |                     {studentsLoading ? (
+ 672 |                       <p className=\"text-gray-500 dark:text-gray-400\">Loading...</p>
+ 673 |                     ) : students.length === 0 ? (
+     `----
+  x Expected unicode escape
+     ,-[C:\Job updates\components\AdminModal.tsx:670:1]
+ 667 |                 </div>
+ 668 |                 {showStudents && (
+ 669 |                   <div className="px-6 py-6 md:px-8 md:py-8 border-t border-gray-100 dark:border-slate-800">
+ 670 |                     <h2 className=\"text-lg font-bold mb-4 text-gray-900 dark:text-white\">Registered Students</h2>
+     :                                   ^
+ 671 |                     {studentsLoading ? (
+ 672 |                       <p className=\"text-gray-500 dark:text-gray-400\">Loading...</p>
+ 673 |                     ) : students.length === 0 ? (
+     `----
+  x Expected '</', got 'string literal'
+     ,-[C:\Job updates\components\AdminModal.tsx:670:1]
+ 667 |                 </div>
+ 668 |                 {showStudents && (
+ 669 |                   <div className="px-6 py-6 md:px-8 md:py-8 border-t border-gray-100 dark:border-slate-800">
+ 670 |                     <h2 className=\"text-lg font-bold mb-4 text-gray-900 dark:text-white\">Registered Students</h2>
+     :                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 671 |                     {studentsLoading ? (
+ 672 |                       <p className=\"text-gray-500 dark:text-gray-400\">Loading...</p>
+ 673 |                     ) : students.length === 0 ? (
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/AdminModal.tsx
+./components/layout/Navbar.tsx
+
+Next.js version: 16.2.6 (Webpack)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:27:14+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+http://localhost:3000
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:29:56+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+## Error Type
+Build Error
+
+## Error Message
+  x Unterminated string constant
+
+## Build Output
+./components/AdminModal.tsx
+Error:   x Unterminated string constant
+     ,-[C:\Job updates\components\AdminModal.tsx:672:1]
+ 669 |                   <div className="px-6 py-6 md:px-8 md:py-8 border-t border-gray-100 dark:border-slate-800">
+ 670 |                     <h2 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Registered Students</h2>
+ 671 |                     {studentsLoading ? (
+ 672 |                       <p className=\"text-gray-500 dark:text-gray-400\">Loading...</p>
+     :                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 673 |                     ) : students.length === 0 ? (
+ 674 |                       <p className=\"text-gray-500 dark:text-gray-400\">No students registered yet.</p>
+ 675 |                     ) : (
+     `----
+  x Expected unicode escape
+     ,-[C:\Job updates\components\AdminModal.tsx:672:1]
+ 669 |                   <div className="px-6 py-6 md:px-8 md:py-8 border-t border-gray-100 dark:border-slate-800">
+ 670 |                     <h2 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Registered Students</h2>
+ 671 |                     {studentsLoading ? (
+ 672 |                       <p className=\"text-gray-500 dark:text-gray-400\">Loading...</p>
+     :                                    ^
+ 673 |                     ) : students.length === 0 ? (
+ 674 |                       <p className=\"text-gray-500 dark:text-gray-400\">No students registered yet.</p>
+ 675 |                     ) : (
+     `----
+  x Expected '</', got 'string literal'
+     ,-[C:\Job updates\components\AdminModal.tsx:672:1]
+ 669 |                   <div className="px-6 py-6 md:px-8 md:py-8 border-t border-gray-100 dark:border-slate-800">
+ 670 |                     <h2 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Registered Students</h2>
+ 671 |                     {studentsLoading ? (
+ 672 |                       <p className=\"text-gray-500 dark:text-gray-400\">Loading...</p>
+     :                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 673 |                     ) : students.length === 0 ? (
+ 674 |                       <p className=\"text-gray-500 dark:text-gray-400\">No students registered yet.</p>
+ 675 |                     ) : (
+     `----
+
+Caused by:
+    Syntax Error
+
+Next.js version: 16.2.6 (Webpack)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:30:24+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in student portal i registered as a student but in my admin portal showing no students registerd yet as shown in the figure 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:47:21+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Logged in as Admin
+
+Full access enabled
+
+Logout
+MANAGE JOB POSTINGS
+
+Hide Students
+Add Job
+No jobs posted yet
+
+Add your first job →
+Registered Students
+No students registered yet.
+    this text shown in my admin dashboard
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:52:19+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Apply the two code changes above (API route and form handler).
+Restart the dev server (kill old PID if needed).
+Test the registration flow again.    do these actions
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:55:21+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+no ill see same 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-29T17:58:09+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Fix ONLY the student data display in the Admin Dashboard modal.
+
+PROBLEM:
+- Student registered successfully (stored in localStorage)
+- Admin modal shows "No students registered yet"
+- Root cause: Registration saves to localStorage on client side
+  BUT admin API reads from data/students.json on server side
+- These two storage locations are completely disconnected
+
+THE FIX:
+Make student registration call the server API which saves to 
+data/students.json — so admin can read it.
+
+ONLY MODIFY THESE FILES:
+1. components/StudentAuthModal.tsx
+2. app/api/student/register/route.ts  
+3. app/api/admin/students/route.ts
+4. lib/admin-storage.ts
+
+DO NOT touch anything else.
+
+════════════════════════════════════════
+STEP 1 — VERIFY lib/admin-storage.ts HAS STUDENT CODE
+════════════════════════════════════════
+
+Open lib/admin-storage.ts and check if these 
+functions exist at the bottom:
+- getStudents()
+- saveStudents()
+- registerStudentServer()
+- loginStudentServer()
+- saveStudentPassword()
+- deleteStudent()
+
+IF THEY DO NOT EXIST, add this complete block 
+at the very bottom of lib/admin-storage.ts:
+
+// ─────────────────────────────────────────────
+// STUDENT STORAGE — add at bottom of file
+// ─────────────────────────────────────────────
+
+export interface StudentRecord {
+  id: string
+  name: string
+  email: string
+  phone: string
+  whatsapp: string
+  college: string
+  registeredAt: string
+  lastLoginAt: string
+  loginCount: number
+}
+
+export function getStudents(): StudentRecord[] {
+  ensureDir()
+  const file = path.join(DATA_DIR, 'students.json')
+  try {
+    if (!fs.existsSync(file)) {
+      fs.writeFileSync(file, '[]')
+      return []
+    }
+    const raw = fs.readFileSync(fi
+<truncated 16292 bytes>
+══
+QUICK FIX — MANUAL STEP (do this NOW):
+════════════════════════════════════════
+
+Since you're already registered but data isn't
+in the server file, do this manual fix:
+
+1. Open your project folder
+2. Create folder: data/ (if not exists)
+3. Create file: data/students.json
+4. Add your student data manually:
+
+[
+  {
+    "id": "student_manual_001",
+    "name": "Your Name Here",
+    "email": "your@email.com",
+    "phone": "your phone",
+    "whatsapp": "your whatsapp",
+    "college": "your college",
+    "registeredAt": "2026-05-29T00:00:00.000Z",
+    "lastLoginAt": "2026-05-29T00:00:00.000Z",
+    "loginCount": 1
+  }
+]
+
+Replace the values with your actual registration data.
+After this, restart npm run dev and open Admin modal 
+→ Students tab — your data will appear immediately.
+
+Then going forward, all NEW registrations will 
+automatically save to this file via the API.
+
+════════════════════════════════════════
+FILES TO CREATE/MODIFY:
+════════════════════════════════════════
+
+CREATE (if not exist):
+- app/api/student/register/route.ts
+- app/api/student/login/route.ts  
+- app/api/student/migrate/route.ts
+- app/api/admin/students/route.ts
+- data/students.json (manual creation with your data)
+
+MODIFY:
+- lib/admin-storage.ts
+    (add student functions if missing)
+- components/StudentAuthModal.tsx
+    (replace handleRegister + handleLogin 
+     to use server API instead of localStorage)
+    (add useEffect migration call)
+- components/AdminModal.tsx
+    (ensure fetchStudents uses cache:'no-store')
+    (ensure fetchStudents called on login + tab click)
+
+DO NOT TOUCH:
+- middleware.ts
+- Any job fetching files
+- Any other components
+- next.config.js
+- tailwind.config.ts
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-30T11:52:08+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-30T11:54:56+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-30T11:59:55+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+proceed with these actions
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-30T12:10:41+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+proceed
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-30T12:12:09+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in admin dashboard under login button its showing admin id and password remove it
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-30T12:18:37+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+check whether my webpage is working perfectly and also in future after deploying is there any chance to get errors
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-30T12:29:06+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in job fetching section jobs is fectching but in all those jobs after click on apply lot of showing page not found or error rectify it
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-30T15:06:36+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+ ## Error Type
+Runtime ReferenceError
+
+## Error Message
+router is not defined
+
+
+    at onClick (components\JobCard.tsx:245:15)
+
+## Code Frame
+  243 |               });
+  244 |               // Navigate to internal apply page
+> 245 |               router.push(`/jobs/${job.id}/apply`);
+      |               ^
+  246 |             }}
+  247 |             className="flex-1 inline-flex items-center justify-center gap-1.5 min-w-0 w-f...
+  248 |           >
+
+Next.js version: 16.2.6 (Webpack)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-30T15:13:14+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+ apply is not working work on it
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-30T15:17:46+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Redesign ONLY the Job Updates page hero section and job category cards. Do NOT modify any other sections, navigation, colors, routes, functionality, backend logic, filters, profile card, notifications panel, or existing components.
+
+HERO SECTION IMPROVEMENTS:
+
+The current hero section looks too empty and does not feel like the main landing area. Transform it into a premium modern SaaS dashboard hero section.
+
+Requirements:
+
+• Increase hero section height to 380-450px
+• Use a modern gradient background (blue → indigo → purple)
+• Add glassmorphism effects
+• Add floating animated elements
+• Add subtle glow effects
+• Add depth with layered cards and shadows
+• Keep existing statistics but redesign them as premium KPI cards
+• Add animated pulse indicators for live updates
+• Add a modern illustration or 3D job briefcase graphic on the right side
+• Add floating notification cards showing:
+   - New Internship Found
+   - New MNC Opening
+   - Resume Match 98%
+• Create a stronger headline:
+
+"Your Next Opportunity is Just One Update Away"
+
+• Add supporting text:
+"AI-powered job tracking with real-time internship, MNC, banking, government, startup and referral opportunities."
+
+• Add feature badges:
+   ✓ Real-Time Updates
+   ✓ Resume Matching
+   ✓ AI Recommendations
+   ✓ Trusted Sources
+
+• Add entrance animations using Framer Motion
+• Add floating animations using CSS keyframes
+• Add subtle particle effects
+• Make the hero section visually dominate the page
+
+LEFT SIDE IMPROVEMENTS:
+
+The left side of the page currently feels empty.
+
+Create a Live Job Feed sidebar.
+
+Requirements:
+
+• Width: 280-320px
+• Fixed vertical card
+• Auto-scrolling ticker animation
+• Continuously cycle latest job updates
+• Show company logos
+• Show company name
+• Show role title
+• Show "NEW" badges
+• Show posted time
+• Auto-scroll infinitely
+• Pause scrolling on hover
+• Smooth animation
+• Use gradient borders and glassmorphism styling
+
+Example feed items:
+
+TCS – Multipl
+<truncated 141 bytes>
+Engineer
+SBI – PO
+Capgemini – Analyst
+Government Jobs – UPSC
+Unstop – Internships
+
+JOB CATEGORY SECTION IMPROVEMENTS:
+
+Current cards are too small.
+
+Increase width significantly.
+
+Requirements:
+
+• Increase category card width by 80-100%
+• Use a responsive 2-column layout on desktop
+• Each category section should occupy much more horizontal space
+• Card height minimum 500px
+• Job cards inside should be larger
+• Increase internal padding
+• Increase spacing between elements
+• Make Apply buttons larger
+• Improve visual hierarchy
+• Add hover animations
+• Add subtle shadows
+• Better typography scaling
+
+Desktop Layout:
+
+[ Live Feed ] [ Internship Jobs (Large Width) ] [ MNC Jobs (Large Width) ]
+
+[ Live Feed ] [ Banking Jobs (Large Width) ] [ Government Jobs (Large Width) ]
+
+Job category cards should feel like primary content blocks, not small widgets.
+
+RESPONSIVENESS:
+
+Desktop:
+• Live Feed Sidebar visible
+• 2 large category columns
+• Hero full width
+
+Tablet:
+• Live Feed moves above content
+• Hero stacks vertically
+• Category cards become single column
+
+Mobile:
+• Hero fully stacked
+• Live feed becomes horizontal slider
+• Single-column job sections
+• Maintain all animations with optimized performance
+
+ANIMATIONS:
+
+• Floating hero elements
+• Auto-scrolling job feed
+• Hover lift effects
+• KPI counter animations
+• Smooth transitions
+• Framer Motion page animations
+• Glassmorphism effects
+• Gradient glow borders
+
+IMPORTANT:
+
+DO NOT MODIFY:
+- Header/Navbar
+- Profile Card
+- Notification Section
+- Existing Filters
+- Existing Backend Logic
+- API Calls
+- Database Structure
+- Routing
+- Authentication
+- Existing Features
+
+ONLY improve:
+1. Hero Section
+2. Left Empty Area (Live Job Feed)
+3. Width and size of Job Category Sections
+
+Maintain existing design language, color palette, and branding while making the page feel like a premium modern SaaS dashboard.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-02T16:15:21+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Error: Cannot find module './1682.js'
+Require stack:
+- C:\Job updates\.next\server\webpack-runtime.js
+- C:\Job updates\.next\server\app\api\saved-jobs\[id]\route.js
+- C:\Job updates\node_modules\next\dist\server\require.js
+- C:\Job updates\node_modules\next\dist\server\load-components.js
+- C:\Job updates\node_modules\next\dist\build\utils.js
+- C:\Job updates\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Job updates\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Job updates\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Job updates\node_modules\next\dist\server\lib\router-server.js
+- C:\Job updates\node_modules\next\dist\server\lib\start-server.js
+
+This error happened while generating the page. Any console logs will be displayed in the terminal window.
+Call Stack
+Next.js
+Array.reduce
+<anonymous>
+Next.js
+Array.map
+<anonymous>
+Next.js
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-02T18:07:40+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+proceed
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-02T18:11:25+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-02T18:20:41+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+In my Next.js JobUpdate portal, make these TWO changes 
+to the landing page (LandingGate component):
+
+1. Replace LEFT "Live Snapshot" panel with an 
+   auto-scrolling animated jobs feed ticker
+2. Make the CENTER hero section more animated
+
+DO NOT modify any other files or sections.
+ONLY modify: components/LandingGate.tsx
+
+════════════════════════════════════════
+CHANGE 1 — LEFT PANEL: AUTO-SCROLLING JOBS FEED
+════════════════════════════════════════
+
+Replace the entire left "LIVE SNAPSHOT / Activity Panel" 
+section with this animated infinite scroll jobs ticker.
+
+The left panel should show a vertical feed of job cards 
+that auto-scroll upward infinitely with smooth animation.
+
+COMPLETE LEFT PANEL REPLACEMENT:
+
+{/* ── LEFT: Auto-scrolling Jobs Feed ── */}
+<div className="hidden lg:flex flex-col w-64 xl:w-72 
+                flex-shrink-0">
+  
+  {/* Panel header */}
+  <div className="flex items-center justify-between mb-3 px-1">
+    <div className="flex items-center gap-2">
+      <div className="w-2 h-2 bg-green-500 rounded-full 
+                      animate-pulse" />
+      <span className="text-xs font-bold text-gray-500 
+                       uppercase tracking-widest">
+        Live Jobs Feed
+      </span>
+    </div>
+    <span className="text-xs text-gray-400">
+      Auto-updating
+    </span>
+  </div>
+
+  {/* Scrolling container */}
+  <div className="relative flex-1 overflow-hidden rounded-2xl 
+                  border border-gray-200 bg-white shadow-sm"
+       style={{ height: '520px' }}>
+    
+    {/* Top fade gradient */}
+    <div className="absolute top-0 left-0 right-0 h-12 
+                    bg-gradient-to-b from-white to-transparent 
+                    z-10 pointer-events-none" />
+    
+    {/* Bottom fade gradient */}
+    <div className="absolute bottom-0 left-0 right-0 h-12 
+                    bg-gradient-to-t from-whit
+<truncated 16265 bytes>
+-to-br 
+                from-slate-50 via-blue-50/40 to-white">
+  
+  {/* MAIN HERO AREA — 3 column layout */}
+  <div className="max-w-7xl mx-auto px-4 pt-8 pb-8 
+                  flex items-start gap-6">
+    
+    {/* LEFT: Auto-scrolling jobs feed (new) */}
+    <div className="hidden lg:flex flex-col w-64 xl:w-72 
+                    flex-shrink-0">
+      ... jobs ticker ...
+    </div>
+
+    {/* CENTER: Animated hero content (updated) */}
+    <div className="flex-1 text-center lg:text-left">
+      ... animated hero ...
+    </div>
+
+    {/* RIGHT: Keep existing right panel UNCHANGED */}
+    <div className="hidden xl:flex flex-col w-64 
+                    flex-shrink-0">
+      ... existing right panel unchanged ...
+    </div>
+
+  </div>
+
+  {/* FEATURES GRID — keep unchanged below */}
+  ... existing features unchanged ...
+
+  {/* STUDENT AUTH MODAL — keep unchanged */}
+  <StudentAuthModal ... />
+</div>
+
+════════════════════════════════════════
+IMPORTANT NOTES:
+════════════════════════════════════════
+
+1. The scroll animation speed is controlled by 
+   the duration in animate-scroll-up (40s = slower, 
+   20s = faster). Adjust to preference.
+
+2. The jobs feed uses STATIC data (LIVE_FEED_JOBS array) 
+   — it does NOT make API calls. This keeps it fast 
+   and always populated.
+
+3. framer-motion is already installed in your project 
+   (it's in package.json) — no new packages needed.
+
+4. The right panel stays COMPLETELY UNCHANGED.
+
+5. The features grid below stays COMPLETELY UNCHANGED.
+
+6. The StudentAuthModal stays COMPLETELY UNCHANGED.
+
+ONLY MODIFY:
+- components/LandingGate.tsx (left panel + hero)
+- tailwind.config.ts (add scroll-up keyframe only)
+
+DO NOT TOUCH:
+- Any other component
+- Any API route
+- middleware.ts
+- lib/ files
+- app/ pages
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T11:34:04+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Keep every existing section, spacing, layout, card size, typography, colors, statistics, right activity panel, bottom cards, and overall dashboard structure exactly as it is. Do not move, resize, redesign, or modify any existing section except the left sidebar and hero visual area.
+
+Replace the left "Live Snapshot" card with a premium "Jobs Feed" panel.
+
+The Jobs Feed should be vertically auto-scrolling with smooth infinite animation, showing real-time job updates.
+
+Each feed item must contain:
+
+Official company logo
+Company name
+Job role title
+Posted time (e.g., 2 min ago, 5 min ago)
+Small "New" badge
+
+Example entries:
+
+TCS logo + TCS + Software Engineer
+Infosys logo + Infosys + System Engineer
+HDFC Bank logo + Relationship Manager
+Accenture logo + Business Analyst
+Deloitte logo + Consultant
+Wipro logo + Project Engineer
+
+Add a thin animated scrollbar indicator on the right side of the Jobs Feed to indicate continuous live updates.
+
+At the bottom of the Jobs Feed add:
+"Live Updates • Auto-Scrolling" with a subtle pulse animation.
+
+Hero Section Enhancement (without changing layout):
+
+Keep the headline, description, Refresh Jobs button, statistics cards, dimensions, alignment, spacing, and content exactly unchanged.
+
+Only make the hero area feel more alive by adding:
+
+Floating glowing particles
+Subtle gradient light effects
+Animated upward trend graph
+Floating job briefcase icon
+Floating rocket icon
+Floating bank/building icon
+Soft glassmorphism illustration
+Gentle pulse animation behind the illustration
+Smooth micro-interactions and motion effects
+
+Animation must be elegant, minimal, premium, and professional.
+
+Avoid flashy effects, excessive glow, large illustrations, color changes, section movement, or layout shifts.
+
+Important: Do not modify any other section of the page. Preserve the exact existing design system, card sizes, padding, borders, typography, colors, and dashboard layout. Only upgrade the left sidebar into an animated Jobs Feed and add subtle motion/visual intelligence to the hero section.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T11:45:34+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T11:47:18+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T11:49:41+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+./components/JobUpdatesHero.tsx
+Error: 
+  x Unexpected token `section`. Expected jsx identifier
+    ,-[C:\Job updates\components\JobUpdatesHero.tsx:31:1]
+ 31 |     : 'Pending';
+ 32 | 
+ 33 |   return (
+ 34 |     <section className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 shadow-sm min-h-[420px] backdrop-blur-lg bg-white/10">
+    :      ^^^^^^^
+ 35 |       <div className="absolute inset-0 bg-gradient-to-br from-[#FFFDFD] via-[#F9F5FF] to-[#F3F4F6]" />
+ 36 |       <div className="absolute -left-16 -top-12 h-72 w-72 rounded-full bg-purple-200/40 blur-3xl" />
+ 36 |       <div className="absolute right-0 top-16 h-72 w-72 rounded-full bg-slate-100/80 blur-3xl" />
+    `----
+
+Caused by:
+    Syntax Error
+This error occurred during the build process and can only be dismissed by fixing the error.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T11:52:20+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Keep the entire dashboard exactly as it is. Do not change, move, resize, redesign, remove, recolor, or modify any existing section, card, navigation item, statistic block, spacing, typography, border radius, shadows, dimensions, layout structure, or content. Preserve the current design system 100%.
+
+Remove the right-side duplicate Live Updates / Activity Panel completely.
+
+Do not replace it with another card or panel. Instead, allow the hero section to naturally utilize that visual space while maintaining the existing dashboard alignment and layout balance.
+
+Enhance only the hero section to make it feel premium, intelligent, and interactive without changing its structure.
+
+Keep:
+
+"Real-Time Updates" badge
+Main headline
+Description text
+Refresh Jobs Now button
+Updated time text
+Existing statistics cards below
+
+exactly in their current positions.
+
+Add a futuristic animated visual area on the right side of the hero section featuring:
+
+Floating 3D glassmorphism analytics panel
+Animated upward growth graph with glowing data points
+Smooth graph-line motion animation
+Floating briefcase icon representing jobs
+Floating bank/building icon representing MNC and banking opportunities
+Floating rocket icon representing career growth
+Subtle particle effects
+Soft glowing orbs
+Ambient gradient light effects
+Light glass reflections
+Hover-responsive micro-interactions
+Gentle pulse animations
+Depth and parallax effects
+
+Animation style should be:
+
+Professional
+Premium SaaS dashboard quality
+Minimal
+Smooth
+Elegant
+Not flashy
+Performance optimized
+
+Jobs Feed Section
+
+Keep the current Jobs Feed layout unchanged.
+
+Maintain:
+
+Auto-scrolling live feed
+Company logos
+Company names
+Job titles
+Posted times
+New badges
+Live status indicators
+Animated scrollbar
+"Live Updates • Auto-Scrolling" footer
+
+Do not modify its dimensions, spacing, colors, or design.
+
+Critical Requirement:
+
+The final result should look like the same dashboard design, with the right-side duplicate panel removed and the hero section upgraded into a visually engaging animated AI-powered career intelligence center. No other section should be changed in any way.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T12:00:56+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from GPT-OSS 120B (Medium) to Gemini 3.1 Pro (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Keep the entire dashboard design exactly as it currently appears. Do not change, move, resize, redesign, recolor, replace, or modify any existing section, navigation item, button, statistic card, typography, spacing, shadows, border radius, layout structure, alignment, content hierarchy, or visual style. Preserve the current UI design system 100%.
+
+Jobs Feed Section Enhancement Only
+
+Keep the existing Jobs Feed design, styling, colors, auto-scroll behavior, badges, timestamps, live indicators, scrollbar animation, and card appearance unchanged.
+
+Remove all company logos completely.
+
+Display only:
+
+Company Name
+Job Title
+Posted Time
+"New" Badge (when applicable)
+Live Status Indicator
+
+Example:
+
+TCS
+Software Engineer
+2 MIN AGO
+
+Infosys
+System Engineer
+5 MIN AGO
+
+HDFC Bank
+Relationship Manager
+8 MIN AGO
+
+Accenture
+Business Analyst
+12 MIN AGO
+
+Deloitte
+Consultant
+15 MIN AGO
+
+Wipro
+Project Engineer
+18 MIN AGO
+
+Increase the height of the Live Job Feed panel by 20–30% vertically so more job updates are visible at once.
+
+The Jobs Feed should extend further downward while maintaining:
+
+Same width
+Same styling
+Same card design
+Same border radius
+Same spacing system
+Same visual hierarchy
+
+Allow approximately 8–10 visible job entries before scrolling.
+
+Maintain:
+
+Infinite auto-scrolling animation
+Smooth vertical movement
+Live update appearance
+Animated scrollbar indicator
+"Live Updates • Auto-Scrolling" footer
+
+Hero Section
+
+Keep the current enhanced hero section exactly as it is:
+
+Animated growth chart
+Floating briefcase icon
+Floating rocket icon
+Floating banking/MNC icon
+Soft glowing particles
+Glassmorphism visual effects
+Career Growth card
+Ambient gradients
+Micro-interactions
+
+Do not modify anything in the hero section.
+
+Critical Requirement
+
+No other section of the dashboard may be changed in any way.
+
+The only adjustment should be:
+
+Remove company logos from the Jobs Feed.
+Increase the vertical height of the Jobs Feed panel so more live job updates are visible.
+
+Everything else must remain pixel-perfect and unchanged.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T12:07:47+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Convert all category sections (Internships, MNC Jobs, Banking Jobs, Government Jobs, CAT/MBA Paths, Startup Roles) into clickable navigation cards/hyperlinks without changing the existing UI design, colors, spacing, layout, typography, cards, buttons, or responsiveness.
+
+Category Navigation Behavior
+
+Make the entire category header area clickable.
+When a user clicks Internships, navigate to /jobs/internships and display all internship listings from that category.
+When a user clicks MNC Jobs, navigate to /jobs/mnc and display all MNC job listings.
+When a user clicks Banking Jobs, navigate to /jobs/banking and display all banking job listings.
+When a user clicks Government Jobs, navigate to /jobs/government and display all government job listings.
+When a user clicks CAT/MBA Paths, navigate to /jobs/cat-mba and display all CAT/MBA opportunities.
+When a user clicks Startup Roles, navigate to /jobs/startups and display all startup opportunities.
+
+Auto-Scrolling Job Feed
+
+Enable smooth vertical auto-scrolling inside every category panel.
+Auto-scroll should continuously cycle through jobs.
+When the last job is reached, seamlessly loop back to the first job.
+Pause auto-scroll on hover.
+Resume auto-scroll when the mouse leaves.
+Allow manual scrolling at any time.
+Auto-scroll should not interfere with Apply Now, Save, Match Resume, or other button interactions.
+Maintain existing scrollbar styling.
+Keep scrolling smooth and professional with no sudden jumps.
+
+Category Pages
+
+Each category page should display a larger dedicated feed containing all jobs from that category.
+Include pagination or infinite scrolling.
+Preserve the existing job card design exactly.
+Keep all existing filters, Apply Now buttons, Save buttons, salary information, locations, timestamps, and Match Resume functionality.
+
+Important:
+
+Do not change the overall dashboard layout.
+Do not modify colors, spacing, typography, card styles, navigation bar, hero section, filters, or any other existing components.
+Only add category hyperlink navigation and smooth auto-scrolling functionality to the job feeds.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T14:48:23+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+continue with implementation plan
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T14:51:04+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ ⨯ Error: Functions cannot be passed directly to Client Components unless you explicitly expose it by marking it with "use server". Or maybe you meant to call this function rather than return it.
+  {$$typeof: ..., render: function Briefcase}
+                          ^^^^^^^^^^^^^^^^^^
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "1003378611"
+ ✓ Compiled / in 260ms (666 modules)
+ ✓ Compiled /_not-found in 497ms (1322 modules)
+ GET /job-updates 404 in 336ms
+ GET /_next/static/css/app/layout.css?v=1780478680734 404 in 217ms
+ GET /_next/static/chunks/main-app.js?v=1780478680734 404 in 254ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 254ms
+ GET /_next/static/chunks/app/error.js 404 in 252ms
+ GET /_next/static/chunks/app/layout.js 404 in 254ms
+ GET /_next/static/chunks/app/global-error.js 404 in 252ms
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T14:55:17+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Failed to load resource: the server responded with a status of 404 (Not Found)
+app-pages-internals.js:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+error.js:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+main-app.js:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+global-error.js:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+layout.css:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T14:56:33+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in jobs section autoscrollig is working slowly could you increase the speed
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T15:01:03+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+as we seen in the photo change student button from blue to black and also change update away, refresh jobs buttons and also right side animation buttons and graph to black 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T15:06:30+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+make student button to blue and alsoin second photo interships and banking government mnc and startup and cat/mba change this colours from purple to black
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T15:13:40+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+make student button to blue and alsoin second photo interships and banking government mnc and startup and cat/mba change this colours from purple to black
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T15:15:21+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in this page make student login button from blue to black and also change get started free button to black above the get started free button there are 500+ 6 FRee ai these also change to black and also cofidence change it to black and make indias student job portal text to bold and black colour
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T15:25:40+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+change all the blue area from blue to orange
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T15:28:19+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in resume match section and refferral hub section make all blue colour text and buttons to black
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T15:34:07+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in the picture beside the job update change the symbol colour from blue to black
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T15:39:36+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+AS WE SEEN IN THE IMAGE in government jobs section all the jobs fetched from previous year change it to present year and also check whether the auto job fetching system is working properly or not
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T15:59:05+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+along with mnc government banking startup mba/cat internships add one more section called core jobs in that apply same rules as  above sections and in that core jobs section fetch related to embedded system job lnks microcontrollers ,vlsi and their sub jobs,pcb design,digital electronics fpga ,analog,iot ,verilog and related to ece and eee jobs fetch all the above mentioned jobs and apply all rules as above sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T16:25:13+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+after clicking on core jobs hyper link it shows jobs not found and i find a return to jobs after clicking that i found these page remove these entire page and also check core jobs section 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T16:33:14+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+after clicking all  job sections hyperlinks it shows page not found please resolve it
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T17:06:25+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+after clicking on hyper links it shows like in the picture and looks like inbuilt i want real page inside
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T17:14:38+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+after clicking on hyperlink it will redirected to inside page but there is load more option inside ,remove it and display all job links
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T17:22:23+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+ inside the hyperlink show all the jos links and expand the bar
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T17:27:14+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+add the another section along with existing named core jos and also inside core jobs fetch embedded system jobs vlsi jobs and also related to ece and eee domain jobs .and also add hyperlink same as above sections and no inbuit inside the hyperlink . without changing/modifying other sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T17:32:39+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+and also add another section same as above one named civil jobs and apply hyperlink to it and also inside the hyperlink no inbuilt display jobs links
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T17:52:10+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in admin dashboard make registered students data as downlodable without changing/modifying other sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T18:27:58+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+© 2026 Geonixa. All rights reserved · Verification logs are retained to prevent fraudulent probing. · Issuer Console .     replace this text in footer
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T18:33:00+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+my footer couldnt changed work on this and replace existing footer with © 2026 Geonixa. All rights reserved · Verification logs are retained to prevent fraudulent probing. · Issuer Console
+
+this
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T18:42:48+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+remove  the admin dashboard from the top and place it on the footer inside  Issuer Console text and also i want my admin dashboard ui looks like in the photo make these changes without changing/modifying other sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T18:46:45+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+and also i want my admin dashboard dispaly fully present it displays half of the webpage i want y webpage to diusplay fully
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T18:50:58+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+the above picture is the referrence picture my admin dashboard looks like the i want add categories just like the refferrence photo my categories as add jod , registered students, and  also i want to maintain my live job feed section and also i want to add logos for companys as a admin make all these requirments fulfill without changing/modifying other sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T19:08:46+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+proceed
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T19:11:28+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+Failed to load resource: the server responded with a status of 404 (Not Found)
+main-app.js:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+app-pages-internals.js:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+page.js:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+error.js:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+global-error.js:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+layout.css:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T19:19:39+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+remove entire registry section in admindashboard and in place of issue one replace it with add job and also in second photo the template looks like clumbsy make it a attractive and easier to admin
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T19:24:56+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+live job feed is availble on the top of the webpage give access to admin can make changes by adding or removing the autoscrolling companies names  and in job live feed section and also in second picture as we  can see that company name will be diplayed give admin access to add company logo to it and for both give names on your own in admin page do it without changing/modifying remaining sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T19:32:54+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+remove live job feed section in admindashboard
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T19:43:47+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+add another section in admin dashboard named logo in these admin has access to add logos for the automatically  fetched jobs  and add logos to the companies
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-03T19:49:30+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in pace of civil jobs replace it with Civil and Mech jobs in this field add//fetch jobs related to only civil and mechanical like autocad ,designing and soo on dont change/modify remaining sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T11:28:32+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in civil and mech section fecthed unrelated jobs for eample senior react developer it is not for civil and mech so fecth only related jobs in every section
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T11:32:30+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+fetch all jobs related to IT jobsand machine learning jobs ai jobs in MNC section
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T11:40:02+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in admin dashboard add job section there are missing some sections like core jobs civil and mech jobs add all missing sections and make it attractive and also perfecty working one
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T11:46:14+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+just now i added one job it showing in job section but it doesnt showing in admin dashboard i want admin has access to add and delete jobs in job section and also admin want access to delete/remove  automatically fetched jobs also please do it without changing/removing other sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T11:51:42+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in admin dashboard scrolling feed if i add one feed in the page its showing only added one alredy existed ones will be not displaying please work on it
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T11:58:18+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in admin dsashboard company logo section after giving url and company name but its not showing  in the jobs section please work on it
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T12:04:35+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in my job fetching section only few jobs will be fetched fecth alteast 50 jobs in each section except govt and banking and cumpulsory jobs fetched are related to their fields only 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T12:26:01+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+if possible fetch upto 50 jobs in both banking and government sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T12:28:58+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+still in some sections available jobs will be hardly 10 work on it ti get better result 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T12:32:32+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in my admin section im unable to change my id and password and also after clicking forgot password it not worked please work on it and also in student section if a student forgot his password by using his mobile number otp or email otp student can able to get his password please work on it without changing/removing other sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T13:21:23+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+proceed
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T13:23:19+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+i want to change userid also in admin dashboard
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T14:47:14+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T14:50:29+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+along with these add company in filters without changing/modifying other sections
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T15:01:42+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+no company filter visibe in my page please work on it
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T15:05:29+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+remove date and locations filter
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-04T15:09:13+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+in the right side of the refresh jobs now add text Ats Resume Checker and make it as hyper link
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-05T11:57:09+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+incerase the text size same as to refresh jobs now
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-05T11:59:04+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+i want some more bigger text and also box around the text
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-05T12:00:20+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+if i click on ats resume it will redirected to resume match stop it i will add one seperate section for ats resume checker
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-05T12:03:49+05:30.
+</ADDITIONAL_METADATA>
+--- NEW REQUEST ---
+<USER_REQUEST>
+import { useMemo } from "react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { scoreAts, type Resume } from "@/data/resumeStore";
+
+export function AtsCheckerPanel({ resume }: { resume: Resume }) {
+  const result = useMemo(() => scoreAts(resume), [resume]);
+
+  return (
+    <Card className="premium-card p-5 space-y-5">
+      <div>
+        <div className="label-eyebrow">ATS Checker</div>
+        <h3 className="font-display text-lg">Score · {result.score}/100</h3>
+        <Badge variant="outline" className="text-[10px] mt-1">{result.strength}</Badge>
+      </div>
+
+      <Progress value={result.score} className="h-2" />
+
+      {/* Quick stats */}
+      <div className="grid grid-cols-3 gap-2 text-xs">
+        <Stat label="Keywords" value={${result.matchedKeywords.length}/${result.matchedKeywords.length + result.missingKeywords.length}} />
+        <Stat label="Checks" value={${result.checks.filter((c) => c.passed).length}/${result.checks.length}} />
+        <Stat label="Weak bullets" value={String(result.weakBullets.length)} />
+      </div>
+
+      {/* Checklist */}
+      <div>
+        <div className="label-eyebrow mb-2">Improvement checklist</div>
+        <div className="space-y-1 max-h-60 overflow-auto scrollbar-thin">
+          {result.checks.map((c) => (
+            <div key={c.id} className="flex items-start gap-2 text-xs border border-border rounded-md px-2.5 py-1.5">
+              {c.passed
+                ? <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                : <XCircle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-muted-foreground" />}
+              <div className="flex-1 min-w-0">
+                <div className={cn("truncate", !c.passed && "text-muted-foreground")}>{c.label}</div>
+                {!c.passed && c.hint && <div className="text-[10px] text-muted-foreground">
+<truncated 45214 bytes>
+tionBody k={k} r={resume} />
+        </section>
+      ))}
+    </div>
+  );
+}
+
+// ===================================================================
+// 5. Creative Portfolio — bold typography
+// ===================================================================
+function Creative({ resume }: Props) {
+  return (
+    <div className="text-black p-10 font-sans">
+      <header className="border-b-4 border-black pb-4 mb-5">
+        <h1 className="text-[36px] font-black leading-none tracking-tight uppercase">{resume.name}</h1>
+        <p className="text-[12px] mt-2 font-medium">{resume.title || resume.targetRole}</p>
+        <p className="text-[10px] mt-2 text-black/70">
+          {[resume.email, resume.phone, resume.portfolio, resume.linkedin].filter(Boolean).join("  /  ")}
+        </p>
+      </header>
+      <div className="grid grid-cols-3 gap-5">
+        <div className="col-span-2 space-y-4">
+          {visibleSections(resume).filter((k) => ["summary", "projects", "experience", "achievements", "publications", "custom"].includes(k) && hasContent(resume, k)).map((k) => (
+            <section key={k}>
+              <h3 className="text-[11px] tracking-[0.18em] font-bold uppercase mb-1.5">{sectionTitle(k, resume)}</h3>
+              <SectionBody k={k} r={resume} />
+            </section>
+          ))}
+        </div>
+        <div className="space-y-4 border-l border-black/30 pl-4">
+          {visibleSections(resume).filter((k) => ["techSkills", "softSkills", "tools", "education", "certifications", "languages", "hobbies", "volunteer", "extracurricular", "references"].includes(k) && hasContent(resume, k)).map((k) => (
+            <section key={k}>
+              <h3 className="text-[10px] tracking-[0.18em] font-bold uppercase mb-1.5">{sectionTitle(k, resume)}</h3>
+              <SectionBody k={k} r={resume} />
+            </section>
+          ))}
+        </div>
+      </
+<truncated 3728 bytes>
+
+NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.
+--- NEW REQUEST ---
+<USER_REQUEST>
+no add this code 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-05T12:07:16+05:30.
+</ADDITIONAL_METADATA>

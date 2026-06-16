@@ -1,0 +1,6 @@
+<USER_REQUEST>
+if i click on ats resume it will redirected to resume match stop it i will add one seperate section for ats resume checker
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-05T12:03:49+05:30.
+</ADDITIONAL_METADATA>
