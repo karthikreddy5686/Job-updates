@@ -20,7 +20,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Missing required fields: id, logoUrl' }, { status: 400 });
     }
 
-    const mockTests = await getStoreData('mock-tests', []);
+    const mockTests = await getStoreData<any[]>('mock-tests', []);
     if (!mockTests || mockTests.length === 0) {
       return NextResponse.json({ error: 'Mock tests data not loaded' }, { status: 404 });
     }
