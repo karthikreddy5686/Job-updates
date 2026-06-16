@@ -43,13 +43,26 @@ export default function StudentAuthModal({
     // Small delay for UX
     await new Promise(r => setTimeout(r, 400))
     
-    const result = loginStudent(loginForm.email, loginForm.password)
-    if (result.success && result.student) {
-      onSuccess(result.student)
-      onClose()
-    } else {
-      setError(result.error || 'Login failed')
+    try {
+      const res = await fetch('/api/student/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: loginForm.email, password: loginForm.password }),
+      })
+      const result = await res.json()
+      
+      if (result.success && result.student) {
+        // Save session locally so the rest of the app knows we are logged in
+        localStorage.setItem('jobupdate_student_session', JSON.stringify(result.student))
+        onSuccess(result.student)
+        onClose()
+      } else {
+        setError(result.error || 'Login failed')
+      }
+    } catch {
+      setError('Network error. Please try again.')
     }
+    
     setLoading(false)
   }
 
@@ -134,6 +147,9 @@ export default function StudentAuthModal({
       });
       const result = await res.json();
       if (result.success) {
+        if (result.student) {
+          localStorage.setItem('jobupdate_student_session', JSON.stringify(result.student));
+        }
         onSuccess({ name: regForm.name, email: regForm.email });
         onClose();
       } else {
