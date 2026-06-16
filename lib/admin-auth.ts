@@ -3,7 +3,7 @@ import path from 'path';
 import crypto from 'crypto';
 
 export const ADMIN_SESSION_COOKIE = 'jobupdate_admin_session';
-export const DEFAULT_ADMIN_EMAIL = 'admin@portal.com';
+export const DEFAULT_ADMIN_EMAIL = 'admin@jobupdate.com';
 export const DEFAULT_ADMIN_PASSWORD = 'Admin@123';
 
 const isVercel = process.env.VERCEL === '1' || process.env.NEXT_PUBLIC_VERCEL_ENV;
