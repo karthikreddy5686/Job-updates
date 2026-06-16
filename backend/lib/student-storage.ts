@@ -1,11 +1,30 @@
 import fs from 'fs';
 import path from 'path';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+const isVercel = process.env.VERCEL === '1' || process.env.NEXT_PUBLIC_VERCEL_ENV;
+const DATA_DIR = isVercel ? '/tmp/data' : path.join(process.cwd(), 'backend', 'data');
+const INITIAL_DATA_DIR = path.join(process.cwd(), 'backend', 'data');
 
 function ensureDir() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
+    
+    // On Vercel, copy initial mock data to the temporary writable directory
+    if (isVercel && fs.existsSync(INITIAL_DATA_DIR)) {
+      try {
+        const files = fs.readdirSync(INITIAL_DATA_DIR);
+        for (const file of files) {
+          if (file.endsWith('.json')) {
+            fs.copyFileSync(
+              path.join(INITIAL_DATA_DIR, file),
+              path.join(DATA_DIR, file)
+            );
+          }
+        }
+      } catch (e) {
+        console.error('Failed to copy initial data:', e);
+      }
+    }
   }
 }
 
