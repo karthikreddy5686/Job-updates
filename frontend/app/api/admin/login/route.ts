@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json()
-    const adminCreds = getAdminCredentials()
+    const adminCreds = await getAdminCredentials()
     
     if (email === adminCreds.email && password === adminCreds.password) {
       const res = NextResponse.json({ success: true })

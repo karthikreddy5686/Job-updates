@@ -1184,7 +1184,7 @@ export async function GET(req: Request) {
     // Load admin posted jobs
     let adminJobsList: Job[] = []
     try {
-      const rawAdminJobs = getJobs() || []
+      const rawAdminJobs = await getJobs() || []
       adminJobsList = rawAdminJobs
         .filter(aj => aj && aj.isActive)
         .map(aj => {
@@ -1240,13 +1240,13 @@ export async function GET(req: Request) {
     let hiddenJobs: Set<string> = new Set()
     try {
       const { getCompanyLogos, getHiddenJobs } = await import('@/lib/admin-storage')
-      const logos = getCompanyLogos()
+      const logos = await getCompanyLogos()
       for (const l of logos) {
         if (l.company && l.company.trim()) {
           logosDict[l.company.toLowerCase().trim()] = l.logo
         }
       }
-      hiddenJobs = new Set(getHiddenJobs())
+      hiddenJobs = new Set(await getHiddenJobs())
     } catch {}
 
     const today = new Date().toDateString()

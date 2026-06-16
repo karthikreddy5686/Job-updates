@@ -3,7 +3,7 @@ import { getStudents } from '@/lib/admin-storage';
 
 export async function GET(request: Request) {
   try {
-    const students = getStudents();
+    const students = await getStudents();
     return NextResponse.json({ success: true, students });
   } catch (error) {
     console.error('Error fetching students:', error);

@@ -13,14 +13,14 @@ export async function POST(req: Request) {
     }
 
     const { email, password, newPassword } = await req.json()
-    const adminCreds = getAdminCredentials()
+    const adminCreds = await getAdminCredentials()
 
     // Validate old password
     if (password !== adminCreds.password) {
       return NextResponse.json({ success: false, error: 'Incorrect current password' }, { status: 400 })
     }
 
-    updateAdminCredentials(email || adminCreds.email, newPassword || adminCreds.password)
+    await updateAdminCredentials(email || adminCreds.email, newPassword || adminCreds.password)
     return NextResponse.json({ success: true, message: 'Settings updated successfully' })
   } catch (e) {
     return NextResponse.json({ success: false, error: 'Server error' }, { status: 500 })

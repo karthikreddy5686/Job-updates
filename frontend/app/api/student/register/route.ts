@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Invalid JSON payload' }, { status: 400 });
     }
     const { name, email, password, phone, whatsapp, collegeName } = data;
-    const result = registerStudentServer(name, email, password, phone, whatsapp, collegeName);
+    const result = await registerStudentServer(name, email, password, phone, whatsapp, collegeName);
     if (result.success) {
       return NextResponse.json({ success: true, student: result.student });
     }

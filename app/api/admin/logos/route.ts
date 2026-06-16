@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { getCompanyLogos, saveCompanyLogos } from '@/lib/admin-storage'
 
 export async function GET() {
-  const logos = getCompanyLogos()
+  const logos = await getCompanyLogos()
   return NextResponse.json({ logos })
 }
 
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       logo: String(item.logo || '')
     })).filter(l => l.company && l.logo)
     
-    saveCompanyLogos(validLogos)
+    await saveCompanyLogos(validLogos)
     return NextResponse.json({ success: true, logos: validLogos })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to save logos' }, { status: 500 })

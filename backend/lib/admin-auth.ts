@@ -1,15 +1,10 @@
-import fs from 'fs';
-import path from 'path';
 import crypto from 'crypto';
+import { getStoreData, setStoreData } from './db';
 
 export const ADMIN_SESSION_COOKIE = 'jobupdate_admin_session';
 export const DEFAULT_ADMIN_EMAIL = 'admin@jobupdate.com';
 export const DEFAULT_ADMIN_PASSWORD = 'Admin@123';
 
-const isVercel = process.env.VERCEL === '1' || process.env.NEXT_PUBLIC_VERCEL_ENV;
-const dataDir = isVercel ? '/tmp/data' : path.join(process.cwd(), 'backend', 'data');
-const adminsPath = path.join(dataDir, 'admins.json');
-const adminSessionsPath = path.join(dataDir, 'admin-sessions.json');
 const HASH_ITERATIONS = 120_000;
 const HASH_KEYLEN = 64;
 const HASH_DIGEST = 'sha512';
@@ -29,42 +24,12 @@ type AdminSessionRecord = {
   expiresAt: string;
 };
 
-const ensureStorage = async () => {
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-
-  if (!fs.existsSync(adminsPath)) {
-    await fs.promises.writeFile(adminsPath, '[]', 'utf8');
-  }
-
-  if (!fs.existsSync(adminSessionsPath)) {
-    await fs.promises.writeFile(adminSessionsPath, '[]', 'utf8');
-  }
-};
-
-const loadJsonFile = async <T>(filePath: string): Promise<T[]> => {
-  await ensureStorage();
-
-  try {
-    const fileContents = await fs.promises.readFile(filePath, 'utf8');
-    return JSON.parse(fileContents) as T[];
-  } catch (error) {
-    await fs.promises.writeFile(filePath, '[]', 'utf8');
-    return [];
-  }
-};
-
-const saveJsonFile = async <T>(filePath: string, data: T[]) => {
-  await fs.promises.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
-};
-
 export async function getAdmins(): Promise<AdminRecord[]> {
-  return loadJsonFile<AdminRecord>(adminsPath);
+  return await getStoreData<AdminRecord[]>('admins', []);
 }
 
 export async function saveAdmins(admins: AdminRecord[]) {
-  return saveJsonFile(adminsPath, admins);
+  await setStoreData('admins', admins);
 }
 
 export async function getAdminByEmail(email: string): Promise<AdminRecord | null> {
@@ -108,8 +73,7 @@ export async function ensureSeededAdmin(): Promise<AdminRecord[]> {
 }
 
 export async function createAdminSession(adminId: string) {
-  await ensureStorage();
-  const sessions = await loadJsonFile<AdminSessionRecord>(adminSessionsPath);
+  const sessions = await getStoreData<AdminSessionRecord[]>('admin-sessions', []);
   const token = crypto.randomBytes(32).toString('hex');
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
@@ -120,7 +84,7 @@ export async function createAdminSession(adminId: string) {
     expiresAt,
   });
 
-  await saveJsonFile(adminSessionsPath, sessions);
+  await setStoreData('admin-sessions', sessions);
   return token;
 }
 
@@ -129,7 +93,7 @@ export async function getAdminBySessionToken(token: string | null) {
     return null;
   }
 
-  const sessions = await loadJsonFile<AdminSessionRecord>(adminSessionsPath);
+  const sessions = await getStoreData<AdminSessionRecord[]>('admin-sessions', []);
   const session = sessions.find((item) => item.token === token);
 
   if (!session) {
@@ -149,9 +113,9 @@ export async function invalidateAdminSession(token: string | null) {
     return;
   }
 
-  const sessions = await loadJsonFile<AdminSessionRecord>(adminSessionsPath);
+  const sessions = await getStoreData<AdminSessionRecord[]>('admin-sessions', []);
   const activeSessions = sessions.filter((item) => item.token !== token);
-  await saveJsonFile(adminSessionsPath, activeSessions);
+  await setStoreData('admin-sessions', activeSessions);
 }
 
 export function getSessionTokenFromRequest(request: Request) {

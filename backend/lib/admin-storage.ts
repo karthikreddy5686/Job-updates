@@ -1,34 +1,7 @@
 // Runs only server-side in API routes
 
-import fs from 'fs'
-import path from 'path'
-
-const isVercel = process.env.VERCEL === '1' || process.env.NEXT_PUBLIC_VERCEL_ENV;
-const DATA_DIR = isVercel ? '/tmp/data' : path.join(process.cwd(), 'backend', 'data');
-const INITIAL_DATA_DIR = path.join(process.cwd(), 'backend', 'data');
-
-function ensureDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-    
-    // On Vercel, copy initial mock data to the temporary writable directory
-    if (isVercel && fs.existsSync(INITIAL_DATA_DIR)) {
-      try {
-        const files = fs.readdirSync(INITIAL_DATA_DIR);
-        for (const file of files) {
-          if (file.endsWith('.json')) {
-            fs.copyFileSync(
-              path.join(INITIAL_DATA_DIR, file),
-              path.join(DATA_DIR, file)
-            );
-          }
-        }
-      } catch (e) {
-        console.error('Failed to copy initial data:', e);
-      }
-    }
-  }
-}
+import { getStoreData, setStoreData } from './db';
+import { ADMIN_EMAIL, ADMIN_PASSWORD } from './admin-config';
 
 export interface AdminJob {
   id: string
@@ -48,21 +21,12 @@ export interface AdminJob {
   createdAt: string
 }
 
-export function getJobs(): AdminJob[] {
-  ensureDir()
-  const file = path.join(DATA_DIR, 'admin-jobs.json')
-  try {
-    if (!fs.existsSync(file)) return []
-    return JSON.parse(fs.readFileSync(file, 'utf-8'))
-  } catch { return [] }
+export async function getJobs(): Promise<AdminJob[]> {
+  return await getStoreData<AdminJob[]>('admin-jobs', []);
 }
 
-export function saveJobs(jobs: AdminJob[]): void {
-  ensureDir()
-  fs.writeFileSync(
-    path.join(DATA_DIR, 'admin-jobs.json'),
-    JSON.stringify(jobs, null, 2)
-  )
+export async function saveJobs(jobs: AdminJob[]): Promise<void> {
+  await setStoreData('admin-jobs', jobs);
 }
 
 export interface LiveFeedItem {
@@ -73,21 +37,12 @@ export interface LiveFeedItem {
   postedTime: string
 }
 
-export function getLiveFeedItems(): LiveFeedItem[] {
-  ensureDir()
-  const file = path.join(DATA_DIR, 'live-feed.json')
-  try {
-    if (!fs.existsSync(file)) return []
-    return JSON.parse(fs.readFileSync(file, 'utf-8'))
-  } catch { return [] }
+export async function getLiveFeedItems(): Promise<LiveFeedItem[]> {
+  return await getStoreData<LiveFeedItem[]>('live-feed', []);
 }
 
-export function saveLiveFeedItems(items: LiveFeedItem[]): void {
-  ensureDir()
-  fs.writeFileSync(
-    path.join(DATA_DIR, 'live-feed.json'),
-    JSON.stringify(items, null, 2)
-  )
+export async function saveLiveFeedItems(items: LiveFeedItem[]): Promise<void> {
+  await setStoreData('live-feed', items);
 }
 
 export interface CompanyLogo {
@@ -95,79 +50,54 @@ export interface CompanyLogo {
   logo: string;
 }
 
-export function getCompanyLogos(): CompanyLogo[] {
-  ensureDir()
-  const file = path.join(DATA_DIR, 'company-logos.json')
-  try {
-    if (!fs.existsSync(file)) return []
-    return JSON.parse(fs.readFileSync(file, 'utf-8'))
-  } catch { return [] }
+export async function getCompanyLogos(): Promise<CompanyLogo[]> {
+  return await getStoreData<CompanyLogo[]>('company-logos', []);
 }
 
-export function saveCompanyLogos(logos: CompanyLogo[]): void {
-  ensureDir()
-  fs.writeFileSync(
-    path.join(DATA_DIR, 'company-logos.json'),
-    JSON.stringify(logos, null, 2)
-  )
+export async function saveCompanyLogos(logos: CompanyLogo[]): Promise<void> {
+  await setStoreData('company-logos', logos);
 }
 
-export function addJob(
-  data: Omit<AdminJob, 'id' | 'createdAt'>
-): AdminJob {
-  const jobs = getJobs()
+export async function addJob(data: Omit<AdminJob, 'id' | 'createdAt'>): Promise<AdminJob> {
+  const jobs = await getJobs();
   const job: AdminJob = {
     ...data,
     id: `job_${Date.now()}`,
     createdAt: new Date().toISOString(),
   }
-  saveJobs([job, ...jobs])
-  return job
+  await saveJobs([job, ...jobs]);
+  return job;
 }
 
-export function updateJob(
-  id: string, 
-  updates: Partial<AdminJob>
-): AdminJob | null {
-  const jobs = getJobs()
-  const i = jobs.findIndex(j => j.id === id)
-  if (i === -1) return null
-  jobs[i] = { ...jobs[i], ...updates }
-  saveJobs(jobs)
-  return jobs[i]
+export async function updateJob(id: string, updates: Partial<AdminJob>): Promise<AdminJob | null> {
+  const jobs = await getJobs();
+  const i = jobs.findIndex(j => j.id === id);
+  if (i === -1) return null;
+  jobs[i] = { ...jobs[i], ...updates };
+  await saveJobs(jobs);
+  return jobs[i];
 }
 
-export function deleteJob(id: string): boolean {
-  const jobs = getJobs()
-  const filtered = jobs.filter(j => j.id !== id)
+export async function deleteJob(id: string): Promise<boolean> {
+  const jobs = await getJobs();
+  const filtered = jobs.filter(j => j.id !== id);
   if (filtered.length === jobs.length) {
-    // If not found in local admin jobs, it might be an automatically fetched job.
-    // We add it to the hidden jobs list.
-    hideJob(id)
-    return true
+    await hideJob(id);
+    return true;
   }
-  saveJobs(filtered)
-  return true
+  await saveJobs(filtered);
+  return true;
 }
 
-export function getHiddenJobs(): string[] {
-  ensureDir()
-  const file = path.join(DATA_DIR, 'hidden-jobs.json')
-  try {
-    if (!fs.existsSync(file)) return []
-    return JSON.parse(fs.readFileSync(file, 'utf-8'))
-  } catch { return [] }
+export async function getHiddenJobs(): Promise<string[]> {
+  return await getStoreData<string[]>('hidden-jobs', []);
 }
 
-export function hideJob(id: string): void {
-  const hidden = getHiddenJobs()
+export async function hideJob(id: string): Promise<void> {
+  const hidden = await getHiddenJobs();
   if (!hidden.includes(id)) {
-    hidden.push(id)
-    ensureDir()
-    fs.writeFileSync(
-      path.join(DATA_DIR, 'hidden-jobs.json'),
-      JSON.stringify(hidden, null, 2)
-    )
+    hidden.push(id);
+    await setStoreData('hidden-jobs', hidden);
   }
 }
 
@@ -184,31 +114,22 @@ export interface Student {
   passwordHash: string // simple base64 hash for demo
 }
 
-export function getStudents(): Student[] {
-  ensureDir()
-  const file = path.join(DATA_DIR, 'students.json')
-  try {
-    if (!fs.existsSync(file)) return []
-    return JSON.parse(fs.readFileSync(file, 'utf-8'))
-  } catch { return [] }
+export async function getStudents(): Promise<Student[]> {
+  return await getStoreData<Student[]>('students', []);
 }
 
-export function saveStudents(students: Student[]): void {
-  ensureDir()
-  fs.writeFileSync(
-    path.join(DATA_DIR, 'students.json'),
-    JSON.stringify(students, null, 2)
-  )
+export async function saveStudents(students: Student[]): Promise<void> {
+  await setStoreData('students', students);
 }
 
-export function registerStudentServer(
+export async function registerStudentServer(
   name: string,
   email: string,
   password: string,
   phone?: string,
   whatsapp?: string,
   collegeName?: string
-): { success: boolean; error?: string; student?: Omit<Student, 'passwordHash'> } {
+): Promise<{ success: boolean; error?: string; student?: Omit<Student, 'passwordHash'> }> {
   if (!name.trim() || !email.trim() || !password.trim()) {
     return { success: false, error: 'All fields are required' }
   }
@@ -219,7 +140,7 @@ export function registerStudentServer(
     return { success: false, error: 'Password must be at least 6 characters' }
   }
 
-  const students = getStudents()
+  const students = await getStudents();
   if (students.find(s => s.email.toLowerCase() === email.toLowerCase())) {
     return { success: false, error: 'This email is already registered. Please login.' }
   }
@@ -234,46 +155,46 @@ export function registerStudentServer(
     registeredAt: new Date().toISOString(),
     passwordHash: Buffer.from(password).toString('base64'),
   }
-  students.push(newStudent)
-  saveStudents(students)
+  students.push(newStudent);
+  await saveStudents(students);
 
-  const { passwordHash, ...publicData } = newStudent
+  const { passwordHash, ...publicData } = newStudent;
   return { success: true, student: publicData }
 }
 
-export function loginStudentServer(
+export async function loginStudentServer(
   email: string,
   password: string
-): { success: boolean; error?: string; student?: Omit<Student, 'passwordHash'> } {
+): Promise<{ success: boolean; error?: string; student?: Omit<Student, 'passwordHash'> }> {
   if (!email.trim() || !password.trim()) {
     return { success: false, error: 'Email and password required' }
   }
-  const students = getStudents()
+  const students = await getStudents();
   const found = students.find(
     s => s.email.toLowerCase() === email.toLowerCase().trim() && s.passwordHash === btoa(password)
   )
   if (!found) {
     return { success: false, error: 'Incorrect email or password.' }
   }
-  const { passwordHash, ...publicData } = found
+  const { passwordHash, ...publicData } = found;
   return { success: true, student: publicData }
 }
 
-export function deleteStudent(id: string): boolean {
-  const students = getStudents()
-  const filtered = students.filter(s => s.id !== id)
-  if (filtered.length === students.length) return false
-  saveStudents(filtered)
-  return true
+export async function deleteStudent(id: string): Promise<boolean> {
+  const students = await getStudents();
+  const filtered = students.filter(s => s.id !== id);
+  if (filtered.length === students.length) return false;
+  await saveStudents(filtered);
+  return true;
 }
 
-export function updateStudentPassword(identifier: string, newHash: string): boolean {
-  const students = getStudents()
-  const sIndex = students.findIndex(s => s.email.toLowerCase() === identifier.toLowerCase() || s.phone === identifier)
-  if (sIndex === -1) return false
-  students[sIndex].passwordHash = newHash
-  saveStudents(students)
-  return true
+export async function updateStudentPassword(identifier: string, newHash: string): Promise<boolean> {
+  const students = await getStudents();
+  const sIndex = students.findIndex(s => s.email.toLowerCase() === identifier.toLowerCase() || s.phone === identifier);
+  if (sIndex === -1) return false;
+  students[sIndex].passwordHash = newHash;
+  await saveStudents(students);
+  return true;
 }
 
 // ---------- OTP Storage ----------
@@ -283,63 +204,42 @@ export interface OTPRecord {
   expiresAt: number
 }
 
-export function getOTPs(): OTPRecord[] {
-  ensureDir()
-  const file = path.join(DATA_DIR, 'otps.json')
-  try {
-    if (!fs.existsSync(file)) return []
-    return JSON.parse(fs.readFileSync(file, 'utf-8'))
-  } catch { return [] }
+export async function getOTPs(): Promise<OTPRecord[]> {
+  return await getStoreData<OTPRecord[]>('otps', []);
 }
 
-export function saveOTPs(otps: OTPRecord[]): void {
-  ensureDir()
-  fs.writeFileSync(
-    path.join(DATA_DIR, 'otps.json'),
-    JSON.stringify(otps, null, 2)
-  )
+export async function saveOTPs(otps: OTPRecord[]): Promise<void> {
+  await setStoreData('otps', otps);
 }
 
-export function generateOTP(identifier: string): string {
-  const otps = getOTPs().filter(o => o.expiresAt > Date.now()) // clean old
-  const otp = Math.floor(100000 + Math.random() * 900000).toString()
+export async function generateOTP(identifier: string): Promise<string> {
+  let otps = await getOTPs();
+  otps = otps.filter(o => o.expiresAt > Date.now()); // clean old
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
   otps.push({
     identifier,
     otp,
     expiresAt: Date.now() + 10 * 60 * 1000 // 10 mins
-  })
-  saveOTPs(otps)
-  return otp
+  });
+  await saveOTPs(otps);
+  return otp;
 }
 
-export function verifyOTP(identifier: string, otp: string): boolean {
-  const otps = getOTPs()
-  const found = otps.find(o => o.identifier.toLowerCase() === identifier.toLowerCase() && o.otp === otp && o.expiresAt > Date.now())
+export async function verifyOTP(identifier: string, otp: string): Promise<boolean> {
+  const otps = await getOTPs();
+  const found = otps.find(o => o.identifier.toLowerCase() === identifier.toLowerCase() && o.otp === otp && o.expiresAt > Date.now());
   if (found) {
-    saveOTPs(otps.filter(o => o.identifier !== identifier)) // clear used OTP
-    return true
+    await saveOTPs(otps.filter(o => o.identifier !== identifier)); // clear used OTP
+    return true;
   }
-  return false
+  return false;
 }
 
 // ---------- Admin Credentials ----------
-import { ADMIN_EMAIL, ADMIN_PASSWORD } from './admin-config'
-
-export function getAdminCredentials() {
-  ensureDir()
-  const file = path.join(DATA_DIR, 'admin-credentials.json')
-  try {
-    if (!fs.existsSync(file)) return { email: ADMIN_EMAIL, password: ADMIN_PASSWORD }
-    return JSON.parse(fs.readFileSync(file, 'utf-8'))
-  } catch {
-    return { email: ADMIN_EMAIL, password: ADMIN_PASSWORD }
-  }
+export async function getAdminCredentials(): Promise<{ email: string; password: string }> {
+  return await getStoreData<{ email: string; password: string }>('admin-credentials', { email: ADMIN_EMAIL, password: ADMIN_PASSWORD });
 }
 
-export function updateAdminCredentials(email: string, password: string) {
-  ensureDir()
-  fs.writeFileSync(
-    path.join(DATA_DIR, 'admin-credentials.json'),
-    JSON.stringify({ email, password }, null, 2)
-  )
+export async function updateAdminCredentials(email: string, password: string): Promise<void> {
+  await setStoreData('admin-credentials', { email, password });
 }

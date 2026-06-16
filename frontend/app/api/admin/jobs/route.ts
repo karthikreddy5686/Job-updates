@@ -16,7 +16,7 @@ export async function GET() {
       { error: 'Unauthorized' }, { status: 401 }
     )
   }
-  const jobs = getJobs()
+  const jobs = await getJobs()
   return NextResponse.json({ jobs })
 }
 
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       { status: 400 }
     )
   }
-  const job = addJob({
+  const job = await addJob({
     title: body.title.trim(),
     company: body.company.trim(),
     logo: body.logo?.trim() || '',

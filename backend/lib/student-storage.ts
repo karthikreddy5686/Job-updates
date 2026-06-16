@@ -1,32 +1,4 @@
-import fs from 'fs';
-import path from 'path';
-
-const isVercel = process.env.VERCEL === '1' || process.env.NEXT_PUBLIC_VERCEL_ENV;
-const DATA_DIR = isVercel ? '/tmp/data' : path.join(process.cwd(), 'backend', 'data');
-const INITIAL_DATA_DIR = path.join(process.cwd(), 'backend', 'data');
-
-function ensureDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-    
-    // On Vercel, copy initial mock data to the temporary writable directory
-    if (isVercel && fs.existsSync(INITIAL_DATA_DIR)) {
-      try {
-        const files = fs.readdirSync(INITIAL_DATA_DIR);
-        for (const file of files) {
-          if (file.endsWith('.json')) {
-            fs.copyFileSync(
-              path.join(INITIAL_DATA_DIR, file),
-              path.join(DATA_DIR, file)
-            );
-          }
-        }
-      } catch (e) {
-        console.error('Failed to copy initial data:', e);
-      }
-    }
-  }
-}
+import { getStoreData, setStoreData } from './db';
 
 export interface StudentRecord {
   id: string;
@@ -39,29 +11,22 @@ export interface StudentRecord {
   registeredAt: string;
 }
 
-export function getStudents(): StudentRecord[] {
-  ensureDir();
-  const file = path.join(DATA_DIR, 'students.json');
-  try {
-    if (!fs.existsSync(file)) return [];
-    return JSON.parse(fs.readFileSync(file, 'utf-8'));
-  } catch { return []; }
+export async function getStudents(): Promise<StudentRecord[]> {
+  return await getStoreData<StudentRecord[]>('students', []);
 }
 
-export function saveStudents(students: StudentRecord[]): void {
-  ensureDir();
-  const file = path.join(DATA_DIR, 'students.json');
-  fs.writeFileSync(file, JSON.stringify(students, null, 2));
+export async function saveStudents(students: StudentRecord[]): Promise<void> {
+  await setStoreData('students', students);
 }
 
-export function registerStudentServer(data: {
+export async function registerStudentServer(data: {
   name: string;
   email: string;
   password: string;
   phone?: string;
   whatsapp?: string;
   collegeName?: string;
-}): { success: boolean; error?: string } {
+}): Promise<{ success: boolean; error?: string }> {
   if (!data.name.trim() || !data.email.trim() || !data.password.trim()) {
     return { success: false, error: 'All fields are required' };
   }
@@ -71,7 +36,7 @@ export function registerStudentServer(data: {
   if (data.password.length < 6) {
     return { success: false, error: 'Password must be at least 6 characters' };
   }
-  const students = getStudents();
+  const students = await getStudents();
   if (students.find(s => s.email.toLowerCase() === data.email.toLowerCase())) {
     return { success: false, error: 'Email already registered' };
   }
@@ -86,15 +51,15 @@ export function registerStudentServer(data: {
     registeredAt: new Date().toISOString(),
   };
   students.push(student);
-  saveStudents(students);
+  await saveStudents(students);
   return { success: true };
 }
 
-export function loginStudentServer(email: string, password: string): { success: boolean; error?: string; student?: StudentRecord } {
+export async function loginStudentServer(email: string, password: string): Promise<{ success: boolean; error?: string; student?: StudentRecord }> {
   if (!email.trim() || !password.trim()) {
     return { success: false, error: 'Email and password required' };
   }
-  const students = getStudents();
+  const students = await getStudents();
   const found = students.find(s => s.email === email.toLowerCase().trim() && s.passwordHash === btoa(password));
   if (!found) {
     return { success: false, error: 'Invalid credentials' };

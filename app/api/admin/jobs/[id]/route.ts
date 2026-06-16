@@ -20,7 +20,7 @@ export async function PATCH(
   }
   const { id } = await params
   const body = await req.json()
-  const updated = updateJob(id, body)
+  const updated = await updateJob(id, body)
   if (!updated) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
@@ -35,7 +35,7 @@ export async function DELETE(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
   const { id } = await params
-  const deleted = deleteJob(id)
+  const deleted = await deleteJob(id)
   if (!deleted) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }

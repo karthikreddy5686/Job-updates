@@ -5,12 +5,12 @@ export async function POST(req: Request) {
   try {
     const { identifier, otp, newPassword } = await req.json()
     
-    if (!verifyOTP(identifier, otp)) {
+    if (!await verifyOTP(identifier, otp)) {
       return NextResponse.json({ success: false, error: 'Invalid or expired OTP' }, { status: 400 })
     }
 
     const newHash = Buffer.from(newPassword).toString('base64')
-    const updated = updateStudentPassword(identifier, newHash)
+    const updated = await updateStudentPassword(identifier, newHash)
     
     if (!updated) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 })

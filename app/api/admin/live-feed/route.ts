@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { getLiveFeedItems, saveLiveFeedItems, LiveFeedItem } from '@/lib/admin-storage'
 
 export async function GET() {
-  const items = getLiveFeedItems()
+  const items = await getLiveFeedItems()
   return NextResponse.json({ items })
 }
 
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       postedTime: String(item.postedTime || '')
     }))
     
-    saveLiveFeedItems(validItems)
+    await saveLiveFeedItems(validItems)
     return NextResponse.json({ success: true, items: validItems })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to save items' }, { status: 500 })
