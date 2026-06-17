@@ -3,29 +3,28 @@ export const dynamic = 'force-dynamic';
 import fs from 'fs';
 import path from 'path';
 import { setStoreData } from '@/lib/db';
+import mockTestsData from '@/data/mockTestsData.json';
 
 export async function GET() {
   try {
     const dataDir = path.join(process.cwd(), 'backend', 'data');
-    if (!fs.existsSync(dataDir)) return NextResponse.json({ error: 'No local data found' });
-
-    const files = fs.readdirSync(dataDir);
     let seeded = 0;
-    for (const file of files) {
-      if (file.endsWith('.json')) {
-        const key = file.replace('.json', '');
-        const content = fs.readFileSync(path.join(dataDir, file), 'utf8');
-        const data = JSON.parse(content);
-        await setStoreData(key, data);
-        seeded++;
+    
+    if (fs.existsSync(dataDir)) {
+      const files = fs.readdirSync(dataDir);
+      for (const file of files) {
+        if (file.endsWith('.json')) {
+          const key = file.replace('.json', '');
+          const content = fs.readFileSync(path.join(dataDir, file), 'utf8');
+          const data = JSON.parse(content);
+          await setStoreData(key, data);
+          seeded++;
+        }
       }
     }
 
-    // Also seed the mock tests data which is in the root data/ folder
-    const mockTestsPath = path.join(process.cwd(), 'data', 'mockTestsData.json');
-    if (fs.existsSync(mockTestsPath)) {
-      const mockTestsContent = fs.readFileSync(mockTestsPath, 'utf8');
-      const mockTestsData = JSON.parse(mockTestsContent);
+    // Seed the mock tests data via static import to guarantee it's bundled
+    if (mockTestsData) {
       await setStoreData('mock-tests', mockTestsData);
       seeded++;
     }
