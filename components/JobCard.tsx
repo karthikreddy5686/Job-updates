@@ -213,7 +213,7 @@ export default function JobCard({ job }: JobCardProps) {
             </span>
             <span className="inline-flex items-center gap-2 rounded-2xl bg-slate-50 px-3 py-2">
               <Sparkles className="h-4 w-4 text-slate-400" />
-              {typeof job.jobType === 'string' ? job.jobType.replace('-', ' ') : (Array.isArray(job.jobType) ? job.jobType.join(', ') : 'full time')}
+              {typeof job.jobType === 'string' ? job.jobType.replace('-', ' ') : (Array.isArray(job.jobType) ? (job.jobType as any[]).join(', ') : 'full time')}
             </span>
           </div>
 
