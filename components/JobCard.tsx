@@ -38,12 +38,22 @@ export default function JobCard({ job }: JobCardProps) {
     return urls;
   }, [job.company, job.logo]);
 
-  const posted = new Date(job.postedDate).toLocaleString([], {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  let posted = 'Recently';
+  try {
+    if (job.postedDate) {
+      const dateObj = new Date(job.postedDate);
+      if (!isNaN(dateObj.getTime())) {
+        posted = dateObj.toLocaleString([], {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+      }
+    }
+  } catch (e) {
+    // fallback to 'Recently'
+  }
 
   const [sessionUser, setSessionUser] = useState<{ id: string; name: string } | null>(null);
   const router = useRouter();
@@ -203,7 +213,7 @@ export default function JobCard({ job }: JobCardProps) {
             </span>
             <span className="inline-flex items-center gap-2 rounded-2xl bg-slate-50 px-3 py-2">
               <Sparkles className="h-4 w-4 text-slate-400" />
-              {job.jobType.replace('-', ' ')}
+              {typeof job.jobType === 'string' ? job.jobType.replace('-', ' ') : (Array.isArray(job.jobType) ? job.jobType.join(', ') : 'full time')}
             </span>
           </div>
 

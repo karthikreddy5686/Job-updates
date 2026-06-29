@@ -36,8 +36,8 @@ function FeedLogo({ item }: { item: LiveFeedItem }) {
   const logoUrls = React.useMemo(() => {
     const urls: string[] = [];
     if (item.logo) urls.push(item.logo);
-    const cleanName = item.company.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const firstWord = item.company.toLowerCase().split(' ')[0].replace(/[^a-z0-9]/g, '');
+    const cleanName = item.company ? item.company.toLowerCase().replace(/[^a-z0-9]/g, '') : '';
+    const firstWord = item.company ? item.company.toLowerCase().split(' ')[0].replace(/[^a-z0-9]/g, '') : '';
     
     if (cleanName && !item.logo?.includes(cleanName)) {
       urls.push(`https://logo.clearbit.com/${cleanName}.com`);
@@ -55,7 +55,7 @@ function FeedLogo({ item }: { item: LiveFeedItem }) {
 
   return (
     <div className="h-8 w-8 rounded-md bg-slate-200 shrink-0 flex items-center justify-center">
-      <span className="text-xs font-bold text-slate-500">{item.company.charAt(0)}</span>
+      <span className="text-xs font-bold text-slate-500">{item.company ? item.company.charAt(0) : 'C'}</span>
     </div>
   );
 }
