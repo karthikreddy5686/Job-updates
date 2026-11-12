@@ -160,87 +160,94 @@ export default function RecommendedJobsCarousel({
             <div
               key={job.id}
               onClick={() => onSelectJob(job)}
-              className="w-[340px] shrink-0 rounded-2xl border border-indigo-200/80 bg-white p-5 shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-1 cursor-pointer flex flex-col justify-between group"
+              className="w-[320px] sm:w-[350px] shrink-0 rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 cursor-pointer flex flex-col justify-between group"
             >
               <div>
-                {/* Top Row: Match Badge + Urgent Tag */}
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="inline-flex items-center gap-1 text-[11px] font-black text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200/60 shadow-2xs">
-                    <Sparkles className="w-3.5 h-3.5 text-indigo-600 fill-indigo-600" />
-                    {matchPercentage}% Match with Profile
-                  </span>
-                  {job.isNew && (
-                    <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/50">
-                      New Today
-                    </span>
-                  )}
+                {/* Top row: Logo, Title, Company + Rating + Match, Bookmark */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3 min-w-0 flex-1">
+                    <div className="h-11 w-11 shrink-0 rounded-xl border border-slate-100 bg-white p-1 shadow-2xs flex items-center justify-center overflow-hidden">
+                      <img
+                        src={logoUrl}
+                        alt={`${job.company} logo`}
+                        className="h-full w-full object-contain"
+                        onError={(e) => {
+                          (e.target as HTMLElement).style.display = 'none';
+                        }}
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-[15px] font-bold text-slate-900 leading-snug line-clamp-1 group-hover:text-blue-600 transition-colors">
+                        {job.title}
+                      </h3>
+                      <div className="mt-0.5 flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                        <span className="truncate max-w-[110px]">{job.company}</span>
+                        <span className="inline-flex items-center gap-0.5 text-amber-500 font-semibold text-[11px]">
+                          ★ 3.8
+                        </span>
+                        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded-full border border-indigo-200/50">
+                          🎯 {matchPercentage}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectJob(job);
+                    }}
+                    className="p-1 text-slate-400 hover:text-slate-600 transition-colors shrink-0"
+                    aria-label="Quick view job"
+                  >
+                    <Bookmark className="h-4.5 w-4.5 text-slate-400" />
+                  </button>
                 </div>
 
-                {/* Company & Title */}
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 shrink-0 rounded-xl border border-slate-100 bg-white p-1.5 shadow-2xs flex items-center justify-center overflow-hidden">
-                    <img
-                      src={logoUrl}
-                      alt={`${job.company} logo`}
-                      className="h-full w-full object-contain"
-                      onError={(e) => {
-                        (e.target as HTMLElement).style.display = 'none';
-                      }}
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1 leading-snug">
-                      {job.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 font-semibold truncate mt-0.5">
-                      {job.company}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Badges: Location, Mode, CTC */}
-                <div className="mt-3.5 space-y-1.5 text-xs text-slate-600 font-medium">
-                  <div className="flex items-center gap-1.5 truncate">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                {/* Details Row: Location, Experience / Type */}
+                <div className="mt-3 space-y-1 text-xs text-slate-600 font-normal">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                     <span className="truncate">{job.location || 'Remote'}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 truncate">
-                    <Briefcase className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span className="capitalize">
-                      {typeof job.jobType === 'string' ? job.jobType.replace('-', ' ') : 'Full Time'}
+                  <div className="flex items-center gap-2">
+                    <Briefcase className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                    <span className="lowercase">
+                      {typeof job.jobType === 'string'
+                        ? job.jobType.replace('-', ' ')
+                        : 'full time'}
                     </span>
-                    {job.salary && (
-                      <>
-                        <span className="text-slate-300">•</span>
-                        <span className="font-bold text-emerald-700 truncate">{job.salary}</span>
-                      </>
-                    )}
                   </div>
+                  {job.salary ? (
+                    <div className="flex items-center gap-2 font-medium text-slate-800">
+                      <span className="text-slate-400 font-semibold text-[13px]">₹</span>
+                      <span>{job.salary}</span>
+                    </div>
+                  ) : null}
+                </div>
+
+                {/* Badge & Relative Time */}
+                <div className="mt-2.5 flex items-center justify-between gap-2">
+                  <div>
+                    <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 border border-amber-200/50">
+                      ⚡ Urgent Hiring
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-slate-400 shrink-0">{posted}</span>
                 </div>
               </div>
 
-              {/* Bottom Buttons */}
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelectJob(job);
-                  }}
-                  className="px-3 py-1.5 rounded-full text-xs font-bold text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-colors"
-                >
-                  Quick View ↗
-                </button>
+              {/* Full-width Apply Button (Pill style from screenshot) */}
+              <div className="mt-3">
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     onApplyJob(job);
                   }}
-                  className="px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-2xs transition-colors flex items-center gap-1"
+                  className="w-full py-2.5 rounded-full bg-[#EBF2FE] hover:bg-[#DDE9FD] active:scale-[0.99] text-[#2563EB] font-semibold text-sm transition-all text-center flex items-center justify-center shadow-2xs"
                 >
-                  <span>Apply</span>
-                  <ArrowRight className="w-3 h-3" />
+                  Apply
                 </button>
               </div>
             </div>

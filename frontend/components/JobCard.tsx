@@ -256,12 +256,12 @@ export default function JobCard({ job, variant = 'auto', onSelect }: JobCardProp
             </div>
             <div className="flex items-center gap-2">
               <Briefcase className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-              <span>
+              <span className="lowercase">
                 {typeof job.jobType === 'string'
                   ? job.jobType.replace('-', ' ')
                   : Array.isArray(job.jobType)
                   ? (job.jobType as any[]).join(', ')
-                  : '0-2 Yrs'}
+                  : 'full time'}
               </span>
             </div>
             {job.salary ? (
@@ -275,15 +275,9 @@ export default function JobCard({ job, variant = 'auto', onSelect }: JobCardProp
           {/* Badge & Relative Time */}
           <div className="mt-2.5 flex items-center justify-between gap-2">
             <div>
-              {job.isNew ? (
-                <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 border border-amber-200/50">
-                  ⚡ Urgent Hiring
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 rounded-md bg-orange-50 px-2 py-0.5 text-[11px] font-semibold text-orange-700 border border-orange-200/50">
-                  🔥 2 Vacancies
-                </span>
-              )}
+              <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 border border-amber-200/50">
+                ⚡ Urgent Hiring
+              </span>
             </div>
             <span className="text-[11px] text-slate-400 shrink-0">{posted}</span>
           </div>
