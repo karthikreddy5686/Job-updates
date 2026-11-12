@@ -296,19 +296,13 @@ export default function JobUpdatesPage() {
 
               {/* ⚡ Modern Unified Filter System (Same as Mobile with Freshers, Remote, Internships, CTC) */}
               <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h2 className="text-base font-bold text-slate-900 tracking-tight">
-                      Filter Opportunities
-                    </h2>
-                    <p className="text-xs text-slate-500 mt-0.5">
-                      Showing {totalFilteredJobs} matching verified openings
-                    </p>
-                  </div>
-                  <Button size="sm" variant="secondary" onClick={refreshAll} className="gap-1.5">
-                    <RefreshCcw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-                    <span>Refresh Feed</span>
-                  </Button>
+                <div className="mb-3">
+                  <h2 className="text-base font-bold text-slate-900 tracking-tight">
+                    Filter Opportunities
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Showing {totalFilteredJobs} matching verified openings
+                  </p>
                 </div>
 
                 <JobFilterBar

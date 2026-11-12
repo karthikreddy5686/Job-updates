@@ -210,13 +210,6 @@ function CategoryDetailPageContent() {
 
           <div className="flex items-center gap-2">
             <DownloadAppButton />
-            <button
-              onClick={() => refreshAll()}
-              className="p-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100"
-              title="Refresh"
-            >
-              <RefreshCcw className={`w-4 h-4 ${isLoading ? 'animate-spin text-blue-600' : ''}`} />
-            </button>
             <Link
               href="/job-updates/alerts"
               className="relative p-2 text-slate-600 hover:text-slate-900 rounded-full hover:bg-slate-100 transition-colors"
