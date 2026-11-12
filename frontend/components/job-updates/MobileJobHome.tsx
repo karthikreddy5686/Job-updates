@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import JobCard from '@/components/JobCard';
 import MobileBottomNav from '@/components/job-updates/MobileBottomNav';
+import { DownloadAppButton } from '@/components/pwa/PwaInstallPrompt';
 import type { DailyJob } from '@/types/jobs';
 import type { DailyCategoryKey } from '@/hooks/useDailyJobs';
 
@@ -183,6 +184,7 @@ export default function MobileJobHome({
           </div>
 
           <div className="flex items-center gap-2">
+            <DownloadAppButton />
             <button
               onClick={() => refreshAll()}
               className="p-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100"

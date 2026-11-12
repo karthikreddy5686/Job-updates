@@ -1,0 +1,26 @@
+{
+  "name": "Geonixa NextJob",
+  "short_name": "NextJob",
+  "description": "Your career edge, one update at a time. Verified daily jobs & internships.",
+  "start_url": "/job-updates",
+  "id": "/job-updates",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F8FAFC",
+  "theme_color": "#2563EB",
+  "icons": [
+    {
+      "src": "/geonixa-logo-full.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/geonixa-logo-full.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
