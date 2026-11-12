@@ -7,6 +7,8 @@ export type JobNotificationCategory =
   | 'government'
   | 'startup'
   | 'cat-mba'
+  | 'core'
+  | 'civil'
   | 'recommendations'
   | 'deadlines'
   | 'resume-match'

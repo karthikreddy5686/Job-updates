@@ -24,38 +24,36 @@
         "name": "next"
       }
     ],
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
       ],
       "@/components/*": [
-        "components/*"
+        "./components/*"
       ],
       "@/components": [
-        "components"
+        "./components"
       ],
       "@/components/ui/*": [
-        "components/ui/*"
+        "./components/ui/*"
       ],
       "@/data/*": [
-        "backend/data/*"
+        "./backend/data/*"
       ],
       "@/lib/*": [
-        "backend/lib/*"
+        "./backend/lib/*"
       ],
       "@/types/*": [
-        "backend/types/*"
+        "./backend/types/*"
       ],
       "@/app/*": [
-        "app/*"
+        "./app/*"
       ],
       "@/app/components/*": [
-        "app/components/*"
+        "./app/components/*"
       ],
       "@/backend/*": [
-        "backend/*"
+        "./backend/*"
       ]
     },
     "allowJs": true

@@ -34,6 +34,8 @@ const CATEGORY_LABELS: Record<NotificationCategory, string> = {
   government: 'Government Jobs',
   startup: 'Startup Roles',
   'cat-mba': 'CAT / MBA Paths',
+  core: 'Core Engineering',
+  civil: 'Civil & Mech',
   recommendations: 'Recommendations',
   deadlines: 'Deadline Alerts',
   'resume-match': 'Resume Match',

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { jobCapabilities } from '@/data/jobCapabilities';
 import type { DailyJob, DateRangeOption, JobTypeFilter, SortOption } from '@/types/jobs';
+import { formatRelativeTime } from '@/lib/utils';
 
 const DAILY_CATEGORIES = ['internships', 'mnc', 'government', 'banking', 'startup', 'cat-mba', 'core', 'civil'] as const;
 export type DailyCategoryKey = (typeof DAILY_CATEGORIES)[number];
@@ -191,7 +192,21 @@ export function useDailyJobs() {
 
     fetches.forEach(({ category, jobs }) => {
       updatedJobs[category] = jobs;
-      updatedLastUpdated[category] = new Date().toISOString();
+
+      // Find actual latest posting date among jobs in this category
+      let newestTimestamp = 0;
+      for (const j of jobs) {
+        if (j.postedDate) {
+          const t = new Date(j.postedDate).getTime();
+          if (!isNaN(t) && t > newestTimestamp) {
+            newestTimestamp = t;
+          }
+        }
+      }
+      updatedLastUpdated[category] = newestTimestamp > 0
+        ? new Date(newestTimestamp).toISOString()
+        : new Date().toISOString();
+
       newKnownIds[category] = jobs.map((job) => job.id);
 
       const oldIds = new Set(previousIdsSnapshot[category] || []);
@@ -258,7 +273,7 @@ export function useDailyJobs() {
   const lastUpdatedLabel = useCallback(
     (category: DailyCategoryKey) => {
       const value = lastUpdated[category];
-      return value ? `Last updated: ${formatTimestamp(value)}` : 'Not updated yet';
+      return value ? `Last updated: ${formatRelativeTime(value)}` : 'Not updated yet';
     },
     [lastUpdated],
   );

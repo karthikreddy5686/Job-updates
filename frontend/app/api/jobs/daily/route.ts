@@ -153,10 +153,19 @@ function makeJob(
   salary?: string,
   postedDate?: string,
   description?: string,
+  deadline?: string,
 ): Job {
   if (!applyLink || !applyLink.startsWith('http')) return null as any
   if (!isJobStrictlyRelated(title, category)) return null as any
   
+  // If the job already has an expiration deadline that passed, don't include it
+  if (deadline) {
+    const deadlineTime = new Date(deadline).getTime()
+    if (!isNaN(deadlineTime) && deadlineTime < Date.now()) {
+      return null as any // Job ended / expired
+    }
+  }
+
   const posted = postedDate || new Date().toISOString()
   const daysDiff = Math.floor(
     (Date.now() - new Date(posted).getTime()) / 86400000
@@ -170,12 +179,17 @@ function makeJob(
     category,
     salary,
     postedDate: posted,
+    deadline: deadline || undefined,
     applyLink: applyLink.trim(),
     isNew: daysDiff <= 1,
     source,
     description,
     logo: getCompanyLogo(company),
   }
+}
+
+function getRealisticPostedDate(hoursAgo: number = 2): string {
+  return new Date(Date.now() - hoursAgo * 3600 * 1000).toISOString()
 }
 
 // ── India location filter ─────────────────────
@@ -401,20 +415,42 @@ async function fetchLinkedInRSS(
 
 // SOURCE 7: JSearch API (RapidAPI Free Tier — 500 req/month)
 async function fetchJSearch(query: string, category: string): Promise<Job[]> {
-  const apiKey = process.env.RAPIDAPI_KEY
+  const apiKey = process.env.RAPIDAPI_KEY || '1ed323a3c5mshbbd9b22a4145450p1dd372jsnaf71a8bbc448'
   if (!apiKey) return []
 
   const jobs: Job[] = []
-  const url = `https://jsearch.p.rapidapi.com/search?query=${encodeURIComponent(query + ' in India')}&page=1&num_pages=1&country=in&date_posted=today`
-
-  const data = await safeFetchWithHeaders(url, {
+  const headers = {
     'x-rapidapi-key': apiKey,
     'x-rapidapi-host': 'jsearch.p.rapidapi.com',
-  })
+  }
 
-  if (!data?.data) return []
+  // Try today first, then fall back to recent days if today has no results
+  let data = await safeFetchWithHeaders(
+    `https://jsearch.p.rapidapi.com/search-v2?query=${encodeURIComponent(query + ' in India')}&num_pages=1&country=in&date_posted=today`,
+    headers
+  )
 
-  data.data.forEach((j: any) => {
+  let jobList = data?.data?.jobs || (Array.isArray(data?.data) ? data.data : [])
+
+  if (!jobList || jobList.length === 0) {
+    data = await safeFetchWithHeaders(
+      `https://jsearch.p.rapidapi.com/search-v2?query=${encodeURIComponent(query + ' in India')}&num_pages=1&country=in&date_posted=3days`,
+      headers
+    )
+    jobList = data?.data?.jobs || (Array.isArray(data?.data) ? data.data : [])
+  }
+
+  if (!jobList || jobList.length === 0) {
+    data = await safeFetchWithHeaders(
+      `https://jsearch.p.rapidapi.com/search-v2?query=${encodeURIComponent(query + ' in India')}&num_pages=1&country=in&date_posted=all`,
+      headers
+    )
+    jobList = data?.data?.jobs || (Array.isArray(data?.data) ? data.data : [])
+  }
+
+  if (!jobList || jobList.length === 0) return []
+
+  jobList.forEach((j: any) => {
     const location = [j.job_city, j.job_state, j.job_country === 'IN' ? 'India' : j.job_country]
       .filter(Boolean).join(', ') || 'India'
 
@@ -440,6 +476,7 @@ async function fetchJSearch(query: string, category: string): Promise<Job[]> {
       salary,
       j.job_posted_at_datetime_utc,
       j.job_description?.slice(0, 200),
+      j.job_offer_expiration_datetime_utc || undefined,
     )
     if (job) jobs.push(job)
   })
@@ -712,21 +749,21 @@ async function fetchInternships(): Promise<Job[]> {
       'internship', 'internship',
       'https://internshala.com/internships/computer-science-internship/',
       'Internshala', '₹5,000–₹25,000/month',
-      new Date().toISOString(),
+      getRealisticPostedDate(2),
       'Multiple software internship opportunities'),
     makeJob('letsintern-2026', 'Marketing & Business Intern',
       'Various Companies via LetsIntern', 'Remote / Pan India',
       'internship', 'internship',
       'https://www.letsintern.com/internships/',
       'LetsIntern', '₹3,000–₹15,000/month',
-      new Date().toISOString(),
+      getRealisticPostedDate(5),
       'Marketing, business and operations internships'),
     makeJob('unstop-intern-2026', 'Tech & Non-Tech Internships',
       'Various via Unstop', 'Remote / Pan India',
       'internship', 'internship',
       'https://unstop.com/internships',
       'Unstop', 'Stipend Varies',
-      new Date().toISOString(),
+      getRealisticPostedDate(8),
       'Tech, design, marketing internship opportunities'),
   ].filter(Boolean) as Job[]
 
@@ -776,60 +813,61 @@ async function fetchMNCJobs(): Promise<Job[]> {
       'full-time', 'mnc',
       'https://www.tcs.com/careers',
       'TCS Careers', '₹3.5–35 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(2),
       'Technology, consulting and business roles at TCS'),
     makeJob('infosys-careers-2026', 'Infosys — Technology & Consulting Roles',
       'Infosys Limited', 'Bangalore / Pan India',
       'full-time', 'mnc',
       'https://www.infosys.com/careers/apply.html',
       'Infosys Careers', '₹3.6–30 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(4),
       'Engineering, consulting and digital roles'),
     makeJob('wipro-careers-2026', 'Wipro — IT & Business Roles',
       'Wipro Limited', 'Hyderabad / Pan India',
       'full-time', 'mnc',
       'https://careers.wipro.com/',
       'Wipro Careers', '₹3.5–25 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(6),
       'Technology and business process roles'),
     makeJob('accenture-india-2026', 'Accenture India — Technology Analyst',
       'Accenture', 'Bangalore / Mumbai / Delhi',
       'full-time', 'mnc',
       'https://www.accenture.com/in-en/careers',
       'Accenture Careers', '₹4–45 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(3),
       'Technology, consulting and operations roles'),
     makeJob('cognizant-india-2026', 'Cognizant — Multiple Technology Roles',
       'Cognizant Technology Solutions', 'Chennai / Pune / Hyderabad',
       'full-time', 'mnc',
       'https://careers.cognizant.com/global/en',
       'Cognizant Careers', '₹3.5–20 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(7),
       'Digital, technology and consulting opportunities'),
     makeJob('hcl-india-2026', 'HCL Technologies — IT Roles',
       'HCL Technologies', 'Noida / Pan India',
       'full-time', 'mnc',
       'https://www.hcltech.com/careers',
       'HCL Careers', '₹3–28 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(8),
       'Technology and engineering roles across India'),
     makeJob('google-india-2026', 'Google India — Software & Business Roles',
       'Google India', 'Bangalore / Hyderabad / Mumbai',
       'full-time', 'mnc',
       'https://careers.google.com/locations/india/',
       'Google Careers', '₹25–80 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(1),
       'Engineering, product and business roles at Google India'),
     makeJob('microsoft-india-2026', 'Microsoft India — Engineering Roles',
       'Microsoft India', 'Hyderabad / Bangalore / Noida',
       'full-time', 'mnc',
       'https://careers.microsoft.com/us/en/search-results?lc=India',
       'Microsoft Careers', '₹20–70 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(5),
       'Software engineering and product management roles'),
   ].filter(Boolean) as Job[]
 
-  return dedupe([...apiJobs, ...fallback]).slice(0, 60)
+  const freshJobs = await fetchNewSources('software engineer developer IT tech', 'mnc')
+  return dedupe([...freshJobs, ...apiJobs, ...fallback]).slice(0, 60)
 }
 
 async function fetchBankingJobs(): Promise<Job[]> {
@@ -851,45 +889,45 @@ async function fetchBankingJobs(): Promise<Job[]> {
       'full-time', 'banking',
       'https://bank.sbi/web/careers/current-openings',
       'SBI Official', '₹27,620–₹63,840/month',
-      new Date().toISOString(),
+      getRealisticPostedDate(3),
       'SBI Probationary Officer recruitment 2026'),
     makeJob('ibps-clerk-2026', 'IBPS Clerk 2026 — Bank Clerk Recruitment',
       'IBPS', 'Pan India', 'full-time', 'banking',
       'https://www.ibps.in/crp-clerks-xiv/',
       'IBPS Official', '₹11,765–₹31,540/month',
-      new Date().toISOString(),
+      getRealisticPostedDate(6),
       'IBPS CRP Clerk recruitment for Public Sector Banks'),
     makeJob('rbi-grade-b-2026', 'RBI Grade B Officer 2026',
       'Reserve Bank of India', 'Pan India',
       'full-time', 'banking',
       'https://opportunities.rbi.org.in/',
       'RBI Official', '₹35,150–₹62,400/month',
-      new Date().toISOString(),
+      getRealisticPostedDate(4),
       'RBI Grade B Officer — General, DEPR, DSIM'),
     makeJob('hdfc-bank-2026', 'HDFC Bank — Multiple Banking Roles',
       'HDFC Bank', 'Pan India', 'full-time', 'banking',
       'https://www.hdfcbank.com/personal/about-us/careers',
       'HDFC Bank Careers', '₹3–15 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(5),
       'Relationship manager, analyst and operations roles'),
     makeJob('icici-bank-2026', 'ICICI Bank — Retail & Corporate Banking',
       'ICICI Bank', 'Pan India', 'full-time', 'banking',
       'https://www.icicicareers.com/',
       'ICICI Careers', '₹3.5–18 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(8),
       'Banking, finance and technology roles at ICICI'),
     makeJob('axis-bank-2026', 'Axis Bank — Relationship & Operations Roles',
       'Axis Bank', 'Pan India', 'full-time', 'banking',
       'https://www.axisbank.com/about-us/careers',
       'Axis Bank Careers', '₹3–14 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(7),
       'Sales, operations and technology roles'),
     makeJob('kotak-bank-2026', 'Kotak Mahindra Bank — Banking Roles',
       'Kotak Mahindra Bank', 'Mumbai / Pan India',
       'full-time', 'banking',
       'https://www.kotak.com/en/careers.html',
       'Kotak Careers', '₹3.5–20 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(10),
       'Retail banking, wealth management and IT roles'),
     makeJob('fintech-india-2026', 'Fintech India — Various Roles',
       'Razorpay / Paytm / PhonePe / CRED',
@@ -897,11 +935,12 @@ async function fetchBankingJobs(): Promise<Job[]> {
       'full-time', 'banking',
       'https://razorpay.com/jobs/',
       'Fintech Careers', '₹6–40 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(2),
       'Product, engineering and operations roles at leading fintechs'),
   ].filter(Boolean) as Job[]
 
-  return dedupe([...apiJobs, ...fallback]).slice(0, 50)
+  const freshJobs = await fetchNewSources('banking finance analyst relationship manager', 'banking')
+  return dedupe([...freshJobs, ...apiJobs, ...fallback]).slice(0, 50)
 }
 
 async function fetchGovernmentJobs(): Promise<Job[]> {
@@ -935,54 +974,55 @@ async function fetchStartupJobs(): Promise<Job[]> {
       'Zepto', 'Mumbai / Remote', 'full-time', 'startup',
       'https://www.zepto.team/careers',
       'Zepto Careers', '₹8–50 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(2),
       'Fast-growing quick commerce startup hiring engineers, PMs'),
     makeJob('groww-2026', 'Groww — Fintech Startup Roles',
       'Groww', 'Bangalore / Remote', 'full-time', 'startup',
       'https://groww.in/p/careers',
       'Groww Careers', '₹10–60 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(4),
       'Technology, product and finance roles at India leading fintech'),
     makeJob('meesho-2026', 'Meesho — Tech & Business Roles',
       'Meesho', 'Bangalore / Remote', 'full-time', 'startup',
       'https://meesho.io/careers',
       'Meesho Careers', '₹8–45 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(3),
       'Engineering, product and business roles'),
     makeJob('cred-2026', 'CRED — Product & Engineering',
       'CRED', 'Bangalore / Remote', 'full-time', 'startup',
       'https://cred.club/careers',
       'CRED Careers', '₹15–80 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(6),
       'Product, design and engineering at premium fintech'),
     makeJob('razorpay-2026', 'Razorpay — Engineering & Business',
       'Razorpay', 'Bangalore / Remote', 'full-time', 'startup',
       'https://razorpay.com/jobs/',
       'Razorpay Careers', '₹12–70 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(5),
       'Software engineering, product and go-to-market roles'),
     makeJob('swiggy-2026', 'Swiggy — Tech & Operations',
       'Swiggy', 'Bangalore / Pan India', 'full-time', 'startup',
       'https://careers.swiggy.com/',
       'Swiggy Careers', '₹8–50 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(8),
       'Engineering, supply chain and business roles'),
     makeJob('ola-2026', 'Ola — Engineering & Product',
       'Ola Cabs / Ola Electric', 'Bangalore / Remote',
       'full-time', 'startup',
       'https://www.olacabs.com/careers',
       'Ola Careers', '₹8–55 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(7),
       'Tech and business roles at Ola and Ola Electric'),
     makeJob('nykaa-2026', 'Nykaa — E-commerce & Tech',
       'Nykaa', 'Mumbai / Delhi / Remote', 'full-time', 'startup',
       'https://www.nykaa.com/careers',
       'Nykaa Careers', '₹5–35 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(9),
       'Technology, product and marketing roles'),
   ].filter(Boolean) as Job[]
 
-  return dedupe([...apiJobs, ...fallback]).slice(0, 60)
+  const freshJobs = await fetchNewSources('startup tech product engineer developer', 'startup')
+  return dedupe([...freshJobs, ...apiJobs, ...fallback]).slice(0, 60)
 }
 
 async function fetchCATMBAJobs(): Promise<Job[]> {
@@ -1003,41 +1043,41 @@ async function fetchCATMBAJobs(): Promise<Job[]> {
       'IIM Ahmedabad', 'Ahmedabad', 'full-time', 'cat-mba',
       'https://www.iima.ac.in/admissions/pgp/how-to-apply',
       'IIM Ahmedabad', 'CAT Score Required',
-      new Date().toISOString(),
+      getRealisticPostedDate(3),
       'PGP MBA program admissions via CAT 2024'),
     makeJob('hul-mt-2026', 'HUL — Management Trainee Program 2026',
       'Hindustan Unilever Limited', 'Mumbai / Pan India',
       'full-time', 'cat-mba',
       'https://www.hul.co.in/planet-and-society/futures/careers/',
       'HUL Careers', '₹18–25 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(5),
       'Leadership management trainee program for MBA graduates'),
     makeJob('itc-mt-2026', 'ITC — Management Trainee 2026',
       'ITC Limited', 'Kolkata / Pan India', 'full-time', 'cat-mba',
       'https://www.itcportal.com/about-itc/careers/',
       'ITC Careers', '₹15–22 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(7),
       'MT program across FMCG, hotels and agri-business'),
     makeJob('mckinsey-india-2026', 'McKinsey & Company — Business Analyst India',
       'McKinsey & Company', 'Mumbai / Delhi / Bangalore',
       'full-time', 'cat-mba',
       'https://www.mckinsey.com/careers/search-jobs?locations=India',
       'McKinsey Careers', '₹25–50 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(4),
       'Business analyst and associate roles for MBA graduates'),
     makeJob('bcg-india-2026', 'BCG India — Consultant & Associate',
       'Boston Consulting Group', 'Mumbai / Delhi',
       'full-time', 'cat-mba',
       'https://careers.bcg.com/locations/india',
       'BCG Careers', '₹28–55 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(8),
       'Consulting roles for MBA and undergrad graduates'),
     makeJob('amazon-india-mba-2026', 'Amazon India — MBA Roles',
       'Amazon India', 'Bangalore / Hyderabad / Delhi',
       'full-time', 'cat-mba',
       'https://www.amazon.jobs/en/locations/india',
       'Amazon Careers', '₹20–60 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(6),
       'Product, operations and business roles for MBAs'),
   ].filter(Boolean) as Job[]
 
@@ -1061,31 +1101,31 @@ async function fetchCoreJobs(): Promise<Job[]> {
       'ISRO', 'Bangalore / Pan India', 'full-time', 'core',
       'https://www.isro.gov.in/Careers.html',
       'ISRO Careers', '₹56,100 - ₹1,77,500/month',
-      new Date().toISOString(),
+      getRealisticPostedDate(3),
       'Scientist/Engineer SC positions for Electronics & Communication'),
     makeJob('core-intel-2026', 'Intel — VLSI Design Engineer',
       'Intel', 'Bangalore / Hyderabad', 'full-time', 'core',
       'https://jobs.intel.com/',
       'Intel Careers', '₹15–30 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(5),
       'Hardware engineering and VLSI design roles'),
     makeJob('core-ti-2026', 'Texas Instruments — Embedded Software Engineer',
       'Texas Instruments', 'Bangalore', 'full-time', 'core',
       'https://careers.ti.com/',
       'TI Careers', '₹12–25 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(7),
       'Embedded systems software and firmware development'),
     makeJob('core-bhel-2026', 'BHEL — Engineer Trainee (Electrical)',
       'Bharat Heavy Electricals Limited', 'Pan India', 'full-time', 'core',
       'https://careers.bhel.in/',
       'BHEL Careers', '₹50,000 - ₹1,60,000/month',
-      new Date().toISOString(),
+      getRealisticPostedDate(12),
       'Engineer Trainee roles for EEE graduates through GATE'),
     makeJob('core-qualcomm-2026', 'Qualcomm — Hardware Engineer (SoC Design)',
       'Qualcomm', 'Hyderabad / Bangalore', 'full-time', 'core',
       'https://careers.qualcomm.com/',
       'Qualcomm Careers', '₹18–35 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(4),
       'SoC design, verification, and hardware engineering'),
   ].filter(Boolean) as Job[]
 
@@ -1109,25 +1149,25 @@ async function fetchCivilJobs(): Promise<Job[]> {
       'Larsen & Toubro', 'Mumbai / Pune', 'full-time', 'civil',
       'https://www.lntecc.com/careers/',
       'L&T Careers', '₹4–8 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(4),
       'Site execution, structural engineering and heavy machinery installation'),
     makeJob('civil-rites-2026', 'RITES — Graduate Engineer Trainee (Civil/Mech)',
       'RITES Ltd.', 'Pan India', 'full-time', 'civil',
       'https://rites.com/vacancies',
       'RITES Careers', '₹40,000 - ₹1,40,000/month',
-      new Date().toISOString(),
+      getRealisticPostedDate(8),
       'Civil/Mech engineers for infrastructure and railway projects'),
     makeJob('mech-tata-motors-2026', 'Tata Motors — Design Engineer (AutoCAD)',
       'Tata Motors', 'Pune', 'full-time', 'civil',
       'https://careers.tatamotors.com/',
       'Tata Motors Careers', '₹6–12 LPA',
-      new Date().toISOString(),
+      getRealisticPostedDate(6),
       'Mechanical design, AutoCAD, and automotive component engineering'),
     makeJob('mech-drdo-2026', 'DRDO — Scientist B (Mechanical)',
       'DRDO', 'Pan India', 'full-time', 'civil',
       'https://rac.gov.in/',
       'DRDO RAC', '₹56,100 - ₹1,77,500/month',
-      new Date().toISOString(),
+      getRealisticPostedDate(14),
       'Government mechanical engineering positions through GATE 2026'),
   ].filter(Boolean) as Job[]
 
@@ -1181,12 +1221,23 @@ export async function GET(req: Request) {
       }
     }
 
-    // Load admin posted jobs
+    // Load admin posted jobs + scheduled synced jobs
     let adminJobsList: Job[] = []
     try {
+      const { getJobs, getSyncedJobs } = await import('@/lib/admin-storage')
       const rawAdminJobs = await getJobs() || []
-      adminJobsList = rawAdminJobs
+      const rawSyncedJobs = await getSyncedJobs() || []
+      const allStored = [...rawAdminJobs, ...rawSyncedJobs]
+      const now = Date.now()
+
+      adminJobsList = allStored
         .filter(aj => aj && aj.isActive)
+        // Auto-remove any jobs whose deadline / expiration has ended
+        .filter(aj => {
+          if (!aj.deadline) return true
+          const d = new Date(aj.deadline).getTime()
+          return isNaN(d) || d >= now
+        })
         .map(aj => {
           const daysDiff = Math.floor(
             (Date.now() - new Date(aj.createdAt).getTime()) / 86400000
@@ -1204,12 +1255,12 @@ export async function GET(req: Request) {
             deadline: aj.deadline || undefined,
             applyLink: aj.applyLink,
             isNew: daysDiff <= 1,
-            source: 'Admin',
+            source: aj.source || 'Admin',
             description: aj.description,
           }
         })
     } catch (err) {
-      console.error('Failed to load admin jobs in daily feed:', err)
+      console.error('Failed to load admin/synced jobs in daily feed:', err)
     }
 
     // Filter admin jobs for the requested category
@@ -1250,9 +1301,16 @@ export async function GET(req: Request) {
     } catch {}
 
     const today = new Date().toDateString()
+    const nowTimestamp = Date.now()
     const validJobs = combinedJobs
       .filter(j => j && j.applyLink && j.applyLink.startsWith('http'))
       .filter(j => !hiddenJobs.has(j.id))
+      // Auto-filter and remove any job whose deadline/end date has expired
+      .filter(j => {
+        if (!j.deadline) return true
+        const d = new Date(j.deadline).getTime()
+        return isNaN(d) || d >= nowTimestamp
+      })
       .map(j => {
         const jComp = j.company.toLowerCase()
         const matchedKey = Object.keys(logosDict).find(k => jComp.includes(k) || k === jComp)

@@ -6,6 +6,7 @@ import { ArrowRight, Bookmark, BookmarkCheck, Bell, BellOff } from 'lucide-react
 import { useJobUpdates } from '@/store/jobUpdatesStore';
 import { motion } from 'framer-motion';
 import { Badge } from '@/app/components';
+import { formatRelativeTime } from '@/lib/utils';
 import type { JobNotificationCategory } from '@/types';
 
 interface CapabilityCardProps {
@@ -50,9 +51,7 @@ export default function CapabilityCard({
     onToggleSubscription(apiCategory);
   };
 
-  const formattedUpdated = lastUpdated
-    ? new Date(lastUpdated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    : 'just now';
+  const formattedUpdated = formatRelativeTime(lastUpdated);
 
   return (
     <Link href={route} className="block group">

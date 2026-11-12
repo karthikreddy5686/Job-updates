@@ -25,6 +25,10 @@ const normalizeCategory = (value: string | null): CategoryAlias | null => {
     case 'cat':
     case 'mba':
       return 'cat-mba';
+    case 'core':
+      return 'core';
+    case 'civil':
+      return 'civil';
     case 'recommendations':
     case 'recommendation':
       return 'recommendations';
@@ -122,6 +126,16 @@ const mockData: Record<CategoryAlias, JobNotification[]> = {
     makeJob('cat-mba', 'prep-2026', 'CAT Prep Mentor', 'MBA Catalyst', 'onsite', 20),
     makeJob('cat-mba', 'admissions-2026', 'Admissions Analyst', 'B-School Hub', 'hybrid', 22),
     makeJob('cat-mba', 'career-2026', 'Career Coach', 'FuturePaths', 'remote', 18),
+  ],
+  core: [
+    makeJob('core', 'vlsi-2026', 'VLSI Design Engineer', 'Qualcomm', 'hybrid', 15),
+    makeJob('core', 'embedded-2026', 'Embedded Systems Engineer', 'Bosch India', 'onsite', 12),
+    makeJob('core', 'hardware-2026', 'Hardware Verification Engineer', 'Intel', 'remote', 18),
+  ],
+  civil: [
+    makeJob('civil', 'structural-2026', 'Structural Design Engineer', 'L&T Construction', 'onsite', 14),
+    makeJob('civil', 'site-2026', 'Civil Site Engineer', 'Tata Projects', 'onsite', 20),
+    makeJob('civil', 'autocad-2026', 'CAD Design Engineer', 'Afcons Infrastructure', 'hybrid', 16),
   ],
   recommendations: [
     makeJob('recommendations', 'matching-2026', 'AI Role Specialist', 'NextShift', 'remote', 15),

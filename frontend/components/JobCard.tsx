@@ -7,6 +7,7 @@ import type { DailyJob } from '@/types/jobs';
 import { Button } from './ui/Button';
 
 import { getStudentSession } from '@/lib/student-auth';
+import { formatRelativeTime } from '@/lib/utils';
 import Link from 'next/link';
 import { ArrowRight, Bookmark, Briefcase, CalendarDays, MapPin, Clock3, Sparkles, Target } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -38,22 +39,7 @@ export default function JobCard({ job }: JobCardProps) {
     return urls;
   }, [job.company, job.logo]);
 
-  let posted = 'Recently';
-  try {
-    if (job.postedDate) {
-      const dateObj = new Date(job.postedDate);
-      if (!isNaN(dateObj.getTime())) {
-        posted = dateObj.toLocaleString([], {
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-      }
-    }
-  } catch (e) {
-    // fallback to 'Recently'
-  }
+  const posted = useMemo(() => formatRelativeTime(job.postedDate), [job.postedDate]);
 
   const [sessionUser, setSessionUser] = useState<{ id: string; name: string } | null>(null);
   const router = useRouter();

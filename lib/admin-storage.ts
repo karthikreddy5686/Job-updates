@@ -19,6 +19,7 @@ export interface AdminJob {
   isPinned: boolean
   isFeatured: boolean
   createdAt: string
+  source?: string
 }
 
 export async function getJobs(): Promise<AdminJob[]> {
@@ -27,6 +28,44 @@ export async function getJobs(): Promise<AdminJob[]> {
 
 export async function saveJobs(jobs: AdminJob[]): Promise<void> {
   await setStoreData('admin-jobs', jobs);
+}
+
+export async function getSyncedJobs(): Promise<AdminJob[]> {
+  return await getStoreData<AdminJob[]>('synced-jobs', []);
+}
+
+export async function saveSyncedJobs(jobs: AdminJob[]): Promise<void> {
+  await setStoreData('synced-jobs', jobs);
+}
+
+export async function purgeExpiredJobs(): Promise<{ removedAdmin: number; removedSynced: number }> {
+  const now = Date.now();
+  
+  // 1. Clean admin jobs whose deadlines ended
+  const adminJobs = await getJobs();
+  const validAdmin = adminJobs.filter(j => {
+    if (!j.deadline) return true;
+    const d = new Date(j.deadline).getTime();
+    return isNaN(d) || d >= now;
+  });
+  const removedAdmin = adminJobs.length - validAdmin.length;
+  if (removedAdmin > 0) {
+    await saveJobs(validAdmin);
+  }
+
+  // 2. Clean synced jobs whose deadlines ended
+  const syncedJobs = await getSyncedJobs();
+  const validSynced = syncedJobs.filter(j => {
+    if (!j.deadline) return true;
+    const d = new Date(j.deadline).getTime();
+    return isNaN(d) || d >= now;
+  });
+  const removedSynced = syncedJobs.length - validSynced.length;
+  if (removedSynced > 0) {
+    await saveSyncedJobs(validSynced);
+  }
+
+  return { removedAdmin, removedSynced };
 }
 
 export interface LiveFeedItem {
