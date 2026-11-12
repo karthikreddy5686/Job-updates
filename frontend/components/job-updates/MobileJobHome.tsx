@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import JobCard from '@/components/JobCard';
 import MobileBottomNav from '@/components/job-updates/MobileBottomNav';
+import JobDetailDrawer from '@/components/job-updates/JobDetailDrawer';
 import JobFilterBar, {
   JobFilterState,
   initialFilterState,
@@ -59,6 +60,7 @@ export default function MobileJobHome({
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<JobFilterState>(initialFilterState);
+  const [selectedJob, setSelectedJob] = useState<DailyJob | null>(null);
 
   // 4x2 Category Grid matching the 8 distinct job sections
   const categoryTiles = [
@@ -314,7 +316,12 @@ export default function MobileJobHome({
               </div>
             ) : (
               filteredJobs.slice(0, 15).map((job) => (
-                <JobCard key={job.id} job={job} variant="compact" />
+                <JobCard
+                  key={job.id}
+                  job={job}
+                  variant="compact"
+                  onSelect={(j) => setSelectedJob(j)}
+                />
               ))
             )}
           </div>
@@ -331,6 +338,13 @@ export default function MobileJobHome({
           )}
         </section>
       </div>
+
+      {/* 📑 Split-Screen Master-Detail Job Drawer (Mobile friendly) */}
+      <JobDetailDrawer
+        job={selectedJob}
+        isOpen={!!selectedJob}
+        onClose={() => setSelectedJob(null)}
+      />
 
       {/* 6. Mobile Bottom Navigation Bar (Home, Jobs, Tracker, Saved, Profile) */}
       <MobileBottomNav />
