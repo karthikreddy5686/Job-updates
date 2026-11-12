@@ -1,10 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, ArrowLeft, Briefcase, Loader2, MapPin, Trash2, User, GraduationCap } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, Briefcase, Loader2, MapPin, Trash2, Layers, CheckCircle2 } from 'lucide-react';
 import { Button, Card } from '@/app/components';
 import { getStudentSession } from '@/lib/student-auth';
+import MobileBottomNav from '@/components/job-updates/MobileBottomNav';
 
 interface ApplicationItem {
   id: string;
@@ -15,7 +16,7 @@ interface ApplicationItem {
   location: string;
   jobType: string;
   appliedDate: string;
-  status: 'applied';
+  status: 'applied' | 'screening' | 'interview' | 'offered' | 'rejected';
   applyLink: string;
   notes?: string;
   salary?: string;
@@ -27,7 +28,7 @@ const formatRelativeDate = (date: string) => {
   const then = new Date(date);
   const diff = now.getTime() - then.getTime();
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  if (days === 0) return 'today';
+  if (days <= 0) return 'today';
   if (days === 1) return 'yesterday';
   if (days < 7) return `${days} days ago`;
   if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
@@ -40,7 +41,6 @@ export default function TrackerPage() {
   const [isReady, setIsReady] = useState(false);
   const [applications, setApplications] = useState<ApplicationItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setStudent(getStudentSession());
@@ -65,188 +65,180 @@ export default function TrackerPage() {
     };
   }, []);
 
-  const effectiveUser = student 
-    ? { id: student.id || student.email, name: student.name, email: student.email } 
-    : (isAdmin ? { id: 'admin', name: 'Admin', email: 'admin@geonixanextjob.com' } : null);
-
-  const fetchApplications = async () => {
-    if (!effectiveUser) {
-      setApplications([]);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('/api/applications', {
-        headers: { 'x-user-id': effectiveUser.id },
-      });
-      if (!response.ok) {
-        const body = await response.json().catch(() => null);
-        setError(body?.error || 'Unable to load applications.');
-        setApplications([]);
-      } else {
-        const data = await response.json();
-        setApplications(Array.isArray(data) ? data : []);
-      }
-    } catch (reason) {
-      console.error(reason);
-      setError('Unable to load applications.');
-      setApplications([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const effectiveUserId = student?.id || student?.email || (isAdmin ? 'admin' : 'guest_user');
 
   useEffect(() => {
-    if (isReady) fetchApplications();
-  }, [effectiveUser?.id, isReady]);
+    if (!isReady) return;
 
-  const removeApplication = async (appId: string) => {
-    if (!effectiveUser) return;
+    let active = true;
+    const controller = new AbortController();
+
+    // Check localStorage cache first
     try {
-      const response = await fetch(`/api/applications/${appId}`, {
-        method: 'DELETE',
-        headers: { 'x-user-id': effectiveUser.id },
-      });
-      if (response.ok) {
-        setApplications((prev) => prev.filter((app) => app.id !== appId));
+      const cached = localStorage.getItem('cached_applications');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setApplications(parsed);
+          setLoading(false);
+        }
       }
+    } catch {}
+
+    const fetchApplications = async () => {
+      try {
+        const response = await fetch('/api/applications', {
+          headers: { 'x-user-id': effectiveUserId },
+          signal: controller.signal,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (active && Array.isArray(data)) {
+            setApplications(data);
+            try {
+              localStorage.setItem('cached_applications', JSON.stringify(data));
+            } catch {}
+          }
+        }
+      } catch (reason) {
+        console.warn('Network load for applications deferred to local cache');
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    fetchApplications();
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [effectiveUserId, isReady]);
+
+  const removeApplication = async (id: string) => {
+    setApplications((current) => {
+      const updated = current.filter((item) => item.id !== id);
+      try {
+        localStorage.setItem('cached_applications', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    try {
+      await fetch(`/api/applications/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-user-id': effectiveUserId },
+      });
     } catch (err) {
-      console.error('Failed to remove application', err);
+      console.error('Failed to remove application from server', err);
     }
   };
 
-  if (!isReady) return null;
+  const renderContent = () => {
+    if (!isReady || loading) {
+      return (
+        <Card hover={false} className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="flex justify-center py-12">
+            <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          </div>
+        </Card>
+      );
+    }
 
-  if (!effectiveUser) {
+    if (applications.length === 0) {
+      return (
+        <Card hover={false} className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+          <div className="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center mx-auto mb-3">
+            <Layers className="w-6 h-6" />
+          </div>
+          <p className="text-base font-bold text-slate-900">No applications tracked yet</p>
+          <p className="mt-1 text-xs text-slate-500 max-w-sm mx-auto">
+            When you click "Apply" on any job, it is automatically logged here so you never lose track of where you applied.
+          </p>
+          <Link href="/job-updates" className="mt-5 inline-block">
+            <Button size="md" className="bg-blue-600 text-white rounded-full px-6">
+              Browse Job Updates
+            </Button>
+          </Link>
+        </Card>
+      );
+    }
+
     return (
-      <main className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex items-center justify-center pt-24 md:pt-28">
-        <div className="mx-auto max-w-md w-full px-4 text-center">
-          <Card hover={false} className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-10 shadow-lg">
-            <User className="mx-auto h-12 w-12 text-slate-400" />
-            <h1 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white">Sign in to track applications</h1>
-            <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">Keep your job application pipeline organized and never lose track of roles.</p>
-            <div className="mt-8 flex flex-col gap-3">
-              <Link href="/" className="inline-flex items-center justify-center rounded-xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-orange-700">
-                Go to Portal Gate
-              </Link>
+      <div className="space-y-3.5">
+        {applications.map((app) => (
+          <Card key={app.id} hover={false} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 px-2.5 py-0.5 font-semibold text-[11px] border border-emerald-200/50">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    Applied {formatRelativeDate(app.appliedDate)}
+                  </span>
+                  <span className="text-slate-400">•</span>
+                  <span className="text-slate-600 font-medium">{app.company}</span>
+                </div>
+
+                <h2 className="mt-2 text-lg font-bold text-slate-950 leading-snug">{app.jobTitle}</h2>
+
+                <div className="mt-2.5 flex flex-wrap gap-3 text-xs text-slate-500">
+                  <span className="flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                    {app.location}
+                  </span>
+                  {app.salary && <span className="font-semibold text-slate-800">₹ {app.salary}</span>}
+                  <span>Type: {app.jobType}</span>
+                </div>
+              </div>
+
+              <div className="flex sm:flex-col gap-2 items-center sm:items-end shrink-0">
+                {app.applyLink && app.applyLink !== '#' && (
+                  <Link
+                    href={app.applyLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 px-4 py-1.5 text-xs font-semibold transition-colors"
+                  >
+                    View Job Link
+                  </Link>
+                )}
+                <button
+                  onClick={() => removeApplication(app.id)}
+                  className="p-1.5 text-slate-400 hover:text-red-600 transition-colors rounded-full hover:bg-red-50"
+                  title="Delete from tracker"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </Card>
-        </div>
-      </main>
+        ))}
+      </div>
     );
-  }
+  };
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pt-24 md:pt-28">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
-          <section className="space-y-6">
-            <Card hover={false} className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 shadow-sm">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <Link href="/job-updates" className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors">
-                      <ArrowLeft className="w-4 h-4" />
-                    </Link>
-                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-orange-600 dark:text-orange-400">Application Tracker</p>
-                  </div>
-                  <h1 className="mt-2 text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Your Job Application Pipeline</h1>
-                  <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                    Track and manage every role you've applied to in one convenient dashboard.
-                  </p>
-                </div>
-                <Button onClick={fetchApplications} className="rounded-xl bg-orange-600 hover:bg-orange-500 text-white shadow-orange-500/20">
-                  Refresh tracker
-                </Button>
-              </div>
-            </Card>
-
-            <Card hover={false} className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
-              <div className="mb-6">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400">
-                  {applications.length} Applied Roles
-                </span>
-              </div>
-
-              {loading ? (
-                <div className="flex justify-center py-12">
-                  <Loader2 className="w-8 h-8 text-orange-600 animate-spin" />
-                </div>
-              ) : error ? (
-                <div className="text-center py-8 text-red-500">{error}</div>
-              ) : applications.length === 0 ? (
-                <div className="text-center py-14 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl bg-slate-50 dark:bg-slate-900/50">
-                  <Briefcase className="mx-auto h-12 w-12 text-slate-400" />
-                  <h3 className="mt-4 text-lg font-bold text-slate-900 dark:text-white">No applications tracked yet</h3>
-                  <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Apply to jobs from the main updates feed and they will automatically show up here.</p>
-                  <Link href="/job-updates" className="mt-6 inline-flex items-center gap-1.5 px-5 py-2.5 bg-orange-600 text-white rounded-xl text-sm font-semibold hover:bg-orange-700 transition-colors">
-                    Browse Job Updates <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {applications.map((app) => (
-                    <article key={app.id} className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                      <div className="flex items-start gap-4 min-w-0">
-                        <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center flex-shrink-0 text-slate-400">
-                          {app.companyLogo ? (
-                            <img src={app.companyLogo} alt={app.company} className="w-full h-full object-contain rounded-xl" />
-                          ) : (
-                            <Briefcase className="w-5 h-5" />
-                          )}
-                        </div>
-                        <div className="min-w-0">
-                          <h3 className="font-bold text-slate-900 dark:text-white truncate">{app.jobTitle}</h3>
-                          <p className="text-sm text-slate-500 dark:text-slate-400 truncate">{app.company} · {app.location}</p>
-                          <div className="flex flex-wrap items-center gap-2.5 mt-2 text-xs text-slate-400 dark:text-slate-500">
-                            <span className="capitalize">{app.jobType}</span>
-                            <span>•</span>
-                            <span>Applied {formatRelativeDate(app.appliedDate)}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 self-end sm:self-center">
-                        <a href={app.applyLink} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-350">
-                          View Listing
-                        </a>
-                        <button onClick={() => removeApplication(app.id)} className="p-2 border border-red-200 hover:bg-red-50 dark:border-red-950/40 dark:hover:bg-red-950/20 text-red-500 rounded-lg transition-colors" title="Delete application log">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              )}
-            </Card>
-          </section>
-
-          <aside className="space-y-6">
-            <Card hover={false} className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-indigo-500 text-sm font-bold text-white shadow-md">
-                  {effectiveUser.name?.slice(0, 2).toUpperCase() || 'JD'}
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Signed In As</p>
-                  <p className="mt-1 text-base font-bold text-slate-900 dark:text-white truncate">{effectiveUser.name}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{effectiveUser.email}</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card hover={false} className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
-              <h2 className="text-sm font-bold text-slate-900 dark:text-white">Why Track Applications?</h2>
-              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                Keeping a record of your submissions helps you prepare for interviews, follow up on time, and build a systematic pipeline for your career search.
-              </p>
-            </Card>
-          </aside>
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 pb-28 pt-6 sm:pt-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center gap-3 mb-6">
+          <Link
+            href="/job-updates"
+            className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white border border-slate-200 shadow-2xs text-slate-700 hover:bg-slate-50 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Link>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight">Application Tracker</h1>
+            <p className="text-xs text-slate-500 mt-0.5">Track your submitted job applications and status</p>
+          </div>
         </div>
+
+        <div>{renderContent()}</div>
       </div>
-    </main>
+
+      {/* Persistent Mobile Bottom Navigation Bar */}
+      <MobileBottomNav />
+    </div>
   );
 }

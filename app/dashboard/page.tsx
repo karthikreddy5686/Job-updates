@@ -1,9 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, BarChart3, Bell, Bookmark, Briefcase, CalendarDays, CheckCircle2, Sparkles, Users, Target } from 'lucide-react';
+import { ArrowRight, BarChart3, Bell, Bookmark, Briefcase, CalendarDays, CheckCircle2, Sparkles, Users, Target, LogOut } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { useDashboardData } from '@/hooks/useDashboardData';
+import { logoutStudent, getStudentSession } from '@/lib/student-auth';
+import MobileBottomNav from '@/components/job-updates/MobileBottomNav';
+import { useState, useEffect } from 'react';
 
 const statusStyles: Record<string, string> = {
   Applied: 'bg-sky-100 text-sky-700',
@@ -23,11 +26,27 @@ const formatMetric = (value: number) => {
 };
 
 export default function DashboardPage() {
-  const { user, isLoading } = useAuth();
-  const dashboard = useDashboardData(user);
+  const { user, isLoading, logout } = useAuth();
+  const [student, setStudent] = useState<any>(null);
 
-  const displayName = user?.name?.split(' ')[0] || 'there';
-  const roleLabel = user?.role === 'candidate' ? 'Candidate' : user?.role === 'recruiter' ? 'Recruiter' : 'Admin';
+  useEffect(() => {
+    setStudent(getStudentSession());
+  }, []);
+
+  const handleLogout = () => {
+    logoutStudent();
+    if (logout) logout();
+    localStorage.removeItem('jobupdate_student_session');
+    localStorage.removeItem('admin_session');
+    window.dispatchEvent(new Event('studentLoggedOut'));
+    window.location.href = '/job-updates';
+  };
+
+  const dashboard = useDashboardData(user || (student ? { id: student.id, name: student.name, email: student.email, role: 'candidate' as const } : null));
+
+  const effectiveName = student?.name || user?.name || 'Job Seeker';
+  const displayName = effectiveName.split(' ')[0] || 'there';
+  const roleLabel = user?.role === 'admin' ? 'Admin' : 'Candidate';
 
   const activityItems = [
     { label: 'Applied', value: dashboard.activity.applied, color: 'bg-sky-500' },
@@ -74,6 +93,13 @@ export default function DashboardPage() {
                 Browse roles
                 <ArrowRight className="h-4 w-4" />
               </Link>
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center gap-1.5 rounded-full bg-red-50 border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-100"
+              >
+                <LogOut className="h-4 w-4" />
+                Log Out
+              </button>
             </div>
           </div>
         </section>
@@ -331,6 +357,17 @@ export default function DashboardPage() {
                     </div>
                   ))}
                 </div>
+
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs text-slate-500 font-medium">Session Active</span>
+                  <button
+                    onClick={handleLogout}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-xs transition-colors"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    Log Out
+                  </button>
+                </div>
               </section>
 
               <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/30">
@@ -388,6 +425,9 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* Persistent Mobile Bottom Navigation Bar */}
+      <MobileBottomNav />
     </main>
   );
 }

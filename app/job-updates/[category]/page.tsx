@@ -6,9 +6,9 @@ import Link from 'next/link';
 import { getStudentSession } from '@/lib/student-auth';
 import LandingGate from '@/components/LandingGate';
 import {
-  ArrowLeft,
   Search,
-  Filter,
+  Bell,
+  RefreshCcw,
   Briefcase,
   Building2,
   ShieldCheck,
@@ -17,28 +17,22 @@ import {
   GraduationCap,
   Cpu,
   HardHat,
-  Home,
-  Bookmark,
-  User,
-  Layers,
-  Sparkles,
-  RefreshCcw,
-  SlidersHorizontal,
 } from 'lucide-react';
 import { useDailyJobs, type DailyCategoryKey } from '@/hooks/useDailyJobs';
 import JobCard from '@/components/JobCard';
+import MobileBottomNav from '@/components/job-updates/MobileBottomNav';
 import type { DailyJob } from '@/types/jobs';
 
-const categoryIcons: Record<string, React.ComponentType<any>> = {
-  internships: Briefcase,
-  mnc: Building2,
-  government: ShieldCheck,
-  banking: Banknote,
-  startups: Rocket,
-  'cat-mba': GraduationCap,
-  core: Cpu,
-  civil: HardHat,
-};
+const categoryTabs = [
+  { id: 'mnc', label: 'MNC Jobs', href: '/job-updates/mnc' },
+  { id: 'internships', label: 'Internships', href: '/job-updates/internships' },
+  { id: 'startups', label: 'Startups', href: '/job-updates/startups' },
+  { id: 'banking', label: 'Banking', href: '/job-updates/banking' },
+  { id: 'government', label: 'Government', href: '/job-updates/government' },
+  { id: 'core', label: 'Core Eng', href: '/job-updates/core' },
+  { id: 'civil', label: 'Civil & Mech', href: '/job-updates/civil' },
+  { id: 'cat-mba', label: 'CAT / MBA', href: '/job-updates/cat-mba' },
+];
 
 const governmentFallbackJobs: DailyJob[] = [
   {
@@ -91,7 +85,6 @@ export default function CategoryDetailPage() {
   const searchParams = useSearchParams();
   const categoryParam = params.category as string;
   const initialQuery = searchParams.get('q') || '';
-  const initialType = searchParams.get('type') || 'all';
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -99,9 +92,6 @@ export default function CategoryDetailPage() {
   const [checking, setChecking] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
-  const [workMode, setWorkMode] = useState<string>(initialType);
-  const [selectedExp, setSelectedExp] = useState<string>('all');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
     if (categoryParam === 'referral') {
@@ -140,7 +130,6 @@ export default function CategoryDetailPage() {
   }, [categoryParam]);
 
   const categoryData = categories.find((c) => c.apiCategory === internalKey);
-  const Icon = categoryIcons[categoryParam] || Briefcase;
 
   const categoryTitle = useMemo(() => {
     if (categoryData?.title) return categoryData.title;
@@ -167,7 +156,6 @@ export default function CategoryDetailPage() {
 
   const filteredJobs = useMemo(() => {
     return rawJobs.filter((job) => {
-      // Search query filter
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const matchTitle = job.title.toLowerCase().includes(q);
@@ -175,24 +163,13 @@ export default function CategoryDetailPage() {
         const matchLoc = job.location.toLowerCase().includes(q);
         if (!matchTitle && !matchCompany && !matchLoc) return false;
       }
-
-      // Work mode filter
-      if (workMode !== 'all') {
-        const mode = workMode.toLowerCase();
-        const loc = job.location.toLowerCase();
-        const type = typeof job.jobType === 'string' ? job.jobType.toLowerCase() : '';
-        if (mode === 'remote') {
-          if (!loc.includes('remote') && !type.includes('remote')) return false;
-        } else if (mode === 'onsite') {
-          if (loc.includes('remote') || type.includes('remote')) return false;
-        } else if (mode === 'internship') {
-          if (!type.includes('intern') && !job.title.toLowerCase().includes('intern')) return false;
-        }
-      }
-
       return true;
     });
-  }, [rawJobs, searchQuery, workMode]);
+  }, [rawJobs, searchQuery]);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
 
   if (checking) {
     return (
@@ -215,82 +192,89 @@ export default function CategoryDetailPage() {
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] pb-24 text-slate-900">
-      {/* 📱 Top Header Bar (Matching Screenshot 2) */}
+      {/* 📱 Top Header Bar (Identical to Explore Jobs by Category) */}
       <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3 shadow-2xs">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/job-updates"
-            className="p-1.5 -ml-1 text-slate-700 hover:text-slate-900 rounded-full hover:bg-slate-100 transition-colors shrink-0"
-            aria-label="Back"
-          >
-            <ArrowLeft className="w-5 h-5 stroke-[2.2]" />
-          </Link>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-xs">
+              {(student?.name?.[0] || 'J').toUpperCase()}
+            </div>
+            <div>
+              <p className="text-sm font-bold text-slate-900 tracking-tight leading-tight">
+                Welcome, {student?.name?.split(' ')[0] || 'Job Seeker'}
+              </p>
+              <p className="text-[11px] text-slate-400 font-medium">Explore live verified jobs</p>
+            </div>
+          </div>
 
-          {/* Search Pill Input matching Screenshot 2 */}
-          <div className="flex-1 relative flex items-center">
-            <Search className="absolute left-3 w-4 h-4 text-slate-400 pointer-events-none" />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => refreshAll()}
+              className="p-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100"
+              title="Refresh"
+            >
+              <RefreshCcw className={`w-4 h-4 ${isLoading ? 'animate-spin text-blue-600' : ''}`} />
+            </button>
+            <Link
+              href="/job-updates/alerts"
+              className="relative p-2 text-slate-600 hover:text-slate-900 rounded-full hover:bg-slate-100 transition-colors"
+              aria-label="Alerts"
+            >
+              <Bell className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Search Input identical to Explore jobs page */}
+        <form onSubmit={handleSearchSubmit} className="mt-3 relative">
+          <div className="relative flex items-center">
+            <Search className="absolute left-3.5 w-4 h-4 text-slate-400 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={`Results For ${categoryTitle}, India`}
-              className="w-full h-10 pl-9 pr-3 rounded-full bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-800 placeholder-slate-500 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all shadow-2xs"
+              placeholder="Search for 'B.Tech / B.E.', roles, companies..."
+              className="w-full h-11 pl-10 pr-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all shadow-2xs"
             />
           </div>
+        </form>
 
-          <button
-            onClick={() => refreshAll()}
-            className="p-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100 shrink-0"
-            title="Refresh"
-          >
-            <RefreshCcw className={`w-4 h-4 ${isLoading ? 'animate-spin text-blue-600' : ''}`} />
-          </button>
-        </div>
-
-        {/* Results Count & Filter Pills (Screenshot 2) */}
-        <div className="mt-2.5 flex items-center justify-between text-xs">
-          <p className="font-semibold text-slate-600 pl-1">
-            {isLoading ? 'Updating...' : `${filteredJobs.length} results`}
-          </p>
-        </div>
-
-        {/* Horizontal Filter Chips Bar */}
-        <div className="mt-2 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-          <button
-            onClick={() => setIsFilterOpen((prev) => !prev)}
-            className={`shrink-0 px-3 py-1.5 rounded-full border flex items-center gap-1.5 font-medium transition-colors ${
-              workMode !== 'all' || searchQuery
-                ? 'bg-blue-50 text-blue-600 border-blue-200'
-                : 'bg-white text-slate-700 border-slate-200'
-            }`}
-          >
-            <SlidersHorizontal className="w-3.5 h-3.5" />
-            <span>Filters</span>
-          </button>
-
-          {[
-            { label: 'All Jobs', mode: 'all' },
-            { label: 'Remote', mode: 'remote' },
-            { label: 'On-site', mode: 'onsite' },
-            { label: 'Internship', mode: 'internship' },
-          ].map((chip) => (
-            <button
-              key={chip.mode}
-              onClick={() => setWorkMode(chip.mode)}
-              className={`shrink-0 px-3 py-1.5 rounded-full border text-xs font-medium transition-colors ${
-                workMode === chip.mode
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-2xs'
-                  : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-              }`}
-            >
-              {chip.label}
-            </button>
-          ))}
+        {/* Section Switching Chips Bar */}
+        <div className="mt-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
+          {categoryTabs.map((tab) => {
+            const isActive =
+              internalKey === tab.id ||
+              (tab.id === 'startups' && internalKey === 'startup') ||
+              (tab.id === 'cat-mba' && internalKey === 'cat-mba');
+            return (
+              <Link
+                key={tab.id}
+                href={tab.href}
+                className={`shrink-0 px-3.5 py-1.5 rounded-full border text-xs font-semibold transition-colors ${
+                  isActive
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-2xs'
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                {tab.label}
+              </Link>
+            );
+          })}
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <div className="max-w-2xl mx-auto px-4 py-4 space-y-3.5">
+      {/* Section Title and Count */}
+      <div className="max-w-2xl mx-auto px-4 pt-4 pb-1 flex items-center justify-between">
+        <div>
+          <h1 className="text-base font-bold text-slate-900 tracking-tight">{categoryTitle}</h1>
+          <p className="text-xs text-slate-500">
+            {isLoading ? 'Updating feed...' : `${filteredJobs.length} live openings available`}
+          </p>
+        </div>
+      </div>
+
+      {/* Main Content Area: Compact Cards */}
+      <div className="max-w-2xl mx-auto px-4 py-3 space-y-3">
         {isLoading ? (
           <div className="py-16 text-center bg-white rounded-2xl border border-slate-100 p-8 shadow-xs">
             <div className="w-8 h-8 border-2 border-blue-500/20 border-t-blue-600 rounded-full animate-spin mx-auto mb-3" />
@@ -302,66 +286,24 @@ export default function CategoryDetailPage() {
             <div className="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center mx-auto mb-3">
               <Search className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-slate-800">No jobs match your current filter</h3>
+            <h3 className="text-base font-bold text-slate-800">No jobs match your query</h3>
             <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
-              Try switching your work mode to "All Jobs" or clear your search keywords.
+              Try clearing your search query or pick another category.
             </p>
             <button
-              onClick={() => {
-                setSearchQuery('');
-                setWorkMode('all');
-              }}
+              onClick={() => setSearchQuery('')}
               className="mt-4 px-4 py-2 rounded-full bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 transition-colors"
             >
-              Reset Filters
+              Reset Search
             </button>
           </div>
         ) : (
-          /* List of Small Compact Tabs (Exactly matching Screenshot 2) */
-          filteredJobs.map((job) => (
-            <JobCard key={job.id} job={job} variant="compact" />
-          ))
+          filteredJobs.map((job) => <JobCard key={job.id} job={job} variant="compact" />)
         )}
       </div>
 
-      {/* Mobile Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 py-2 px-3 shadow-lg flex items-center justify-around lg:hidden">
-        <Link
-          href="/job-updates"
-          className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-800 font-medium text-[10px] transition-colors"
-        >
-          <Home className="w-5 h-5" />
-          <span>Home</span>
-        </Link>
-        <Link
-          href={`/job-updates/${categoryParam}`}
-          className="flex flex-col items-center gap-0.5 text-blue-600 font-bold text-[10px]"
-        >
-          <Briefcase className="w-5 h-5 stroke-[2.2]" />
-          <span>Jobs</span>
-        </Link>
-        <Link
-          href="/job-updates/tracker"
-          className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-800 font-medium text-[10px] transition-colors"
-        >
-          <Layers className="w-5 h-5" />
-          <span>Tracker</span>
-        </Link>
-        <Link
-          href="/job-updates/saved"
-          className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-800 font-medium text-[10px] transition-colors"
-        >
-          <Bookmark className="w-5 h-5" />
-          <span>Saved</span>
-        </Link>
-        <Link
-          href="/dashboard#profile"
-          className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-800 font-medium text-[10px] transition-colors"
-        >
-          <User className="w-5 h-5" />
-          <span>Profile</span>
-        </Link>
-      </nav>
+      {/* Persistent Mobile Bottom Navigation Bar */}
+      <MobileBottomNav />
 
       {toastMessage && (
         <div className="fixed bottom-16 right-4 z-50 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-xl">

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+export const dynamic = 'force-dynamic';
+import { readJsonStorage, writeJsonStorage } from '@/lib/user-data-storage';
 
 type ApplicationStatus = 'applied' | 'screening' | 'interview' | 'offered' | 'rejected';
 
@@ -21,85 +21,50 @@ interface ApplicationRecord {
   source: string;
 }
 
-const applicationsPath = path.join(process.cwd(), 'data', 'applications.json');
+const STORAGE_FILE = 'applications.json';
 
-const ensureStorage = async () => {
-  const dir = path.dirname(applicationsPath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
+const getUserId = (request: Request): string => request.headers.get('x-user-id') || 'guest_user';
 
-  if (!fs.existsSync(applicationsPath)) {
-    fs.writeFileSync(applicationsPath, '[]', 'utf8');
-  }
-};
-
-const loadApplications = async (): Promise<ApplicationRecord[]> => {
-  await ensureStorage();
-  const file = await fs.promises.readFile(applicationsPath, 'utf8');
+export async function PATCH(request: Request, { params }: { params: any }) {
   try {
-    return JSON.parse(file) as ApplicationRecord[];
-  } catch (error) {
-    fs.writeFileSync(applicationsPath, '[]', 'utf8');
-    return [];
+    const routeParams = params && typeof params.then === 'function' ? await params : params;
+    const id = routeParams?.id;
+    const userId = getUserId(request);
+    const body = await request.json();
+
+    const applications = await readJsonStorage<ApplicationRecord[]>(STORAGE_FILE, []);
+    const index = applications.findIndex((app) => app.id === id && (app.userId === userId || userId === 'all'));
+
+    if (index === -1) {
+      return NextResponse.json({ error: 'Application not found' }, { status: 404 });
+    }
+
+    applications[index] = {
+      ...applications[index],
+      ...body,
+      id: applications[index].id,
+      userId: applications[index].userId,
+    };
+
+    await writeJsonStorage(STORAGE_FILE, applications);
+    return NextResponse.json(applications[index]);
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to update application' }, { status: 500 });
   }
-};
-
-const saveApplications = async (applications: ApplicationRecord[]) => {
-  await ensureStorage();
-  await fs.promises.writeFile(applicationsPath, JSON.stringify(applications, null, 2), 'utf8');
-};
-
-const getUserId = (request: Request): string | null => {
-  return request.headers.get('x-user-id') || null;
-};
-
-export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params;
-  const userId = getUserId(request);
-  if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const body = await request.json();
-  const nextStatus = body.status as ApplicationStatus;
-  if (!nextStatus) {
-    return NextResponse.json({ error: 'Status is required' }, { status: 400 });
-  }
-
-  const applications = await loadApplications();
-  const index = applications.findIndex((application) => application.id === resolvedParams.id && application.userId === userId);
-
-  if (index === -1) {
-    return NextResponse.json({ error: 'Application not found' }, { status: 404 });
-  }
-
-  applications[index] = {
-    ...applications[index],
-    status: nextStatus,
-    notes: body.notes !== undefined ? body.notes : applications[index].notes,
-  };
-
-  await saveApplications(applications);
-  return NextResponse.json(applications[index]);
 }
 
-export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params;
-  const userId = getUserId(request);
-  if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+export async function DELETE(request: Request, { params }: { params: any }) {
+  try {
+    const routeParams = params && typeof params.then === 'function' ? await params : params;
+    const id = routeParams?.id;
+    const userId = getUserId(request);
+
+    const applications = await readJsonStorage<ApplicationRecord[]>(STORAGE_FILE, []);
+    const filtered = applications.filter((app) => !(app.id === id && (app.userId === userId || userId === 'all')));
+
+    await writeJsonStorage(STORAGE_FILE, filtered);
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ success: false });
   }
-
-  const applications = await loadApplications();
-  const index = applications.findIndex((application) => application.id === resolvedParams.id && application.userId === userId);
-
-  if (index === -1) {
-    return NextResponse.json({ error: 'Application not found' }, { status: 404 });
-  }
-
-  applications.splice(index, 1);
-  await saveApplications(applications);
-
-  return NextResponse.json({ success: true });
 }

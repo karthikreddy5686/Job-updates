@@ -25,6 +25,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import JobCard from '@/components/JobCard';
+import MobileBottomNav from '@/components/job-updates/MobileBottomNav';
 import type { DailyJob } from '@/types/jobs';
 import type { DailyCategoryKey } from '@/hooks/useDailyJobs';
 
@@ -327,43 +328,7 @@ export default function MobileJobHome({
       </div>
 
       {/* 6. Mobile Bottom Navigation Bar (Home, Jobs, Tracker, Saved, Profile) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 py-2 px-3 shadow-lg flex items-center justify-around">
-        <Link
-          href="/job-updates"
-          className="flex flex-col items-center gap-0.5 text-blue-600 font-bold text-[10px]"
-        >
-          <Home className="w-5 h-5 stroke-[2.2]" />
-          <span>Home</span>
-        </Link>
-        <Link
-          href="/job-updates/mnc"
-          className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-800 font-medium text-[10px] transition-colors"
-        >
-          <Briefcase className="w-5 h-5" />
-          <span>Jobs</span>
-        </Link>
-        <Link
-          href="/job-updates/tracker"
-          className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-800 font-medium text-[10px] transition-colors"
-        >
-          <Layers className="w-5 h-5" />
-          <span>Tracker</span>
-        </Link>
-        <Link
-          href="/job-updates/saved"
-          className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-800 font-medium text-[10px] transition-colors"
-        >
-          <Bookmark className="w-5 h-5" />
-          <span>Saved</span>
-        </Link>
-        <Link
-          href="/dashboard#profile"
-          className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-800 font-medium text-[10px] transition-colors"
-        >
-          <User className="w-5 h-5" />
-          <span>Profile</span>
-        </Link>
-      </nav>
+      <MobileBottomNav />
     </div>
   );
 }
