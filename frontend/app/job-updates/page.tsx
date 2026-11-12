@@ -29,6 +29,7 @@ import { useJobUpdates } from '@/store/jobUpdatesStore';
 import { useNotifications } from '@/app/providers';
 import { useDailyJobs, type DailyCategoryKey } from '@/hooks/useDailyJobs';
 import CategorySection from '@/components/CategorySection';
+import MobileJobHome from '@/components/job-updates/MobileJobHome';
 import JobUpdatesHero from '@/components/JobUpdatesHero';
 import LiveJobFeed from '@/components/LiveJobFeed';
 import MockInterviewWidget from '@/components/job-updates/MockInterviewWidget';
@@ -148,7 +149,20 @@ export default function JobUpdatesPage() {
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] text-slate-900">
-      <div className="relative overflow-hidden min-h-screen">
+      {/* 📱 Dedicated Mobile View (matching reference screenshots) */}
+      <MobileJobHome
+        student={student}
+        categories={categories}
+        jobsByCategory={jobsByCategory}
+        countsByCategory={countsByCategory}
+        totalNewJobs={totalNewJobs}
+        unreadCount={unreadCount}
+        refreshAll={refreshAll}
+        isLoading={isLoading}
+      />
+
+      {/* 💻 Desktop Full Dashboard (hidden on mobile) */}
+      <div className="hidden lg:block relative overflow-hidden min-h-screen">
         <div className="pointer-events-none absolute -left-24 -top-12 h-72 w-72 rounded-full bg-purple-200/40 blur-3xl" />
         <div className="pointer-events-none absolute right-0 top-24 h-80 w-80 rounded-full bg-indigo-200/30 blur-3xl" />
 
