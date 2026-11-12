@@ -38,7 +38,7 @@ export default function RecommendedJobsCarousel({
     let preferredLocation = 'remote';
 
     try {
-      const saved = localStorage.getItem('naukri_manual_profile');
+      const saved = localStorage.getItem('candidate_manual_profile') || localStorage.getItem('naukri_manual_profile');
       if (saved) {
         const p = JSON.parse(saved);
         if (Array.isArray(p.skills) && p.skills.length > 0) {

@@ -64,7 +64,7 @@ export default function DesktopProfileCard({ student }: DesktopProfileCardProps)
     } catch {}
 
     try {
-      const savedProfile = localStorage.getItem('naukri_manual_profile');
+      const savedProfile = localStorage.getItem('candidate_manual_profile') || localStorage.getItem('naukri_manual_profile');
       if (savedProfile) {
         const p = JSON.parse(savedProfile);
         if (p.resumeName) resumeName = p.resumeName;
@@ -177,7 +177,7 @@ export default function DesktopProfileCard({ student }: DesktopProfileCardProps)
           href="/dashboard"
           className="w-full py-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors text-center"
         >
-          <span>Complete Naukri Profile</span>
+          <span>Complete Your Profile</span>
           <ChevronRight className="w-3.5 h-3.5" />
         </Link>
       </div>

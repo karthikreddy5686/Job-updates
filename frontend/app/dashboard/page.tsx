@@ -139,7 +139,7 @@ export default function ProfileDashboardPage() {
 
     // 2. Load any profile sections the user manually completed in the profile
     try {
-      const saved = localStorage.getItem('naukri_manual_profile');
+      const saved = localStorage.getItem('candidate_manual_profile') || localStorage.getItem('naukri_manual_profile');
       if (saved) {
         const parsed = JSON.parse(saved);
         currentData = {
@@ -169,6 +169,7 @@ export default function ProfileDashboardPage() {
     setProfile((prev) => {
       const updated = { ...prev, ...updates };
       try {
+        localStorage.setItem('candidate_manual_profile', JSON.stringify(updated));
         localStorage.setItem('naukri_manual_profile', JSON.stringify(updated));
       } catch {}
       return updated;
