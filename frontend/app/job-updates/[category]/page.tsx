@@ -17,6 +17,7 @@ import {
   GraduationCap,
   Cpu,
   HardHat,
+  X,
 } from 'lucide-react';
 import { useDailyJobs, type DailyCategoryKey } from '@/hooks/useDailyJobs';
 import JobCard from '@/components/JobCard';
@@ -235,8 +236,18 @@ function CategoryDetailPageContent() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search for 'B.Tech / B.E.', roles, companies..."
-              className="w-full h-11 pl-10 pr-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all shadow-2xs"
+              className="w-full h-11 pl-10 pr-9 rounded-2xl bg-slate-50 border border-slate-200 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all shadow-2xs"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                aria-label="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </form>
 

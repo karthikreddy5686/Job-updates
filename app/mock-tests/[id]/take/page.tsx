@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { notFound, useRouter } from 'next/navigation';
 import { mockTestsData } from '@/data/mockTestsData';
 import { Clock, CheckCircle2, ChevronLeft, ChevronRight, XCircle, Play, FileCode2 } from 'lucide-react';
@@ -14,6 +14,12 @@ export default function ActiveTestPage({ params }: { params: { id: string } }) {
   const [testResults, setTestResults] = useState<Record<number, any[]>>({});
   const [timeLeft, setTimeLeft] = useState(initialTime);
 
+  const handleSubmit = useCallback(() => {
+    if (!test) return;
+    localStorage.setItem(`mock_result_${test.id}`, JSON.stringify(answers));
+    router.push(`/mock-tests/${test.id}/results`);
+  }, [answers, router, test]);
+
   useEffect(() => {
     if (!test) return;
     if (timeLeft <= 0) {
@@ -22,7 +28,7 @@ export default function ActiveTestPage({ params }: { params: { id: string } }) {
     }
     const timer = setInterval(() => setTimeLeft(t => t - 1), 1000);
     return () => clearInterval(timer);
-  }, [timeLeft, test]);
+  }, [timeLeft, test, handleSubmit]);
 
   if (!test) return notFound();
 
@@ -75,12 +81,6 @@ export default function ActiveTestPage({ params }: { params: { id: string } }) {
       delete next[currentIndex];
       return next;
     });
-  };
-
-  const handleSubmit = () => {
-    // In a real app, save to db. Here, pass via localStorage or state management.
-    localStorage.setItem(`mock_result_${test.id}`, JSON.stringify(answers));
-    router.push(`/mock-tests/${test.id}/results`);
   };
 
   const formatTime = (seconds: number) => {

@@ -21,6 +21,9 @@ export default function LiveAIInterview({ test, onEnd }: LiveAIInterviewProps) {
   const streamRef = useRef<MediaStream | null>(null);
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
+  const aiStateRef = useRef(aiState);
+  aiStateRef.current = aiState;
+  const handleEndInterviewRef = useRef<() => void>();
 
   const currentQ = test.questions[currentIndex];
 
@@ -68,7 +71,7 @@ export default function LiveAIInterview({ test, onEnd }: LiveAIInterviewProps) {
       };
 
       recognition.onend = () => {
-        if (aiState === 'listening') {
+        if (aiStateRef.current === 'listening') {
            // Auto restart if it stops unexpectedly while listening
            try { recognition.start(); } catch (e) {}
         }
@@ -93,7 +96,7 @@ export default function LiveAIInterview({ test, onEnd }: LiveAIInterviewProps) {
   // Timer
   useEffect(() => {
     if (timeLeft <= 0) {
-      handleEndInterview();
+      handleEndInterviewRef.current?.();
       return;
     }
     const timer = setInterval(() => setTimeLeft(t => t - 1), 1000);
@@ -158,6 +161,7 @@ export default function LiveAIInterview({ test, onEnd }: LiveAIInterviewProps) {
     const finalAnswers = { ...answers, [currentQ.id]: transcript };
     onEnd(finalAnswers);
   };
+  handleEndInterviewRef.current = handleEndInterview;
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);

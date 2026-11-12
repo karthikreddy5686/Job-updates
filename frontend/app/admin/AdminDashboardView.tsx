@@ -145,7 +145,7 @@ export default function AdminDashboard() {
         .catch(err => console.error(err))
         .finally(() => setLoadingMockTests(false));
     }
-  }, [activeTab]);
+  }, [activeTab, mockTests.length]);
 
   const applicationsLast7Days = [
     { day: 'Mon', count: 42 },

@@ -93,7 +93,7 @@ export default function CategorySection({
   const categoryHref = `/job-updates/${categoryKey === 'startup' ? 'startups' : categoryKey}`;
 
   useEffect(() => {
-    if (!isExpanded || !scrollContainerRef.current || renderedJobs.length === 0 || hideLoadMore) return;
+    if (!isExpanded || !scrollContainerRef.current || renderedJobs.length <= 2 || hideLoadMore) return;
     
     const container = scrollContainerRef.current;
     let animationFrameId: number;
@@ -120,7 +120,7 @@ export default function CategorySection({
 
     animationFrameId = requestAnimationFrame(scroll);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [isExpanded, isHovered, renderedJobs.length, showAll]);
+  }, [isExpanded, isHovered, renderedJobs.length, showAll, hideLoadMore]);
 
   return (
     <section className={`flex flex-col overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg ${hideLoadMore ? 'w-full' : 'h-full max-h-[550px]'}`}>

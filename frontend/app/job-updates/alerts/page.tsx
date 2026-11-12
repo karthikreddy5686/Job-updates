@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { AlertTriangle, CalendarDays, Clock, FolderSearch, Sparkles, User, ArrowLeft } from 'lucide-react';
 import { Button, Card } from '@/app/components';
 import { getStudentSession } from '@/lib/student-auth';
@@ -77,7 +77,7 @@ export default function DeadlineAlertsPage() {
 
   const effectiveUser = student ? { id: student.id || student.email, name: student.name, email: student.email } : (isAdmin ? { id: 'admin', name: 'Admin', email: 'admin@geonixanextjob.com' } : null);
 
-  const fetchAlerts = async () => {
+  const fetchAlerts = useCallback(async () => {
     if (!effectiveUser) {
       setAlerts([]);
       setLoading(false);
@@ -106,18 +106,18 @@ export default function DeadlineAlertsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [effectiveUser?.id]);
 
   useEffect(() => {
     if (isReady) fetchAlerts();
-  }, [effectiveUser?.id, isReady]);
+  }, [fetchAlerts, isReady]);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
-      if (effectiveUser) fetchAlerts();
+      fetchAlerts();
     }, 60 * 60 * 1000);
     return () => window.clearInterval(interval);
-  }, [effectiveUser?.id]);
+  }, [fetchAlerts]);
 
   const counts = useMemo(
     () => ({
