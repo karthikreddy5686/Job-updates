@@ -1191,111 +1191,31 @@ async function fetchCivilJobs(): Promise<Job[]> {
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const category = searchParams.get('category') || 'all'
+  const forceLive = searchParams.get('refresh') === 'true'
 
   try {
-    let jobs: Job[] = []
+    const { getJobs, getSyncedJobs, isValidJobApplyUrl, purgeExpiredJobs } = await import('@/lib/admin-storage')
 
-    const fetchers: Record<string, () => Promise<Job[]>> = {
-      internship: fetchInternships,
-      internships: fetchInternships,
-      mnc: fetchMNCJobs,
-      banking: fetchBankingJobs,
-      government: fetchGovernmentJobs,
-      govt: fetchGovernmentJobs,
-      startup: fetchStartupJobs,
-      'cat-mba': fetchCATMBAJobs,
-      catmba: fetchCATMBAJobs,
-      core: fetchCoreJobs,
-      civil: fetchCivilJobs,
-    }
+    // Clean out expired and generic homepage jobs from storage
+    const rawAdminJobs = (await getJobs()) || []
+    let rawSyncedJobs = (await getSyncedJobs()) || []
 
-    if (category === 'all') {
-      const results = await Promise.allSettled([
-        fetchInternships(),
-        fetchMNCJobs(),
-        fetchBankingJobs(),
-        fetchGovernmentJobs(),
-        fetchStartupJobs(),
-        fetchCATMBAJobs(),
-        fetchCoreJobs(),
-        fetchCivilJobs(),
-      ])
-      jobs = results.flatMap(r =>
-        r.status === 'fulfilled' ? r.value : []
-      )
-    } else {
-      const fetcher = fetchers[category]
-      if (fetcher) {
-        jobs = await fetcher()
+    // If synced jobs store is completely empty, perform an initial sync
+    if (rawSyncedJobs.length === 0 || forceLive) {
+      try {
+        const { syncJobsAndPurgeExpired } = await import('@/lib/job-sync-service')
+        await syncJobsAndPurgeExpired()
+        rawSyncedJobs = (await getSyncedJobs()) || []
+      } catch (err) {
+        console.error('Auto sync error:', err)
       }
     }
 
-    // Load admin posted jobs + scheduled synced jobs
-    let adminJobsList: Job[] = []
-    try {
-      const { getJobs, getSyncedJobs } = await import('@/lib/admin-storage')
-      const rawAdminJobs = await getJobs() || []
-      const rawSyncedJobs = await getSyncedJobs() || []
-      const allStored = [...rawAdminJobs, ...rawSyncedJobs]
-      const now = Date.now()
+    const allStored = [...rawAdminJobs, ...rawSyncedJobs]
+    const now = Date.now()
+    const thirtyDaysMs = 30 * 86400000
 
-      adminJobsList = allStored
-        .filter(aj => aj && aj.isActive)
-        // Auto-remove any jobs whose deadline / expiration has ended
-        .filter(aj => {
-          if (!aj.deadline) return true
-          const d = new Date(aj.deadline).getTime()
-          return isNaN(d) || d >= now
-        })
-        .map(aj => {
-          const daysDiff = Math.floor(
-            (Date.now() - new Date(aj.createdAt).getTime()) / 86400000
-          )
-          return {
-            id: aj.id,
-            title: aj.title,
-            company: aj.company,
-            logo: aj.logo || '',
-            location: aj.location || 'India',
-            jobType: aj.jobType || 'full-time',
-            category: aj.category,
-            salary: aj.salary || undefined,
-            postedDate: aj.createdAt || new Date().toISOString(),
-            deadline: aj.deadline || undefined,
-            applyLink: aj.applyLink,
-            isNew: daysDiff <= 1,
-            source: aj.source || 'Admin',
-            description: aj.description,
-          }
-        })
-    } catch (err) {
-      console.error('Failed to load admin/synced jobs in daily feed:', err)
-    }
-
-    // Filter admin jobs for the requested category
-    let categoryAdminJobs: Job[] = []
-    if (category === 'all') {
-      categoryAdminJobs = adminJobsList
-    } else {
-      const normalizedRequest = category.toLowerCase()
-      categoryAdminJobs = adminJobsList.filter(aj => {
-        const ajCat = aj.category.toLowerCase()
-        if (normalizedRequest === 'government' || normalizedRequest === 'govt') {
-          return ajCat === 'government' || ajCat === 'govt'
-        }
-        if (normalizedRequest === 'internships' || normalizedRequest === 'internship') {
-          return ajCat === 'internship' || ajCat === 'internships'
-        }
-        if (normalizedRequest === 'cat-mba' || normalizedRequest === 'catmba') {
-          return ajCat === 'cat-mba' || ajCat === 'catmba'
-        }
-        return ajCat === normalizedRequest
-      })
-    }
-
-    const combinedJobs = dedupe([...categoryAdminJobs, ...jobs])
-
-    // Inject custom logos and filter hidden jobs
+    // Load custom logos and hidden jobs set
     let logosDict: Record<string, string> = {}
     let hiddenJobs: Set<string> = new Set()
     try {
@@ -1309,31 +1229,81 @@ export async function GET(req: Request) {
       hiddenJobs = new Set(await getHiddenJobs())
     } catch {}
 
-    const today = new Date().toDateString()
-    const nowTimestamp = Date.now()
-    const validJobs = combinedJobs
-      .filter(j => j && j.applyLink && j.applyLink.startsWith('http'))
-      .filter(j => !hiddenJobs.has(j.id))
-      // Auto-filter and remove any job whose deadline/end date has expired
-      .filter(j => {
-        if (!j.deadline) return true
-        const d = new Date(j.deadline).getTime()
-        return isNaN(d) || d >= nowTimestamp
+    // Filter strictly for ACTIVE, NON-EXPIRED, and DIRECT APPLY jobs
+    const activeValidJobs: Job[] = allStored
+      .filter(aj => aj && aj.isActive)
+      .filter(aj => !hiddenJobs.has(aj.id))
+      // 1. Delete all expired jobs
+      .filter(aj => {
+        if (!aj.deadline) return true
+        const d = new Date(aj.deadline).getTime()
+        return isNaN(d) || d >= now
       })
-      .map(j => {
-        const jComp = j.company.toLowerCase()
+      // 2. Delete jobs older than 30 days
+      .filter(aj => {
+        if (!aj.createdAt) return true
+        const c = new Date(aj.createdAt).getTime()
+        return isNaN(c) || (now - c) <= thirtyDaysMs
+      })
+      // 3. STRICT CHECK: Must be a specific job role apply link, NEVER a generic company homepage
+      .filter(aj => aj.applyLink && isValidJobApplyUrl(aj.applyLink))
+      .map(aj => {
+        const daysDiff = Math.floor(
+          (Date.now() - new Date(aj.createdAt).getTime()) / 86400000
+        )
+        const jComp = aj.company.toLowerCase()
         const matchedKey = Object.keys(logosDict).find(k => jComp.includes(k) || k === jComp)
-        
-        if (matchedKey) {
-          return { ...j, logo: logosDict[matchedKey] }
+        const logo = matchedKey ? logosDict[matchedKey] : (aj.logo || '')
+
+        return {
+          id: aj.id,
+          title: aj.title,
+          company: aj.company,
+          logo,
+          location: aj.location || 'India',
+          jobType: aj.jobType || 'full-time',
+          category: aj.category,
+          salary: aj.salary || undefined,
+          postedDate: aj.createdAt || new Date().toISOString(),
+          deadline: aj.deadline || undefined,
+          applyLink: aj.applyLink,
+          isNew: daysDiff <= 1,
+          source: aj.source || 'Live',
+          description: aj.description,
         }
-        return j
       })
 
+    // Filter for requested category
+    let categoryJobs: Job[] = []
+    if (category === 'all') {
+      categoryJobs = activeValidJobs
+    } else {
+      const normalizedRequest = category.toLowerCase()
+      categoryJobs = activeValidJobs.filter(aj => {
+        const ajCat = aj.category.toLowerCase()
+        if (normalizedRequest === 'government' || normalizedRequest === 'govt') {
+          return ajCat === 'government' || ajCat === 'govt'
+        }
+        if (normalizedRequest === 'internships' || normalizedRequest === 'internship') {
+          return ajCat === 'internship' || ajCat === 'internships'
+        }
+        if (normalizedRequest === 'cat-mba' || normalizedRequest === 'catmba') {
+          return ajCat === 'cat-mba' || ajCat === 'catmba'
+        }
+        if (normalizedRequest === 'startup' || normalizedRequest === 'startups') {
+          return ajCat === 'startup' || ajCat === 'startups'
+        }
+        return ajCat === normalizedRequest
+      })
+    }
+
+    const dedupedJobs = dedupe(categoryJobs)
+    const today = new Date().toDateString()
+
     return NextResponse.json({
-      jobs: validJobs,
-      total: validJobs.length,
-      newToday: validJobs.filter(
+      jobs: dedupedJobs,
+      total: dedupedJobs.length,
+      newToday: dedupedJobs.filter(
         j => new Date(j.postedDate).toDateString() === today
       ).length,
       fetchedAt: new Date().toISOString(),

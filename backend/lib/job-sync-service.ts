@@ -1,4 +1,4 @@
-import { getSyncedJobs, saveSyncedJobs, purgeExpiredJobs, AdminJob } from './admin-storage';
+import { getSyncedJobs, saveSyncedJobs, purgeExpiredJobs, isValidJobApplyUrl, AdminJob } from './admin-storage';
 
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '1ed323a3c5mshbbd9b22a4145450p1dd372jsnaf71a8bbc448';
 
@@ -159,12 +159,20 @@ export async function syncJobsAndPurgeExpired() {
     }
   }
 
-  // Step 3: Filter all active jobs to ensure NO expired job is saved
+  // Step 3: Filter all active jobs to ensure NO expired or generic homepage job is saved
   const now = Date.now();
+  const thirtyDaysMs = 30 * 86400000;
   const updatedJobList = Array.from(existingMap.values()).filter(j => {
-    if (!j.deadline) return true;
-    const d = new Date(j.deadline).getTime();
-    return isNaN(d) || d >= now;
+    if (!j || !j.applyLink || !isValidJobApplyUrl(j.applyLink)) return false;
+    if (j.deadline) {
+      const d = new Date(j.deadline).getTime();
+      if (!isNaN(d) && d < now) return false;
+    }
+    if (j.createdAt) {
+      const createdTime = new Date(j.createdAt).getTime();
+      if (!isNaN(createdTime) && now - createdTime > thirtyDaysMs) return false;
+    }
+    return true;
   });
 
   // Keep most recent 500 jobs across categories

@@ -38,27 +38,109 @@ export async function saveSyncedJobs(jobs: AdminJob[]): Promise<void> {
   await setStoreData('synced-jobs', jobs);
 }
 
+export function isValidJobApplyUrl(url?: string): boolean {
+  if (!url || !url.startsWith('http')) return false;
+
+  // Generic company career homepages that don't point to a specific job opening
+  const genericHomepages = [
+    'accenture.com/in-en/careers',
+    'accenture.com/careers',
+    'tcs.com/careers',
+    'infosys.com/careers',
+    'careers.wipro.com',
+    'cognizant.com/global/en',
+    'hcltech.com/careers',
+    'careers.google.com/locations/india',
+    'careers.microsoft.com/us/en/search-results',
+    'rac.gov.in',
+    'internshala.com/internships',
+    'letsintern.com/internships',
+    'unstop.com/internships',
+    'careers.ti.com',
+    'lntecc.com/careers',
+    'rites.com/vacancies',
+    'careers.tatamotors.com',
+    'bank.sbi/web/careers',
+    'ibps.in',
+    'opportunities.rbi.org.in',
+    'hdfcbank.com',
+    'icicicareers.com',
+    'axisbank.com',
+    'kotak.com/en/careers',
+    'zepto.team/careers',
+    'groww.in/p/careers',
+    'meesho.io/careers',
+    'cred.club/careers',
+    'nykaa.com/careers',
+    'iima.ac.in/admissions',
+    'hul.co.in',
+    'itcportal.com/about-itc/careers',
+    'mckinsey.com/careers',
+    'careers.bcg.com/locations/india',
+    'amazon.jobs/en/locations/india',
+    'upsc.gov.in',
+    'ssc.gov.in',
+    'indianrailways.gov.in',
+    'isro.gov.in/Careers.html',
+    'drdo.gov.in',
+    'ongcindia.com',
+    'licindia.in',
+    'barc.gov.in',
+    'delhimetrorail.com',
+    'indianairforce.nic.in',
+    'nabard.org'
+  ];
+
+  const lower = url.toLowerCase();
+  for (const domain of genericHomepages) {
+    if (lower.includes(domain)) {
+      const hasSpecificId = /\/(job|jobs|view|posting|requisition|vacancy|detail|apply|openings)\/[a-zA-Z0-9_-]{3,}/i.test(lower)
+        || /\?(job_id|id|jk|jid)=[a-zA-Z0-9_-]+/i.test(lower);
+      if (!hasSpecificId) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 export async function purgeExpiredJobs(): Promise<{ removedAdmin: number; removedSynced: number }> {
   const now = Date.now();
+  const thirtyDaysMs = 30 * 86400000;
   
-  // 1. Clean admin jobs whose deadlines ended
+  // 1. Clean admin jobs: expired, older than 30 days, or generic homepage links
   const adminJobs = await getJobs();
   const validAdmin = adminJobs.filter(j => {
-    if (!j.deadline) return true;
-    const d = new Date(j.deadline).getTime();
-    return isNaN(d) || d >= now;
+    if (!j || !j.applyLink || !isValidJobApplyUrl(j.applyLink)) return false;
+    if (j.deadline) {
+      const d = new Date(j.deadline).getTime();
+      if (!isNaN(d) && d < now) return false;
+    }
+    if (j.createdAt) {
+      const createdTime = new Date(j.createdAt).getTime();
+      if (!isNaN(createdTime) && now - createdTime > thirtyDaysMs) return false;
+    }
+    return true;
   });
   const removedAdmin = adminJobs.length - validAdmin.length;
   if (removedAdmin > 0) {
     await saveJobs(validAdmin);
   }
 
-  // 2. Clean synced jobs whose deadlines ended
+  // 2. Clean synced jobs: expired, older than 30 days, or generic homepage links
   const syncedJobs = await getSyncedJobs();
   const validSynced = syncedJobs.filter(j => {
-    if (!j.deadline) return true;
-    const d = new Date(j.deadline).getTime();
-    return isNaN(d) || d >= now;
+    if (!j || !j.applyLink || !isValidJobApplyUrl(j.applyLink)) return false;
+    if (j.deadline) {
+      const d = new Date(j.deadline).getTime();
+      if (!isNaN(d) && d < now) return false;
+    }
+    if (j.createdAt) {
+      const createdTime = new Date(j.createdAt).getTime();
+      if (!isNaN(createdTime) && now - createdTime > thirtyDaysMs) return false;
+    }
+    return true;
   });
   const removedSynced = syncedJobs.length - validSynced.length;
   if (removedSynced > 0) {
