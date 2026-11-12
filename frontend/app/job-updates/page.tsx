@@ -34,6 +34,13 @@ import JobUpdatesHero from '@/components/JobUpdatesHero';
 import LiveJobFeed from '@/components/LiveJobFeed';
 import MockInterviewWidget from '@/components/job-updates/MockInterviewWidget';
 import BlogsWidget from '@/components/job-updates/BlogsWidget';
+import DesktopProfileCard from '@/components/job-updates/DesktopProfileCard';
+import DesktopCategoryGrid from '@/components/job-updates/DesktopCategoryGrid';
+import JobFilterBar, {
+  JobFilterState,
+  initialFilterState,
+  applyJobFilters,
+} from '@/components/job-updates/JobFilterBar';
 import type { DateRangeOption } from '@/types/jobs';
 
 const navItems = [
@@ -128,6 +135,22 @@ export default function JobUpdatesPage() {
     [categories, jobsByCategory],
   );
 
+  const [desktopFilters, setDesktopFilters] = useState<JobFilterState>(initialFilterState);
+
+  const desktopFilteredJobsByCategory = useMemo(() => {
+    const result: Record<DailyCategoryKey, any[]> = {} as any;
+    categories.forEach((cat) => {
+      const key = cat.apiCategory as DailyCategoryKey;
+      const list = jobsByCategory[key] || [];
+      result[key] = applyJobFilters(list, desktopFilters);
+    });
+    return result;
+  }, [categories, jobsByCategory, desktopFilters]);
+
+  const totalFilteredJobs = useMemo(() => {
+    return Object.values(desktopFilteredJobsByCategory).reduce((sum, list) => sum + list.length, 0);
+  }, [desktopFilteredJobsByCategory]);
+
   if (checking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -171,9 +194,12 @@ export default function JobUpdatesPage() {
             <LiveJobFeed />
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+          <div className="grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
             <aside className="hidden lg:block">
-              <div className="sticky top-28">
+              <div className="sticky top-28 space-y-4">
+                {/* 👤 Candidate Profile Snapshot (Naukri/LinkedIn style) */}
+                <DesktopProfileCard student={student} />
+
                 <div className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
                   <div className="mb-4 px-2">
                     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Menu</p>
@@ -198,7 +224,7 @@ export default function JobUpdatesPage() {
               </div>
             </aside>
 
-            <section className="flex-1 min-w-0 space-y-8">
+            <section className="flex-1 min-w-0 space-y-6">
 
               <JobUpdatesHero
                 totalNewJobs={totalNewJobs}
@@ -206,94 +232,31 @@ export default function JobUpdatesPage() {
                 onRefresh={refreshAll}
               />
 
-              <div className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-sm max-h-[90px]">
-                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                  <div className="grid auto-cols-min grid-flow-col gap-3 overflow-x-auto pb-1 md:overflow-visible">
+              {/* 🎯 Explore Jobs by Category (8 Domain Grid) */}
+              <DesktopCategoryGrid countsByCategory={countsByCategory} />
 
-
-                    <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 shadow-sm">
-                      Job Type
-                      <select
-                        aria-label="Select job type"
-                        value={filters.jobType}
-                        onChange={(event) => setFilters((prev) => ({ ...prev, jobType: event.target.value as any }))}
-                        className="bg-transparent outline-none text-sm"
-                      >
-                        <option value="all">All Opportunities</option>
-                        <option value="fresher">🎓 Fresher (0 Yrs)</option>
-                        <option value="remote">Remote / WFH</option>
-                        <option value="hybrid">Hybrid</option>
-                        <option value="onsite">On-site</option>
-                        <option value="internship">Internship</option>
-                        <option value="full-time">Full-time</option>
-                      </select>
-                    </div>
-
-                    <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 shadow-sm">
-                      Company
-                      <input
-                        aria-label="Company"
-                        value={filters.company}
-                        onChange={(event) => setFilters((prev) => ({ ...prev, company: event.target.value }))}
-                        placeholder="Any company"
-                        className="w-32 bg-transparent outline-none text-sm"
-                      />
-                    </div>
-
-                    <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 shadow-sm">
-                      Sort
-                      <select
-                        aria-label="Sort results"
-                        value={filters.sortBy}
-                        onChange={(event) => setFilters((prev) => ({ ...prev, sortBy: event.target.value as typeof filters.sortBy }))}
-                        className="bg-transparent outline-none text-sm"
-                      >
-                        <option value="newest-first">Newest</option>
-                        <option value="deadline-soon">Deadline</option>
-                      </select>
-                    </div>
-
-                    <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 shadow-sm">
-                      Salary
-                      <input
-                        aria-label="Salary min"
-                        value={filters.salaryRange[0]}
-                        onChange={(event) =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            salaryRange: [Math.max(0, Number(event.target.value)), prev.salaryRange[1]],
-                          }))
-                        }
-                        min={0}
-                        placeholder="Min"
-                        className="w-20 bg-transparent outline-none text-sm"
-                      />
-                      <span className="text-slate-400">—</span>
-                      <input
-                        aria-label="Salary max"
-                        value={filters.salaryRange[1]}
-                        onChange={(event) =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            salaryRange: [prev.salaryRange[0], Math.max(prev.salaryRange[0], Number(event.target.value))],
-                          }))
-                        }
-                        min={0}
-                        placeholder="Max"
-                        className="w-20 bg-transparent outline-none text-sm"
-                      />
-                    </div>
+              {/* ⚡ Modern Unified Filter System (Same as Mobile with Freshers, Remote, Internships, CTC) */}
+              <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h2 className="text-base font-bold text-slate-900 tracking-tight">
+                      Filter Opportunities
+                    </h2>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Showing {totalFilteredJobs} matching verified openings
+                    </p>
                   </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm">
-                      {unreadCount} alerts
-                    </div>
-                    <Button size="sm" variant="secondary" onClick={refreshAll}>
-                      <RefreshCcw className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <Button size="sm" variant="secondary" onClick={refreshAll} className="gap-1.5">
+                    <RefreshCcw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+                    <span>Refresh Feed</span>
+                  </Button>
                 </div>
+
+                <JobFilterBar
+                  filters={desktopFilters}
+                  onChange={setDesktopFilters}
+                  totalResultsCount={totalFilteredJobs}
+                />
               </div>
 
               <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 job-category-grid">
@@ -304,7 +267,7 @@ export default function JobUpdatesPage() {
                 ) : (
                   categories.map((category) => {
                     const key = category.apiCategory as DailyCategoryKey;
-                    const jobs = jobsByCategory[key] || [];
+                    const jobs = desktopFilteredJobsByCategory[key] || [];
                     const title = category.title;
                     const description = category.description;
                     const Icon = categoryIcons[key];
