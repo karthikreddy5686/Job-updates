@@ -181,13 +181,23 @@ export default function CategorySection({
                 <p className="text-sm">Try broadening the date or location filters to see more opportunities.</p>
               </div>
             ) : (
-              <div className="space-y-5">
+              <div className="space-y-3.5">
                 {visibleJobs.map((job, idx) => (
-                  <JobCard key={`first-${job.id}-${idx}`} job={job} onSelect={onSelectJob} />
+                  <JobCard
+                    key={`first-${job.id}-${idx}`}
+                    job={job}
+                    variant="compact"
+                    onSelect={onSelectJob}
+                  />
                 ))}
                 {/* Duplicate the list for seamless looping if we have items and scrolling is enabled */}
                 {!hideLoadMore && visibleJobs.map((job, idx) => (
-                  <JobCard key={`second-${job.id}-${idx}`} job={job} onSelect={onSelectJob} />
+                  <JobCard
+                    key={`second-${job.id}-${idx}`}
+                    job={job}
+                    variant="compact"
+                    onSelect={onSelectJob}
+                  />
                 ))}
               </div>
             )}

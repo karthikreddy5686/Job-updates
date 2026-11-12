@@ -198,7 +198,7 @@ export default function JobCard({ job, variant = 'auto', onSelect }: JobCardProp
     }
   };
 
-  const showCompactOnly = variant === 'compact';
+  const showCompactOnly = variant === 'compact' || variant === 'auto';
   const showFullOnly = variant === 'full';
 
   return (
