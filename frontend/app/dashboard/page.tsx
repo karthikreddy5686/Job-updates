@@ -15,7 +15,6 @@ import {
   Download,
   Trash2,
   Edit3,
-  CheckCircle2,
   Plus,
   X,
   Sparkles,
@@ -26,10 +25,9 @@ import {
   LogOut,
   Camera,
   Check,
-  ChevronRight,
   ShieldCheck,
-  DollarSign,
-  TrendingUp,
+  AlertCircle,
+  FileUp,
 } from 'lucide-react';
 import { getStudentSession, logoutStudent } from '@/lib/student-auth';
 import { useAuth } from '@/lib/auth-context';
@@ -53,29 +51,47 @@ interface ProfileState {
   expectedSalary: string;
 }
 
+const defaultProfile: ProfileState = {
+  name: '',
+  headline: '',
+  email: '',
+  phone: '',
+  location: '',
+  experience: '',
+  college: '',
+  degree: '',
+  graduationYear: '',
+  skills: [],
+  resumeName: '',
+  resumeDate: '',
+  preferredRoles: '',
+  preferredLocations: '',
+  expectedSalary: '',
+};
+
+// Popular quick skills like Naukri
+const suggestedSkills = [
+  'Python',
+  'Java',
+  'React.js',
+  'SQL',
+  'JavaScript',
+  'Node.js',
+  'Next.js',
+  'C++',
+  'Full Stack Development',
+  'Tailwind CSS',
+  'Data Structures',
+  'Git',
+];
+
 export default function ProfileDashboardPage() {
   const router = useRouter();
   const { logout } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [student, setStudent] = useState<any>(null);
-  const [profile, setProfile] = useState<ProfileState>({
-    name: 'Karthik Reddy',
-    headline: 'B.Tech CSE | Aspiring Full-Stack Software Developer | React, Next.js, Node.js',
-    email: 'karthik@example.com',
-    phone: '+91 98765 43210',
-    location: 'Hyderabad, India',
-    experience: 'Fresher (0-1 Yrs)',
-    college: 'Vignan Institute of Technology & Science',
-    degree: 'B.Tech - Computer Science & Engineering',
-    graduationYear: '2026',
-    skills: ['React.js', 'Next.js', 'TypeScript', 'Node.js', 'Python', 'Tailwind CSS', 'SQL', 'Git & GitHub'],
-    resumeName: 'Karthik_Reddy_Resume_2026.pdf',
-    resumeDate: 'Nov 12, 2026',
-    preferredRoles: 'Software Developer, Frontend Engineer, Full-Stack Dev',
-    preferredLocations: 'Hyderabad, Bangalore, Remote',
-    expectedSalary: '₹ 6,00,000 - 14,00,000 LPA',
-  });
+  const [profile, setProfile] = useState<ProfileState>(defaultProfile);
 
   const [isEditingBasic, setIsEditingBasic] = useState(false);
   const [isEditingEducation, setIsEditingEducation] = useState(false);
@@ -90,25 +106,26 @@ export default function ProfileDashboardPage() {
 
   useEffect(() => {
     const s = getStudentSession();
+    let currentData = { ...defaultProfile };
+
     if (s) {
       setStudent(s);
-      setProfile((prev) => ({
-        ...prev,
-        name: s.name || prev.name,
-        email: s.email || prev.email,
-        phone: s.phone || prev.phone,
-        college: s.collegeName || prev.college,
-      }));
+      currentData.name = s.name || '';
+      currentData.email = s.email || '';
+      currentData.phone = s.phone || '';
+      currentData.college = s.collegeName || '';
     }
 
-    // Load custom profile data from localStorage if exists
+    // Load any user manually saved profile data
     try {
-      const saved = localStorage.getItem('naukri_profile_data');
+      const saved = localStorage.getItem('naukri_manual_profile');
       if (saved) {
         const parsed = JSON.parse(saved);
-        setProfile((prev) => ({ ...prev, ...parsed }));
+        currentData = { ...currentData, ...parsed };
       }
     } catch {}
+
+    setProfile(currentData);
 
     // Load saved count & application count
     try {
@@ -123,7 +140,7 @@ export default function ProfileDashboardPage() {
     setProfile((prev) => {
       const updated = { ...prev, ...updates };
       try {
-        localStorage.setItem('naukri_profile_data', JSON.stringify(updated));
+        localStorage.setItem('naukri_manual_profile', JSON.stringify(updated));
       } catch {}
       return updated;
     });
@@ -149,22 +166,25 @@ export default function ProfileDashboardPage() {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const now = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date());
+      const now = new Intl.DateTimeFormat('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      }).format(new Date());
       saveProfileUpdate({
         resumeName: file.name,
         resumeDate: now,
       });
-      showToast(`Uploaded ${file.name}`);
+      showToast(`Resume uploaded: ${file.name}`);
     }
   };
 
-  const handleAddSkill = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newSkill.trim() && !profile.skills.includes(newSkill.trim())) {
-      const updated = [...profile.skills, newSkill.trim()];
+  const handleAddSkill = (skillToAdd: string) => {
+    const trimmed = skillToAdd.trim();
+    if (trimmed && !profile.skills.includes(trimmed)) {
+      const updated = [...profile.skills, trimmed];
       saveProfileUpdate({ skills: updated });
       setNewSkill('');
-      setShowAddSkill(false);
     }
   };
 
@@ -173,18 +193,40 @@ export default function ProfileDashboardPage() {
     saveProfileUpdate({ skills: updated });
   };
 
-  // Calculate profile completeness percentage (Naukri style)
+  const handleDeleteResume = () => {
+    if (confirm('Are you sure you want to delete your resume?')) {
+      saveProfileUpdate({
+        resumeName: '',
+        resumeDate: '',
+      });
+      showToast('Resume removed');
+    }
+  };
+
+  // Dynamic Naukri-style Completeness calculation
   const calculateCompleteness = () => {
-    let score = 40; // Base registration score
-    if (profile.headline) score += 10;
-    if (profile.resumeName) score += 20;
-    if (profile.skills.length >= 3) score += 10;
-    if (profile.college) score += 10;
+    let score = 0;
+    if (profile.name) score += 10;
+    if (profile.email) score += 10;
     if (profile.phone) score += 10;
+    if (profile.headline) score += 15;
+    if (profile.resumeName) score += 25;
+    if (profile.skills.length >= 3) score += 15;
+    if (profile.college || profile.degree) score += 10;
+    if (profile.preferredRoles || profile.location) score += 5;
     return Math.min(100, score);
   };
 
   const completeness = calculateCompleteness();
+
+  const getNextRecommendedStep = () => {
+    if (!profile.resumeName) return 'Upload your resume (+25%) to get noticed by recruiters';
+    if (!profile.headline) return 'Add a professional headline (+15%)';
+    if (profile.skills.length < 3) return 'Add at least 3 key skills (+15%)';
+    if (!profile.degree) return 'Add your education details (+10%)';
+    if (!profile.phone) return 'Add your phone number (+10%)';
+    return 'Your profile is strong and ready for top recruiters!';
+  };
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] pb-28 text-slate-900">
@@ -193,9 +235,15 @@ export default function ProfileDashboardPage() {
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h1 className="text-lg font-bold text-slate-900 tracking-tight">My Profile</h1>
-            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-              Verified Candidate
-            </span>
+            {completeness >= 70 ? (
+              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                Active Candidate
+              </span>
+            ) : (
+              <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                Profile Incomplete
+              </span>
+            )}
           </div>
 
           <button
@@ -217,7 +265,7 @@ export default function ProfileDashboardPage() {
               {/* Avatar with edit badge */}
               <div className="relative shrink-0">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white font-bold text-2xl flex items-center justify-center shadow-md">
-                  {profile.name.charAt(0).toUpperCase()}
+                  {(profile.name || student?.name || 'U').charAt(0).toUpperCase()}
                 </div>
                 <button
                   onClick={() => setIsEditingBasic(true)}
@@ -232,32 +280,75 @@ export default function ProfileDashboardPage() {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <h2 className="text-lg sm:text-xl font-bold text-slate-950 truncate leading-snug">
-                    {profile.name}
+                    {profile.name || student?.name || 'Your Name'}
                   </h2>
                   <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
                 </div>
-                <p className="mt-1 text-xs text-slate-600 leading-relaxed font-normal">
-                  {profile.headline}
-                </p>
 
-                {/* Contact Pills */}
+                {profile.headline ? (
+                  <p className="mt-1 text-xs text-slate-600 leading-relaxed font-normal">
+                    {profile.headline}
+                  </p>
+                ) : (
+                  <button
+                    onClick={() => setIsEditingBasic(true)}
+                    className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add professional headline</span>
+                  </button>
+                )}
+
+                {/* Contact & Location Details */}
                 <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-600 font-medium">
-                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
-                    <MapPin className="w-3 h-3 text-slate-400" />
-                    {profile.location}
-                  </span>
-                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
-                    <Briefcase className="w-3 h-3 text-slate-400" />
-                    {profile.experience}
-                  </span>
-                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
-                    <Phone className="w-3 h-3 text-emerald-600" />
-                    {profile.phone}
-                  </span>
-                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
-                    <Mail className="w-3 h-3 text-blue-600" />
-                    {profile.email}
-                  </span>
+                  {profile.location ? (
+                    <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
+                      <MapPin className="w-3 h-3 text-slate-400" />
+                      {profile.location}
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => setIsEditingBasic(true)}
+                      className="inline-flex items-center gap-1 bg-slate-50 hover:bg-slate-100 border border-dashed border-slate-300 px-2.5 py-1 rounded-lg text-slate-500"
+                    >
+                      <Plus className="w-3 h-3" /> Add Location
+                    </button>
+                  )}
+
+                  {profile.experience ? (
+                    <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
+                      <Briefcase className="w-3 h-3 text-slate-400" />
+                      {profile.experience}
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => setIsEditingBasic(true)}
+                      className="inline-flex items-center gap-1 bg-slate-50 hover:bg-slate-100 border border-dashed border-slate-300 px-2.5 py-1 rounded-lg text-slate-500"
+                    >
+                      <Plus className="w-3 h-3" /> Add Experience
+                    </button>
+                  )}
+
+                  {profile.phone ? (
+                    <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
+                      <Phone className="w-3 h-3 text-emerald-600" />
+                      {profile.phone}
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => setIsEditingBasic(true)}
+                      className="inline-flex items-center gap-1 bg-slate-50 hover:bg-slate-100 border border-dashed border-slate-300 px-2.5 py-1 rounded-lg text-slate-500"
+                    >
+                      <Plus className="w-3 h-3" /> Add Phone
+                    </button>
+                  )}
+
+                  {profile.email ? (
+                    <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
+                      <Mail className="w-3 h-3 text-blue-600" />
+                      {profile.email}
+                    </span>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -265,7 +356,7 @@ export default function ProfileDashboardPage() {
             <button
               onClick={() => setIsEditingBasic(true)}
               className="p-2 text-slate-400 hover:text-blue-600 transition-colors shrink-0 rounded-full hover:bg-slate-50"
-              title="Edit Basic Details"
+              title="Edit Profile"
             >
               <Edit3 className="w-4 h-4" />
             </button>
@@ -285,78 +376,118 @@ export default function ProfileDashboardPage() {
             </div>
             <p className="mt-1.5 text-[11px] text-slate-500 flex items-center gap-1">
               <Sparkles className="w-3 h-3 text-amber-500 shrink-0" />
-              Recruiters view completed profiles 3x more often.
+              <span>{getNextRecommendedStep()}</span>
             </p>
           </div>
         </section>
 
-        {/* 3. Resume Card (Naukri signature card) */}
+        {/* 3. Resume Card (Naukri signature card with Manual Upload Option) */}
         <section className="rounded-3xl border border-slate-200/90 bg-white p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-blue-600" />
               <h3 className="text-sm font-bold text-slate-900">Resume</h3>
             </div>
-            <span className="text-[11px] text-slate-400 font-medium">Updated: {profile.resumeDate}</span>
+            {profile.resumeDate ? (
+              <span className="text-[11px] text-slate-400 font-medium">Uploaded: {profile.resumeDate}</span>
+            ) : (
+              <span className="text-[11px] text-amber-600 font-semibold bg-amber-50 px-2 py-0.5 rounded-full">
+                Required for 3x calls
+              </span>
+            )}
           </div>
 
-          <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-white border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 shadow-2xs">
-                <FileText className="w-5 h-5" />
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+            accept=".pdf,.doc,.docx"
+            className="hidden"
+          />
+
+          {profile.resumeName ? (
+            <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-white border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 shadow-2xs">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-slate-900 truncate">{profile.resumeName}</p>
+                  <p className="text-[11px] text-slate-500">Document ready for direct ATS apply</p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="text-xs font-bold text-slate-900 truncate">{profile.resumeName}</p>
-                <p className="text-[11px] text-slate-500">PDF Document • 450 KB</p>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors shadow-2xs"
+                >
+                  <Upload className="w-3 h-3" />
+                  <span>Update</span>
+                </button>
+                <button
+                  onClick={handleDeleteResume}
+                  className="p-1.5 text-slate-400 hover:text-red-600 transition-colors rounded-full"
+                  title="Remove Resume"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileUpload}
-                accept=".pdf,.doc,.docx"
-                className="hidden"
-              />
+          ) : (
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="p-6 rounded-2xl border-2 border-dashed border-blue-200 hover:border-blue-400 bg-blue-50/30 text-center cursor-pointer transition-colors group"
+            >
+              <div className="w-11 h-11 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition-transform">
+                <FileUp className="w-5 h-5" />
+              </div>
+              <p className="text-xs font-bold text-slate-800">Upload Resume</p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Supported formats: PDF, DOC, DOCX up to 5MB
+              </p>
               <button
-                onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors shadow-2xs"
+                type="button"
+                className="mt-3 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-blue-600 text-white font-bold text-xs shadow-2xs"
               >
-                <Upload className="w-3 h-3" />
-                <span>Update Resume</span>
+                <Upload className="w-3.5 h-3.5" />
+                <span>Select File from Device</span>
               </button>
             </div>
-          </div>
-
-          <p className="mt-2.5 text-[11px] text-slate-400">
-            Supported Formats: doc, docx, rtf, pdf, up to 2MB.
-          </p>
+          )}
         </section>
 
-        {/* 4. Key Skills (Naukri Style Tags) */}
+        {/* 4. Key Skills (Naukri Style Manual Chips & Add Options) */}
         <section className="rounded-3xl border border-slate-200/90 bg-white p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-500" />
               <h3 className="text-sm font-bold text-slate-900">Key Skills</h3>
+              <span className="text-[11px] text-slate-400 font-medium">({profile.skills.length})</span>
             </div>
             <button
               onClick={() => setShowAddSkill((prev) => !prev)}
               className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Add Skill</span>
+              <span>Add Skills</span>
             </button>
           </div>
 
+          {/* Add skill input form */}
           {showAddSkill && (
-            <form onSubmit={handleAddSkill} className="mb-3 flex items-center gap-2">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleAddSkill(newSkill);
+              }}
+              className="mb-3.5 flex items-center gap-2"
+            >
               <input
                 type="text"
                 value={newSkill}
                 onChange={(e) => setNewSkill(e.target.value)}
-                placeholder="Enter skill (e.g. Docker, Redux, Java)"
+                placeholder="Type skill name (e.g. Java, Docker, React)..."
                 className="flex-1 h-9 px-3 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
                 autoFocus
               />
@@ -371,27 +502,59 @@ export default function ProfileDashboardPage() {
                 onClick={() => setShowAddSkill(false)}
                 className="h-9 px-3 text-slate-400 hover:text-slate-600 text-xs"
               >
-                Cancel
+                Close
               </button>
             </form>
           )}
 
-          <div className="flex flex-wrap gap-2">
-            {profile.skills.map((skill) => (
-              <span
-                key={skill}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700 hover:bg-slate-100 transition-colors"
-              >
-                <span>{skill}</span>
-                <button
-                  onClick={() => handleRemoveSkill(skill)}
-                  className="text-slate-400 hover:text-red-500"
-                  title="Remove skill"
+          {/* Added Skills List */}
+          {profile.skills.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {profile.skills.map((skill) => (
+                <span
+                  key={skill}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700 hover:bg-slate-100 transition-colors"
                 >
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
-            ))}
+                  <span>{skill}</span>
+                  <button
+                    onClick={() => handleRemoveSkill(skill)}
+                    className="text-slate-400 hover:text-red-500"
+                    title="Remove skill"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          ) : (
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+              <p className="text-xs text-slate-600 font-medium">No skills added yet</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                Skills help match you with verified MNC and startup openings
+              </p>
+            </div>
+          )}
+
+          {/* Suggested Quick Add Skills (Naukri style) */}
+          <div className="mt-3.5 pt-3 border-t border-slate-100">
+            <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2">
+              Suggested skills to add:
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {suggestedSkills
+                .filter((s) => !profile.skills.includes(s))
+                .slice(0, 8)
+                .map((skill) => (
+                  <button
+                    key={skill}
+                    onClick={() => handleAddSkill(skill)}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50/60 hover:bg-blue-100 text-blue-700 text-[11px] font-semibold border border-blue-200/60 transition-colors"
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>{skill}</span>
+                  </button>
+                ))}
+            </div>
           </div>
         </section>
 
@@ -454,7 +617,7 @@ export default function ProfileDashboardPage() {
           </Link>
         </div>
 
-        {/* 6. Education Details (Naukri Style) */}
+        {/* 6. Education Details (Naukri Style Manual Fill) */}
         <section className="rounded-3xl border border-slate-200/90 bg-white p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -465,20 +628,32 @@ export default function ProfileDashboardPage() {
               onClick={() => setIsEditingEducation(true)}
               className="text-xs font-bold text-blue-600 hover:text-blue-700"
             >
-              Edit
+              {profile.degree || profile.college ? 'Edit' : '+ Add'}
             </button>
           </div>
 
-          <div className="space-y-1">
-            <h4 className="text-sm font-bold text-slate-900">{profile.degree}</h4>
-            <p className="text-xs font-medium text-slate-600">{profile.college}</p>
-            <p className="text-[11px] text-slate-400">
-              Graduation: {profile.graduationYear} • Full Time
-            </p>
-          </div>
+          {profile.degree || profile.college ? (
+            <div className="space-y-1">
+              <h4 className="text-sm font-bold text-slate-900">{profile.degree || 'Degree not specified'}</h4>
+              <p className="text-xs font-medium text-slate-600">{profile.college || 'College not specified'}</p>
+              {profile.graduationYear && (
+                <p className="text-[11px] text-slate-400">
+                  Graduation: {profile.graduationYear} • Full Time
+                </p>
+              )}
+            </div>
+          ) : (
+            <div
+              onClick={() => setIsEditingEducation(true)}
+              className="p-4 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-dashed border-slate-300 text-center cursor-pointer transition-colors"
+            >
+              <p className="text-xs font-semibold text-blue-600">+ Add Education Details</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Degree, college/institute and graduation year</p>
+            </div>
+          )}
         </section>
 
-        {/* 7. Career Preferences (Naukri Style) */}
+        {/* 7. Career Preferences (Naukri Style Manual Fill) */}
         <section className="rounded-3xl border border-slate-200/90 bg-white p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -489,24 +664,38 @@ export default function ProfileDashboardPage() {
               onClick={() => setIsEditingPreferences(true)}
               className="text-xs font-bold text-blue-600 hover:text-blue-700"
             >
-              Edit
+              {profile.preferredRoles || profile.preferredLocations ? 'Edit' : '+ Add'}
             </button>
           </div>
 
-          <div className="grid gap-2.5 text-xs text-slate-700">
-            <div className="flex justify-between py-1 border-b border-slate-50">
-              <span className="text-slate-400">Preferred Roles</span>
-              <span className="font-semibold text-right max-w-[200px]">{profile.preferredRoles}</span>
+          {profile.preferredRoles || profile.preferredLocations || profile.expectedSalary ? (
+            <div className="grid gap-2 text-xs text-slate-700">
+              <div className="flex justify-between py-1 border-b border-slate-50">
+                <span className="text-slate-400">Preferred Roles</span>
+                <span className="font-semibold text-right max-w-[200px]">
+                  {profile.preferredRoles || 'Any technical role'}
+                </span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-slate-50">
+                <span className="text-slate-400">Preferred Locations</span>
+                <span className="font-semibold text-right">{profile.preferredLocations || 'Flexible'}</span>
+              </div>
+              <div className="flex justify-between py-1">
+                <span className="text-slate-400">Expected Salary</span>
+                <span className="font-semibold text-right text-emerald-700">
+                  {profile.expectedSalary || 'Negotiable'}
+                </span>
+              </div>
             </div>
-            <div className="flex justify-between py-1 border-b border-slate-50">
-              <span className="text-slate-400">Preferred Locations</span>
-              <span className="font-semibold text-right">{profile.preferredLocations}</span>
+          ) : (
+            <div
+              onClick={() => setIsEditingPreferences(true)}
+              className="p-4 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-dashed border-slate-300 text-center cursor-pointer transition-colors"
+            >
+              <p className="text-xs font-semibold text-blue-600">+ Add Career Preferences</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Role preferences, locations & expected salary</p>
             </div>
-            <div className="flex justify-between py-1">
-              <span className="text-slate-400">Expected Salary</span>
-              <span className="font-semibold text-right text-emerald-700">{profile.expectedSalary}</span>
-            </div>
-          </div>
+          )}
         </section>
 
         {/* 8. Log Out Card */}
@@ -540,6 +729,7 @@ export default function ProfileDashboardPage() {
                 <label className="font-semibold text-slate-700 block mb-1">Full Name</label>
                 <input
                   type="text"
+                  placeholder="e.g. Rahul Sharma"
                   value={profile.name}
                   onChange={(e) => setProfile((p) => ({ ...p, name: e.target.value }))}
                   className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
@@ -550,6 +740,7 @@ export default function ProfileDashboardPage() {
                 <label className="font-semibold text-slate-700 block mb-1">Professional Headline</label>
                 <textarea
                   rows={2}
+                  placeholder="e.g. B.Tech Computer Science Fresher | Software Engineer"
                   value={profile.headline}
                   onChange={(e) => setProfile((p) => ({ ...p, headline: e.target.value }))}
                   className="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
@@ -560,6 +751,7 @@ export default function ProfileDashboardPage() {
                 <label className="font-semibold text-slate-700 block mb-1">Phone Number</label>
                 <input
                   type="text"
+                  placeholder="e.g. +91 98765 43210"
                   value={profile.phone}
                   onChange={(e) => setProfile((p) => ({ ...p, phone: e.target.value }))}
                   className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
@@ -570,6 +762,7 @@ export default function ProfileDashboardPage() {
                 <label className="font-semibold text-slate-700 block mb-1">Current Location</label>
                 <input
                   type="text"
+                  placeholder="e.g. Hyderabad, India"
                   value={profile.location}
                   onChange={(e) => setProfile((p) => ({ ...p, location: e.target.value }))}
                   className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
@@ -578,12 +771,18 @@ export default function ProfileDashboardPage() {
 
               <div>
                 <label className="font-semibold text-slate-700 block mb-1">Experience Level</label>
-                <input
-                  type="text"
+                <select
                   value={profile.experience}
                   onChange={(e) => setProfile((p) => ({ ...p, experience: e.target.value }))}
-                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
-                />
+                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500 bg-white"
+                >
+                  <option value="">Select experience level</option>
+                  <option value="Fresher (0 Yrs)">Fresher (0 Yrs)</option>
+                  <option value="0 - 1 Years">0 - 1 Years</option>
+                  <option value="1 - 3 Years">1 - 3 Years</option>
+                  <option value="3 - 5 Years">3 - 5 Years</option>
+                  <option value="5+ Years">5+ Years</option>
+                </select>
               </div>
             </div>
 
@@ -595,7 +794,7 @@ export default function ProfileDashboardPage() {
                 }}
                 className="flex-1 py-2.5 rounded-full bg-blue-600 text-white font-bold text-xs hover:bg-blue-500"
               >
-                Save Changes
+                Save Details
               </button>
               <button
                 onClick={() => setIsEditingBasic(false)}
@@ -613,7 +812,7 @@ export default function ProfileDashboardPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
           <div className="bg-white rounded-3xl p-6 w-full max-w-md text-slate-900 shadow-2xl space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-slate-900">Edit Education Details</h3>
+              <h3 className="text-base font-bold text-slate-900">Education Details</h3>
               <button onClick={() => setIsEditingEducation(false)} className="p-1 text-slate-400 hover:text-slate-700">
                 <X className="w-5 h-5" />
               </button>
@@ -624,6 +823,7 @@ export default function ProfileDashboardPage() {
                 <label className="font-semibold text-slate-700 block mb-1">Degree & Major</label>
                 <input
                   type="text"
+                  placeholder="e.g. B.Tech in Computer Science"
                   value={profile.degree}
                   onChange={(e) => setProfile((p) => ({ ...p, degree: e.target.value }))}
                   className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
@@ -631,9 +831,10 @@ export default function ProfileDashboardPage() {
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">College / Institute Name</label>
+                <label className="font-semibold text-slate-700 block mb-1">College / Institute</label>
                 <input
                   type="text"
+                  placeholder="e.g. IIT, NIT, or College Name"
                   value={profile.college}
                   onChange={(e) => setProfile((p) => ({ ...p, college: e.target.value }))}
                   className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
@@ -641,9 +842,10 @@ export default function ProfileDashboardPage() {
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Year of Graduation</label>
+                <label className="font-semibold text-slate-700 block mb-1">Graduation Year</label>
                 <input
                   type="text"
+                  placeholder="e.g. 2026"
                   value={profile.graduationYear}
                   onChange={(e) => setProfile((p) => ({ ...p, graduationYear: e.target.value }))}
                   className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
@@ -677,7 +879,7 @@ export default function ProfileDashboardPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
           <div className="bg-white rounded-3xl p-6 w-full max-w-md text-slate-900 shadow-2xl space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-slate-900">Edit Career Preferences</h3>
+              <h3 className="text-base font-bold text-slate-900">Career Preferences</h3>
               <button onClick={() => setIsEditingPreferences(false)} className="p-1 text-slate-400 hover:text-slate-700">
                 <X className="w-5 h-5" />
               </button>
@@ -688,6 +890,7 @@ export default function ProfileDashboardPage() {
                 <label className="font-semibold text-slate-700 block mb-1">Preferred Job Roles</label>
                 <input
                   type="text"
+                  placeholder="e.g. Software Developer, Frontend Developer"
                   value={profile.preferredRoles}
                   onChange={(e) => setProfile((p) => ({ ...p, preferredRoles: e.target.value }))}
                   className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
@@ -695,9 +898,10 @@ export default function ProfileDashboardPage() {
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Preferred Job Locations</label>
+                <label className="font-semibold text-slate-700 block mb-1">Preferred Cities / Remote</label>
                 <input
                   type="text"
+                  placeholder="e.g. Hyderabad, Bangalore, Remote"
                   value={profile.preferredLocations}
                   onChange={(e) => setProfile((p) => ({ ...p, preferredLocations: e.target.value }))}
                   className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
@@ -705,9 +909,10 @@ export default function ProfileDashboardPage() {
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Expected Salary Range</label>
+                <label className="font-semibold text-slate-700 block mb-1">Expected Salary (Annual)</label>
                 <input
                   type="text"
+                  placeholder="e.g. ₹ 5,00,000 - 10,00,000 LPA"
                   value={profile.expectedSalary}
                   onChange={(e) => setProfile((p) => ({ ...p, expectedSalary: e.target.value }))}
                   className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
