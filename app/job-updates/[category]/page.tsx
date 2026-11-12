@@ -126,9 +126,36 @@ export default function CategoryDetailPage() {
     refreshAll,
   } = useDailyJobs();
 
-  const internalKey = (categoryParam === 'startups' ? 'startup' : categoryParam) as DailyCategoryKey;
+  const internalKey = useMemo(() => {
+    const p = (categoryParam || '').toLowerCase();
+    if (p === 'startups' || p === 'startup') return 'startup';
+    if (p === 'internships' || p === 'internship') return 'internships';
+    if (p === 'cat' || p === 'cat-mba') return 'cat-mba';
+    if (p === 'civil') return 'civil';
+    if (p === 'core') return 'core';
+    if (p === 'government') return 'government';
+    if (p === 'banking') return 'banking';
+    if (p === 'mnc') return 'mnc';
+    return (p as DailyCategoryKey);
+  }, [categoryParam]);
+
   const categoryData = categories.find((c) => c.apiCategory === internalKey);
   const Icon = categoryIcons[categoryParam] || Briefcase;
+
+  const categoryTitle = useMemo(() => {
+    if (categoryData?.title) return categoryData.title;
+    const titles: Record<string, string> = {
+      mnc: 'Jobs in MNCs',
+      internships: 'Internship Listings',
+      government: 'Government Jobs',
+      banking: 'Banking Jobs',
+      startup: 'Startup Roles',
+      core: 'Core Engineering Jobs',
+      civil: 'Civil & Mechanical Jobs',
+      'cat-mba': 'CAT / MBA Opportunities',
+    };
+    return titles[internalKey] || 'Jobs';
+  }, [categoryData, internalKey]);
 
   const rawJobs = useMemo(() => {
     const fetched = jobsByCategory[internalKey] || [];
@@ -185,8 +212,6 @@ export default function CategoryDetailPage() {
       />
     );
   }
-
-  const categoryTitle = categoryData?.title || 'Jobs';
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] pb-24 text-slate-900">

@@ -14,16 +14,15 @@ import {
   Rocket,
   Cpu,
   GraduationCap,
+  HardHat,
   TrendingUp,
-  MapPin,
-  ChevronRight,
-  SlidersHorizontal,
   Bookmark,
   User,
   Sparkles,
   Layers,
   ArrowRight,
   RefreshCcw,
+  CheckCircle2,
 } from 'lucide-react';
 import JobCard from '@/components/JobCard';
 import type { DailyJob } from '@/types/jobs';
@@ -52,47 +51,35 @@ export default function MobileJobHome({
 }: MobileJobHomeProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedPill, setSelectedPill] = useState<string | null>(null);
 
-  // Quick suggestion chips matching Screenshot 1
-  const quickPills = [
-    { label: 'Software Developer', query: 'Software Developer' },
-    { label: 'Remote Jobs', query: 'Remote' },
-    { label: 'Jobs in MNCs', category: 'mnc' },
-    { label: 'Walk in Jobs', query: 'Walk in' },
-    { label: 'Fresh Jobs', category: 'internships' },
-    { label: 'Govt Jobs', category: 'government' },
-    { label: 'Banking Jobs', category: 'banking' },
-  ];
-
-  // 4x2 Category Grid matching Screenshot 1
+  // 4x2 Category Grid matching the 8 distinct job sections
   const categoryTiles = [
     {
-      id: 'wfh',
-      title: 'Work From\nHome',
-      icon: Home,
-      bgColor: 'bg-[#E8F8F0]',
-      textColor: 'text-[#059669]',
-      borderColor: 'border-[#D1F2E2]',
-      href: '/job-updates/internships?type=remote',
+      id: 'mnc',
+      title: 'Jobs in\nMNCs',
+      icon: Building2,
+      bgColor: 'bg-[#FEF9E7]',
+      textColor: 'text-[#CA8A04]',
+      borderColor: 'border-[#FEF0B8]',
+      href: '/job-updates/mnc',
     },
     {
-      id: 'walkin',
-      title: 'Walk in\nJobs',
+      id: 'internships',
+      title: 'Internships',
       icon: Briefcase,
+      bgColor: 'bg-[#ECFDF5]',
+      textColor: 'text-[#059669]',
+      borderColor: 'border-[#D1F2E2]',
+      href: '/job-updates/internships',
+    },
+    {
+      id: 'startups',
+      title: 'Startup\nJobs',
+      icon: Rocket,
       bgColor: 'bg-[#F0EBFF]',
       textColor: 'text-[#7C3AED]',
       borderColor: 'border-[#E4D7FF]',
       href: '/job-updates/startups',
-    },
-    {
-      id: 'high-salary',
-      title: 'High Salary\nJobs',
-      icon: Banknote,
-      bgColor: 'bg-[#FFF0F0]',
-      textColor: 'text-[#E11D48]',
-      borderColor: 'border-[#FFE0E0]',
-      href: '/job-updates/core',
     },
     {
       id: 'banking',
@@ -104,34 +91,7 @@ export default function MobileJobHome({
       href: '/job-updates/banking',
     },
     {
-      id: 'top-companies',
-      title: 'Top\nCompanies',
-      icon: Building2,
-      bgColor: 'bg-[#FFF1EC]',
-      textColor: 'text-[#EA580C]',
-      borderColor: 'border-[#FED9CB]',
-      href: '/job-updates/mnc',
-    },
-    {
-      id: 'mnc',
-      title: 'Jobs in\nMNCs',
-      icon: Building2,
-      bgColor: 'bg-[#FEF9E7]',
-      textColor: 'text-[#CA8A04]',
-      borderColor: 'border-[#FEF0B8]',
-      href: '/job-updates/mnc',
-    },
-    {
-      id: 'core',
-      title: 'Core\nEngineering',
-      icon: Cpu,
-      bgColor: 'bg-[#ECFDF5]',
-      textColor: 'text-[#0D9488]',
-      borderColor: 'border-[#CCFBF1]',
-      href: '/job-updates/core',
-    },
-    {
-      id: 'govt',
+      id: 'government',
       title: 'Government\nJobs',
       icon: ShieldCheck,
       bgColor: 'bg-[#EEF2FF]',
@@ -139,12 +99,38 @@ export default function MobileJobHome({
       borderColor: 'border-[#E0E7FF]',
       href: '/job-updates/government',
     },
+    {
+      id: 'core',
+      title: 'Core\nEngineering',
+      icon: Cpu,
+      bgColor: 'bg-[#E6FFFA]',
+      textColor: 'text-[#0D9488]',
+      borderColor: 'border-[#CCFBF1]',
+      href: '/job-updates/core',
+    },
+    {
+      id: 'civil',
+      title: 'Civil &\nMech Jobs',
+      icon: HardHat,
+      bgColor: 'bg-[#FFF1EC]',
+      textColor: 'text-[#EA580C]',
+      borderColor: 'border-[#FED9CB]',
+      href: '/job-updates/civil',
+    },
+    {
+      id: 'cat-mba',
+      title: 'CAT / MBA\nJobs',
+      icon: GraduationCap,
+      bgColor: 'bg-[#FFF0F0]',
+      textColor: 'text-[#E11D48]',
+      borderColor: 'border-[#FFE0E0]',
+      href: '/job-updates/cat-mba',
+    },
   ];
 
   // Aggregate curated list of jobs for "Jobs based on your profile"
   const allJobs = useMemo(() => {
     const list: DailyJob[] = [];
-    // Prioritize MNC and trending categories
     const priorityCategories: DailyCategoryKey[] = ['mnc', 'internships', 'startup', 'core', 'banking', 'government', 'civil', 'cat-mba'];
     priorityCategories.forEach(key => {
       const catJobs = jobsByCategory[key] || [];
@@ -175,15 +161,6 @@ export default function MobileJobHome({
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/job-updates/mnc?q=${encodeURIComponent(searchQuery)}`);
-    }
-  };
-
-  const handlePillClick = (pill: (typeof quickPills)[0]) => {
-    setSelectedPill(pill.label);
-    if (pill.category) {
-      router.push(`/job-updates/${pill.category}`);
-    } else {
-      setSearchQuery(pill.query || '');
     }
   };
 
@@ -225,7 +202,7 @@ export default function MobileJobHome({
           </div>
         </div>
 
-        {/* 2. Search Input */}
+        {/* 2. Search Input (Clean without redundant pill navbar below) */}
         <form onSubmit={handleSearchSubmit} className="mt-3 relative">
           <div className="relative flex items-center">
             <Search className="absolute left-3.5 w-4 h-4 text-slate-400 pointer-events-none" />
@@ -238,23 +215,6 @@ export default function MobileJobHome({
             />
           </div>
         </form>
-
-        {/* Quick Suggestion Pills */}
-        <div className="mt-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-          {quickPills.map((pill) => (
-            <button
-              key={pill.label}
-              onClick={() => handlePillClick(pill)}
-              className={`shrink-0 px-3 py-1.5 rounded-full border text-xs font-medium transition-colors flex items-center gap-1 ${
-                selectedPill === pill.label
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-              }`}
-            >
-              {pill.label} <ChevronRight className="w-3 h-3 opacity-60" />
-            </button>
-          ))}
-        </div>
       </header>
 
       <div className="px-4 py-4 space-y-6">
@@ -267,7 +227,7 @@ export default function MobileJobHome({
             <span className="text-xs font-semibold text-blue-600">8 Categories</span>
           </div>
 
-          {/* 4 columns x 2 rows Grid matching Screenshot 1 */}
+          {/* 4 columns x 2 rows Grid matching all 8 sections */}
           <div className="grid grid-cols-4 gap-3">
             {categoryTiles.map((tile) => {
               const Icon = tile.icon;
@@ -291,23 +251,26 @@ export default function MobileJobHome({
           </div>
         </section>
 
-        {/* 4. Promotional Banner ("PRO - hired faster") */}
-        <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 p-4 text-white shadow-sm">
+        {/* 4. Free AI Resume Match Banner (Clear that it's 100% Free, not paid) */}
+        <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-4 text-white shadow-sm">
           <div className="relative z-10 flex items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-lg font-black tracking-wider">PRO</span>
-                <span className="text-xs font-semibold bg-white/20 px-2 py-0.5 rounded-full">AI Match</span>
+                <span className="text-sm font-extrabold tracking-wide">Free AI Resume Match</span>
+                <span className="text-[10px] font-bold bg-white/20 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  100% Free
+                </span>
               </div>
-              <p className="mt-0.5 text-xs text-white/90 font-medium leading-snug">
-                Get hired faster with hidden invitations & resume matching
+              <p className="mt-1 text-xs text-blue-100 font-medium leading-snug">
+                Compare your resume with live job postings & get tailored interview tips
               </p>
             </div>
             <Link
               href="/resume-match"
-              className="shrink-0 px-3.5 py-2 rounded-full bg-white text-slate-900 font-bold text-xs shadow-sm hover:bg-orange-50 transition-colors"
+              className="shrink-0 px-3.5 py-2 rounded-full bg-white text-indigo-700 font-bold text-xs shadow-sm hover:bg-blue-50 transition-colors flex items-center gap-1"
             >
-              Become a Pro
+              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Match Resume</span>
             </Link>
           </div>
         </section>
@@ -327,7 +290,7 @@ export default function MobileJobHome({
               href="/job-updates/mnc"
               className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-0.5"
             >
-              View all <ChevronRight className="w-3.5 h-3.5" />
+              View all <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
