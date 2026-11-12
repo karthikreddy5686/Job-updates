@@ -319,9 +319,18 @@ export default function MobileJobHome({
                 <p className="text-xs text-slate-500">Loading today's fresh jobs...</p>
               </div>
             ) : filteredJobs.length === 0 ? (
-              <div className="py-10 text-center bg-white rounded-2xl border border-slate-100 p-6">
-                <p className="text-sm font-semibold text-slate-800">No jobs match your query</p>
-                <p className="text-xs text-slate-400 mt-1">Try resetting your search or pick another category.</p>
+              <div className="py-10 text-center bg-white rounded-2xl border border-slate-100 p-6 shadow-2xs">
+                <p className="text-sm font-bold text-slate-800">No jobs match your criteria</p>
+                <p className="text-xs text-slate-400 mt-1">Try clearing your filters or search keywords to view all active openings.</p>
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setFilters(initialFilterState);
+                  }}
+                  className="mt-3.5 px-5 py-2 rounded-full bg-blue-600 text-white text-xs font-bold hover:bg-blue-500 active:scale-95 transition-all shadow-2xs"
+                >
+                  Reset Filters & Search
+                </button>
               </div>
             ) : (
               filteredJobs.slice(0, 15).map((job) => (

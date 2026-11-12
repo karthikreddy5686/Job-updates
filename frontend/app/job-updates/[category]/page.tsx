@@ -312,10 +312,13 @@ function CategoryDetailPageContent() {
               Try clearing your search query or pick another category.
             </p>
             <button
-              onClick={() => setSearchQuery('')}
-              className="mt-4 px-4 py-2 rounded-full bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 transition-colors"
+              onClick={() => {
+                setSearchQuery('');
+                setFilters(initialFilterState);
+              }}
+              className="mt-4 px-5 py-2.5 rounded-full bg-blue-600 text-white text-xs font-bold hover:bg-blue-500 active:scale-95 transition-all shadow-2xs"
             >
-              Reset Search
+              Reset Filters & Search
             </button>
           </div>
         ) : (
