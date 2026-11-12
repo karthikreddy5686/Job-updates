@@ -21,6 +21,7 @@ import {
 import { useDailyJobs, type DailyCategoryKey } from '@/hooks/useDailyJobs';
 import JobCard from '@/components/JobCard';
 import MobileBottomNav from '@/components/job-updates/MobileBottomNav';
+import JobDetailDrawer from '@/components/job-updates/JobDetailDrawer';
 import JobFilterBar, {
   JobFilterState,
   initialFilterState,
@@ -99,6 +100,7 @@ function CategoryDetailPageContent() {
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [filters, setFilters] = useState<JobFilterState>(initialFilterState);
+  const [selectedJob, setSelectedJob] = useState<DailyJob | null>(null);
 
   useEffect(() => {
     if (categoryParam === 'referral') {
@@ -306,9 +308,23 @@ function CategoryDetailPageContent() {
             </button>
           </div>
         ) : (
-          filteredJobs.map((job) => <JobCard key={job.id} job={job} variant="compact" />)
+          filteredJobs.map((job) => (
+            <JobCard
+              key={job.id}
+              job={job}
+              variant="compact"
+              onSelect={(j) => setSelectedJob(j)}
+            />
+          ))
         )}
       </div>
+
+      {/* 📑 Split-Screen Master-Detail Job Drawer */}
+      <JobDetailDrawer
+        job={selectedJob}
+        isOpen={!!selectedJob}
+        onClose={() => setSelectedJob(null)}
+      />
 
       {/* Persistent Mobile Bottom Navigation Bar */}
       <MobileBottomNav />

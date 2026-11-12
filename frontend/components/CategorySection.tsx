@@ -65,6 +65,7 @@ interface CategorySectionProps {
   onToggle: () => void;
   onRefresh: () => void;
   hideLoadMore?: boolean;
+  onSelectJob?: (job: DailyJob) => void;
 }
 
 export default function CategorySection({
@@ -79,6 +80,7 @@ export default function CategorySection({
   onToggle,
   onRefresh,
   hideLoadMore = false,
+  onSelectJob,
 }: CategorySectionProps) {
   const [showAll, setShowAll] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -181,11 +183,11 @@ export default function CategorySection({
             ) : (
               <div className="space-y-5">
                 {visibleJobs.map((job, idx) => (
-                  <JobCard key={`first-${job.id}-${idx}`} job={job} />
+                  <JobCard key={`first-${job.id}-${idx}`} job={job} onSelect={onSelectJob} />
                 ))}
                 {/* Duplicate the list for seamless looping if we have items and scrolling is enabled */}
                 {!hideLoadMore && visibleJobs.map((job, idx) => (
-                  <JobCard key={`second-${job.id}-${idx}`} job={job} />
+                  <JobCard key={`second-${job.id}-${idx}`} job={job} onSelect={onSelectJob} />
                 ))}
               </div>
             )}

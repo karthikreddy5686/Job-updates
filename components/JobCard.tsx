@@ -15,9 +15,10 @@ import { useRouter } from 'next/navigation';
 interface JobCardProps {
   job: DailyJob;
   variant?: 'auto' | 'compact' | 'full';
+  onSelect?: (job: DailyJob) => void;
 }
 
-export default function JobCard({ job, variant = 'auto' }: JobCardProps) {
+export default function JobCard({ job, variant = 'auto', onSelect }: JobCardProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [logoIndex, setLogoIndex] = useState(0);
@@ -117,7 +118,8 @@ export default function JobCard({ job, variant = 'auto' }: JobCardProps) {
     };
   }, [job.id, sessionUser]);
 
-  const toggleSaved = async () => {
+  const toggleSaved = async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     if (!sessionUser) {
       window.location.href = '/';
       return;
@@ -164,7 +166,8 @@ export default function JobCard({ job, variant = 'auto' }: JobCardProps) {
   };
 
 
-  const handleApply = async () => {
+  const handleApply = async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     if (sessionUser) {
       await fetch('/api/applications', {
         method: 'POST',
@@ -202,7 +205,12 @@ export default function JobCard({ job, variant = 'auto' }: JobCardProps) {
     <>
       {/* 📱 Mobile Compact Tab Card (Exactly matching Screenshot 2) */}
       {!showFullOnly && (
-        <article className={`${showCompactOnly ? 'block' : 'block sm:hidden'} rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm transition duration-200 hover:shadow-md`}>
+        <article
+          onClick={() => onSelect?.(job)}
+          className={`${showCompactOnly ? 'block' : 'block sm:hidden'} rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm transition duration-200 hover:shadow-md ${
+            onSelect ? 'cursor-pointer hover:border-blue-300' : ''
+          }`}
+        >
           {/* Top row: Logo, Title, Company + Rating, Bookmark */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-3 min-w-0 flex-1">
@@ -294,7 +302,12 @@ export default function JobCard({ job, variant = 'auto' }: JobCardProps) {
 
       {/* 💻 Desktop Full Card View */}
       {!showCompactOnly && (
-        <article className={`${showFullOnly ? 'hidden' : 'hidden sm:block'} group overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-2xl`}>
+        <article
+          onClick={() => onSelect?.(job)}
+          className={`${showFullOnly ? 'hidden' : 'hidden sm:block'} group overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-2xl ${
+            onSelect ? 'cursor-pointer hover:border-blue-400' : ''
+          }`}
+        >
           <div className="flex items-start gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-[1.5rem] bg-slate-50 text-slate-600 shadow-sm overflow-hidden flex-shrink-0 border border-slate-100">
               {logoIndex < logoUrls.length ? (

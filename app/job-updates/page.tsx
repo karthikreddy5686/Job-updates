@@ -36,12 +36,15 @@ import MockInterviewWidget from '@/components/job-updates/MockInterviewWidget';
 import BlogsWidget from '@/components/job-updates/BlogsWidget';
 import DesktopProfileCard from '@/components/job-updates/DesktopProfileCard';
 import DesktopCategoryGrid from '@/components/job-updates/DesktopCategoryGrid';
+import TopCommandBar from '@/components/job-updates/TopCommandBar';
+import RecommendedJobsCarousel from '@/components/job-updates/RecommendedJobsCarousel';
+import JobDetailDrawer from '@/components/job-updates/JobDetailDrawer';
 import JobFilterBar, {
   JobFilterState,
   initialFilterState,
   applyJobFilters,
 } from '@/components/job-updates/JobFilterBar';
-import type { DateRangeOption } from '@/types/jobs';
+import type { DailyJob, DateRangeOption } from '@/types/jobs';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard Home', icon: Home, href: '/dashboard' },
@@ -136,16 +139,43 @@ export default function JobUpdatesPage() {
   );
 
   const [desktopFilters, setDesktopFilters] = useState<JobFilterState>(initialFilterState);
+  const [selectedJob, setSelectedJob] = useState<DailyJob | null>(null);
+  const [roleQuery, setRoleQuery] = useState('');
+  const [locationQuery, setLocationQuery] = useState('');
+
+  const allJobsList = useMemo(() => {
+    const list: DailyJob[] = [];
+    categories.forEach((cat) => {
+      const key = cat.apiCategory as DailyCategoryKey;
+      const catJobs = jobsByCategory[key] || [];
+      catJobs.forEach((j) => {
+        if (!list.some((existing) => existing.id === j.id)) list.push(j);
+      });
+    });
+    return list;
+  }, [categories, jobsByCategory]);
 
   const desktopFilteredJobsByCategory = useMemo(() => {
     const result: Record<DailyCategoryKey, any[]> = {} as any;
+    const combinedSearch = [roleQuery.trim(), locationQuery.trim()].filter(Boolean).join(' ');
+
     categories.forEach((cat) => {
       const key = cat.apiCategory as DailyCategoryKey;
       const list = jobsByCategory[key] || [];
-      result[key] = applyJobFilters(list, desktopFilters);
+      let filtered = applyJobFilters(list, desktopFilters, combinedSearch);
+
+      if (locationQuery.trim()) {
+        const locQ = locationQuery.trim().toLowerCase();
+        filtered = filtered.filter((j) => {
+          const jobLoc = (j.location || '').toLowerCase();
+          return jobLoc.includes(locQ) || (locQ === 'remote' && (j.jobType === 'remote' || jobLoc.includes('remote')));
+        });
+      }
+
+      result[key] = filtered;
     });
     return result;
-  }, [categories, jobsByCategory, desktopFilters]);
+  }, [categories, jobsByCategory, desktopFilters, roleQuery, locationQuery]);
 
   const totalFilteredJobs = useMemo(() => {
     return Object.values(desktopFilteredJobsByCategory).reduce((sum, list) => sum + list.length, 0);
@@ -226,10 +256,39 @@ export default function JobUpdatesPage() {
 
             <section className="flex-1 min-w-0 space-y-6">
 
+              {/* 🔍 Top Sticky Command Bar with Role & Location + Trending Pills */}
+              <TopCommandBar
+                roleQuery={roleQuery}
+                locationQuery={locationQuery}
+                onRoleChange={setRoleQuery}
+                onLocationChange={setLocationQuery}
+                onSearch={(r, l) => {
+                  setRoleQuery(r);
+                  setLocationQuery(l);
+                }}
+                onClear={() => {
+                  setRoleQuery('');
+                  setLocationQuery('');
+                }}
+                totalResultsCount={totalFilteredJobs}
+              />
+
               <JobUpdatesHero
                 totalNewJobs={totalNewJobs}
                 lastFetch={lastFetch}
                 onRefresh={refreshAll}
+              />
+
+              {/* 🌟 "Recommended For You" Hero Carousel with AI Match % */}
+              <RecommendedJobsCarousel
+                jobs={allJobsList}
+                student={student}
+                onSelectJob={(j) => setSelectedJob(j)}
+                onApplyJob={(j) => {
+                  if (j.applyLink?.startsWith('http')) {
+                    window.open(j.applyLink, '_blank', 'noopener,noreferrer');
+                  }
+                }}
               />
 
               {/* 🎯 Explore Jobs by Category (8 Domain Grid) */}
@@ -285,6 +344,7 @@ export default function JobUpdatesPage() {
                         isExpanded={expandedSections[key]}
                         onToggle={() => setExpandedSections((prev) => ({ ...prev, [key]: !prev[key] }))}
                         onRefresh={refreshAll}
+                        onSelectJob={(j) => setSelectedJob(j)}
                       />
                     );
                   })
@@ -293,6 +353,18 @@ export default function JobUpdatesPage() {
             </section>
           </div>
         </div>
+
+        {/* 📑 Split-Screen Master-Detail Job Drawer (LinkedIn / Indeed Style) */}
+        <JobDetailDrawer
+          job={selectedJob}
+          isOpen={!!selectedJob}
+          onClose={() => setSelectedJob(null)}
+          onApply={(j) => {
+            if (j.applyLink?.startsWith('http')) {
+              window.open(j.applyLink, '_blank', 'noopener,noreferrer');
+            }
+          }}
+        />
 
         <AnimatePresence>
           {sidebarOpen && (

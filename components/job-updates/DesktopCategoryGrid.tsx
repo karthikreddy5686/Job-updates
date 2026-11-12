@@ -163,3 +163,4 @@ export default function DesktopCategoryGrid({ countsByCategory }: DesktopCategor
     </div>
   );
 }
+
