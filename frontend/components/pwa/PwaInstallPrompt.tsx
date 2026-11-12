@@ -100,8 +100,8 @@ export default function PwaInstallPrompt() {
       <div className="fixed top-2 left-3 right-3 sm:left-auto sm:right-6 sm:max-w-md z-50 animate-in fade-in slide-in-from-top-4 duration-300">
         <div className="bg-gradient-to-r from-slate-900 to-blue-950 text-white rounded-2xl p-3.5 shadow-2xl border border-blue-500/30 flex items-center justify-between gap-3 backdrop-blur-md">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 shadow-xs border border-blue-400/40">
-              <Smartphone className="w-5 h-5 text-white stroke-[2.2]" />
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0 shadow-xs border border-white/20 overflow-hidden p-0.5">
+              <img src="/app-icon.png" alt="App Icon" className="w-full h-full object-contain rounded-lg" />
             </div>
             <div className="min-w-0">
               <p className="text-xs font-bold text-white tracking-tight leading-snug">
