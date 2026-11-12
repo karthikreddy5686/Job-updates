@@ -21,6 +21,11 @@ import {
 import { useDailyJobs, type DailyCategoryKey } from '@/hooks/useDailyJobs';
 import JobCard from '@/components/JobCard';
 import MobileBottomNav from '@/components/job-updates/MobileBottomNav';
+import JobFilterBar, {
+  JobFilterState,
+  initialFilterState,
+  applyJobFilters,
+} from '@/components/job-updates/JobFilterBar';
 import { DownloadAppButton } from '@/components/pwa/PwaInstallPrompt';
 import type { DailyJob } from '@/types/jobs';
 
@@ -93,6 +98,7 @@ export default function CategoryDetailPage() {
   const [checking, setChecking] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [filters, setFilters] = useState<JobFilterState>(initialFilterState);
 
   useEffect(() => {
     if (categoryParam === 'referral') {
@@ -156,17 +162,8 @@ export default function CategoryDetailPage() {
   }, [internalKey, jobsByCategory]);
 
   const filteredJobs = useMemo(() => {
-    return rawJobs.filter((job) => {
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const matchTitle = job.title.toLowerCase().includes(q);
-        const matchCompany = job.company.toLowerCase().includes(q);
-        const matchLoc = job.location.toLowerCase().includes(q);
-        if (!matchTitle && !matchCompany && !matchLoc) return false;
-      }
-      return true;
-    });
-  }, [rawJobs, searchQuery]);
+    return applyJobFilters(rawJobs, filters, searchQuery);
+  }, [rawJobs, filters, searchQuery]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -273,6 +270,15 @@ export default function CategoryDetailPage() {
             {isLoading ? 'Updating feed...' : `${filteredJobs.length} live openings available`}
           </p>
         </div>
+      </div>
+
+      {/* ⚡ Filter Bar (Naukri-style Quick Chips + Bottom Sheet) */}
+      <div className="max-w-2xl mx-auto px-4 pt-1 pb-2">
+        <JobFilterBar
+          filters={filters}
+          onChange={setFilters}
+          totalResultsCount={filteredJobs.length}
+        />
       </div>
 
       {/* Main Content Area: Compact Cards */}

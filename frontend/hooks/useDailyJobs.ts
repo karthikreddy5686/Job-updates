@@ -18,7 +18,7 @@ const POLL_INTERVAL_MS = 30 * 60 * 1000;
 
 const defaultFilters = {
   dateRange: 'today' as DateRangeOption,
-  jobType: 'all' as JobTypeFilter,
+  jobType: 'all' as JobTypeFilter | 'fresher',
   location: '',
   company: '',
   salaryRange: [0, 250000] as [number, number],
@@ -118,8 +118,14 @@ const isJobVisible = (
     !normalizedCompany ||
     job.company.toLowerCase().includes(normalizedCompany);
 
-  const matchesJobType =
-    filters.jobType === 'all' || job.jobType === filters.jobType;
+  let matchesJobType = true;
+  if ((filters.jobType as string) === 'fresher') {
+    const title = (job.title || '').toLowerCase();
+    const isSenior = /\b(senior|sr\.|lead|principal|architect|manager|head|director|staff|vp|7\+|8\+|10\+)\b/i.test(title);
+    matchesJobType = !isSenior;
+  } else if (filters.jobType !== 'all') {
+    matchesJobType = job.jobType === filters.jobType;
+  }
 
   const salaryValue = parseSalaryValue(job.salary);
   const matchesSalary =

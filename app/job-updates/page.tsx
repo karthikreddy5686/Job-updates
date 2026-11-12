@@ -216,11 +216,12 @@ export default function JobUpdatesPage() {
                       <select
                         aria-label="Select job type"
                         value={filters.jobType}
-                        onChange={(event) => setFilters((prev) => ({ ...prev, jobType: event.target.value as typeof filters.jobType }))}
+                        onChange={(event) => setFilters((prev) => ({ ...prev, jobType: event.target.value as any }))}
                         className="bg-transparent outline-none text-sm"
                       >
-                        <option value="all">All</option>
-                        <option value="remote">Remote</option>
+                        <option value="all">All Opportunities</option>
+                        <option value="fresher">🎓 Fresher (0 Yrs)</option>
+                        <option value="remote">Remote / WFH</option>
                         <option value="hybrid">Hybrid</option>
                         <option value="onsite">On-site</option>
                         <option value="internship">Internship</option>

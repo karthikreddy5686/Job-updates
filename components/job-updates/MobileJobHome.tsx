@@ -26,6 +26,11 @@ import {
 } from 'lucide-react';
 import JobCard from '@/components/JobCard';
 import MobileBottomNav from '@/components/job-updates/MobileBottomNav';
+import JobFilterBar, {
+  JobFilterState,
+  initialFilterState,
+  applyJobFilters,
+} from '@/components/job-updates/JobFilterBar';
 import { DownloadAppButton } from '@/components/pwa/PwaInstallPrompt';
 import type { DailyJob } from '@/types/jobs';
 import type { DailyCategoryKey } from '@/hooks/useDailyJobs';
@@ -53,6 +58,7 @@ export default function MobileJobHome({
 }: MobileJobHomeProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<JobFilterState>(initialFilterState);
 
   // 4x2 Category Grid matching the 8 distinct job sections
   const categoryTiles = [
@@ -146,18 +152,8 @@ export default function MobileJobHome({
   }, [jobsByCategory]);
 
   const filteredJobs = useMemo(() => {
-    let result = allJobs;
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        j =>
-          j.title.toLowerCase().includes(q) ||
-          j.company.toLowerCase().includes(q) ||
-          j.location.toLowerCase().includes(q)
-      );
-    }
-    return result;
-  }, [allJobs, searchQuery]);
+    return applyJobFilters(allJobs, filters, searchQuery);
+  }, [allJobs, filters, searchQuery]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -296,6 +292,13 @@ export default function MobileJobHome({
               View all <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
+
+          {/* ⚡ Quick Filters (Fresher, Remote, Batch, CTC, Internships) */}
+          <JobFilterBar
+            filters={filters}
+            onChange={setFilters}
+            totalResultsCount={filteredJobs.length}
+          />
 
           {/* List of Compact Tab Cards */}
           <div className="space-y-3">
