@@ -198,6 +198,12 @@ export default function JobCard({ job, variant = 'auto', onSelect }: JobCardProp
     }
   };
 
+  const isUrgent = Boolean(
+    (job as any).isUrgent ||
+    (job as any).urgency === 'urgent' ||
+    /\b(urgent|immediate|urgently|walk-in)\b/i.test(job.title || '')
+  );
+
   const showCompactOnly = variant === 'compact' || variant === 'auto';
   const showFullOnly = variant === 'full';
 
@@ -244,7 +250,7 @@ export default function JobCard({ job, variant = 'auto', onSelect }: JobCardProp
               className="p-1 text-slate-400 hover:text-slate-600 transition-colors shrink-0"
               aria-label={isSaved ? 'Unsave job' : 'Save job'}
             >
-              <Bookmark className={`h-4 w-4 ${isSaved ? 'fill-blue-600 text-blue-600' : ''}`} />
+              <Bookmark className={`h-4.5 w-4.5 ${isSaved ? 'fill-blue-600 text-blue-600' : ''}`} />
             </button>
           </div>
 
@@ -272,14 +278,20 @@ export default function JobCard({ job, variant = 'auto', onSelect }: JobCardProp
             ) : null}
           </div>
 
-          {/* Badge & Relative Time */}
-          <div className="mt-2.5 flex items-center justify-between gap-2">
+          {/* Badge & Posted Date */}
+          <div className="mt-2.5 flex items-center justify-between gap-2 min-h-[22px]">
             <div>
-              <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 border border-amber-200/50">
-                ⚡ Urgent Hiring
-              </span>
+              {isUrgent ? (
+                <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 border border-amber-200/50">
+                  ⚡ Urgent Hiring
+                </span>
+              ) : job.category === 'internship' || job.jobType === 'internship' ? (
+                <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 border border-emerald-200/50">
+                  Internship
+                </span>
+              ) : null}
             </div>
-            <span className="text-[11px] text-slate-400 shrink-0">{posted}</span>
+            <span className="text-[11px] text-slate-400 font-medium shrink-0">{posted}</span>
           </div>
 
           {/* Full-width Apply Button (Pill style from screenshot) */}

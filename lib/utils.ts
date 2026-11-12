@@ -7,24 +7,41 @@ export function formatRelativeTime(dateInput?: string | Date | null): string {
   const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
   if (isNaN(date.getTime())) return 'Recently';
 
-  const diffMs = Date.now() - date.getTime();
-  if (diffMs < 0 || diffMs < 60 * 1000) {
-    return 'Just now';
+  const now = new Date();
+
+  // Calendar day match for Today
+  const isToday =
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
+
+  if (isToday) {
+    return 'Today';
   }
-  const diffMins = Math.floor(diffMs / (60 * 1000));
-  if (diffMins < 60) {
-    return `${diffMins}m ago`;
-  }
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) {
-    return `${diffHours}h ago`;
-  }
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays === 1) {
+
+  // Calendar day match for Yesterday
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  const isYesterday =
+    date.getDate() === yesterday.getDate() &&
+    date.getMonth() === yesterday.getMonth() &&
+    date.getFullYear() === yesterday.getFullYear();
+
+  if (isYesterday) {
     return 'Yesterday';
   }
-  if (diffDays < 7) {
+
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (24 * 3600 * 1000));
+
+  if (diffDays >= 2 && diffDays <= 6) {
     return `${diffDays}d ago`;
   }
-  return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+
+  const isCurrentYear = date.getFullYear() === now.getFullYear();
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: isCurrentYear ? undefined : 'numeric',
+  });
 }

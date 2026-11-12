@@ -203,7 +203,7 @@ export function applyJobFilters(
 
   // 8. Urgent Hiring Only
   if (filters.urgentOnly) {
-    list = list.filter((job) => job.isNew);
+    list = list.filter((job) => Boolean(job.isUrgent || /\b(urgent|immediate|urgently|walk-in)\b/i.test(job.title || '')));
   }
 
   // 9. Sorting

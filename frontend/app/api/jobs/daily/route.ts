@@ -62,6 +62,7 @@ interface Job {
   deadline?: string
   applyLink: string
   isNew: boolean
+  isUrgent?: boolean
   source: string
   description?: string
   logo?: string
@@ -166,10 +167,11 @@ function makeJob(
     }
   }
 
-  const posted = postedDate || new Date().toISOString()
+  const posted = postedDate || new Date(Date.now() - 6 * 3600 * 1000).toISOString()
   const daysDiff = Math.floor(
     (Date.now() - new Date(posted).getTime()) / 86400000
   )
+  const isUrgent = /\b(urgent|immediate|urgently|walk-in)\b/i.test(title || '')
   return {
     id: id || `${source}-${Date.now()}-${Math.random().toString(36).slice(2,6)}`,
     title: title?.trim() || '',
@@ -182,6 +184,7 @@ function makeJob(
     deadline: deadline || undefined,
     applyLink: applyLink.trim(),
     isNew: daysDiff <= 1,
+    isUrgent,
     source,
     description,
     logo: getCompanyLogo(company),

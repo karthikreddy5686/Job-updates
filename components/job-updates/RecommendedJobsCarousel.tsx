@@ -155,6 +155,11 @@ export default function RecommendedJobsCarousel({
           const cleanName = job.company.toLowerCase().replace(/[^a-z0-9]/g, '');
           const logoUrl = job.logo || `https://logo.clearbit.com/${cleanName}.com`;
           const posted = formatRelativeTime(job.postedDate);
+          const isUrgent = Boolean(
+            (job as any).isUrgent ||
+            (job as any).urgency === 'urgent' ||
+            /\b(urgent|immediate|urgently|walk-in)\b/i.test(job.title || '')
+          );
 
           return (
             <div
@@ -226,14 +231,20 @@ export default function RecommendedJobsCarousel({
                   ) : null}
                 </div>
 
-                {/* Badge & Relative Time */}
-                <div className="mt-2.5 flex items-center justify-between gap-2">
+                {/* Badge & Posted Date */}
+                <div className="mt-2.5 flex items-center justify-between gap-2 min-h-[22px]">
                   <div>
-                    <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 border border-amber-200/50">
-                      ⚡ Urgent Hiring
-                    </span>
+                    {isUrgent ? (
+                      <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 border border-amber-200/50">
+                        ⚡ Urgent Hiring
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-2 py-0.5 text-[11px] font-semibold text-indigo-700 border border-indigo-200/50">
+                        Top Recommendation
+                      </span>
+                    )}
                   </div>
-                  <span className="text-[11px] text-slate-400 shrink-0">{posted}</span>
+                  <span className="text-[11px] text-slate-400 font-medium shrink-0">{posted}</span>
                 </div>
               </div>
 

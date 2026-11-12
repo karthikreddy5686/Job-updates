@@ -21,5 +21,6 @@ export interface DailyJob {
   deadline?: string;
   applyLink: string;
   isNew: boolean;
+  isUrgent?: boolean;
   source: string;
 }

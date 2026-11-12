@@ -18,16 +18,16 @@ interface LiveJobFeedProps {
 }
 
 const defaultFeedItems: LiveFeedItem[] = [
-  { id: '1', company: 'TCS', role: 'Software Engineer', isNew: true, postedTime: '2 MIN AGO' },
-  { id: '2', company: 'Infosys', role: 'System Engineer', isNew: true, postedTime: '5 MIN AGO' },
-  { id: '3', company: 'HDFC Bank', role: 'Relationship Manager', isNew: false, postedTime: '8 MIN AGO' },
-  { id: '4', company: 'Accenture', role: 'Business Analyst', isNew: false, postedTime: '12 MIN AGO' },
-  { id: '5', company: 'Deloitte', role: 'Consultant', isNew: true, postedTime: '15 MIN AGO' },
-  { id: '6', company: 'Wipro', role: 'Project Engineer', isNew: false, postedTime: '18 MIN AGO' },
-  { id: '7', company: 'SBI', role: 'PO', isNew: false, postedTime: '22 MIN AGO' },
-  { id: '8', company: 'Capgemini', role: 'Analyst', isNew: false, postedTime: '25 MIN AGO' },
-  { id: '9', company: 'Government Jobs', role: 'UPSC', isNew: false, postedTime: '30 MIN AGO' },
-  { id: '10', company: 'Unstop', role: 'Internships', isNew: true, postedTime: '35 MIN AGO' },
+  { id: '1', company: 'TCS', role: 'Software Engineer', isNew: true, postedTime: 'TODAY' },
+  { id: '2', company: 'Infosys', role: 'System Engineer', isNew: true, postedTime: 'TODAY' },
+  { id: '3', company: 'HDFC Bank', role: 'Relationship Manager', isNew: false, postedTime: 'YESTERDAY' },
+  { id: '4', company: 'Accenture', role: 'Business Analyst', isNew: false, postedTime: 'YESTERDAY' },
+  { id: '5', company: 'Deloitte', role: 'Consultant', isNew: true, postedTime: 'TODAY' },
+  { id: '6', company: 'Wipro', role: 'Project Engineer', isNew: false, postedTime: 'YESTERDAY' },
+  { id: '7', company: 'SBI', role: 'PO', isNew: false, postedTime: 'ACTIVE' },
+  { id: '8', company: 'Capgemini', role: 'Analyst', isNew: false, postedTime: 'TODAY' },
+  { id: '9', company: 'Government Jobs', role: 'UPSC', isNew: false, postedTime: 'ACTIVE' },
+  { id: '10', company: 'Unstop', role: 'Internships', isNew: true, postedTime: 'TODAY' },
 ];
 
 function FeedLogo({ item }: { item: LiveFeedItem }) {

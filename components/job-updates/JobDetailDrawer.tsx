@@ -71,6 +71,11 @@ export default function JobDetailDrawer({
   if (!isOpen || !job) return null;
 
   const posted = formatRelativeTime(job.postedDate);
+  const isUrgent = Boolean(
+    (job as any).isUrgent ||
+    (job as any).urgency === 'urgent' ||
+    /\b(urgent|immediate|urgently|walk-in)\b/i.test(job.title || '')
+  );
 
   // Dynamic Skills & Requirements deduced from Job Title & Category
   const jobMeta = (() => {
@@ -199,12 +204,16 @@ export default function JobDetailDrawer({
                 <Sparkles className="w-3 h-3 text-blue-600" />
                 Live Job Details
               </span>
-              {job.isNew && (
+              {isUrgent ? (
                 <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/50">
                   <Flame className="w-3 h-3 text-amber-500" />
                   Urgent Hiring
                 </span>
-              )}
+              ) : job.category === 'internship' || job.jobType === 'internship' ? (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/50">
+                  Internship
+                </span>
+              ) : null}
             </div>
 
             <div className="flex items-center gap-2">
