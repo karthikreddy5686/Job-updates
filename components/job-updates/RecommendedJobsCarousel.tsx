@@ -108,23 +108,13 @@ export default function RecommendedJobsCarousel({
 
       {/* Header */}
       <div className="relative z-10 flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2.5">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-xs">
-            <Target className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-base font-black text-slate-900 tracking-tight">
-                Recommended For You
-              </h2>
-              <span className="text-[10px] font-extrabold bg-indigo-600 text-white px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs">
-                AI Match
-              </span>
-            </div>
-            <p className="text-xs text-slate-500 font-medium mt-0.5">
-              Ranked highest based on your profile skills & preferred domains
-            </p>
-          </div>
+        <div>
+          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+            Recommended For You
+          </h2>
+          <p className="text-xs text-slate-500 font-medium mt-0.5">
+            Ranked highest based on your profile skills & preferred domains
+          </p>
         </div>
 
         {/* Carousel Arrow Buttons */}
@@ -151,7 +141,7 @@ export default function RecommendedJobsCarousel({
         ref={scrollRef}
         className="relative z-10 flex items-stretch gap-4 overflow-x-auto no-scrollbar pb-2 pt-1 scroll-smooth"
       >
-        {scoredJobs.map(({ job, matchPercentage }) => {
+        {scoredJobs.map(({ job }) => {
           const cleanName = job.company.toLowerCase().replace(/[^a-z0-9]/g, '');
           const logoUrl = job.logo || `https://logo.clearbit.com/${cleanName}.com`;
           const posted = formatRelativeTime(job.postedDate);
@@ -168,7 +158,7 @@ export default function RecommendedJobsCarousel({
               className="w-[320px] sm:w-[350px] shrink-0 rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 cursor-pointer flex flex-col justify-between group"
             >
               <div>
-                {/* Top row: Logo, Title, Company + Rating + Match, Bookmark */}
+                {/* Top row: Logo, Title, Company + Rating, Bookmark */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3 min-w-0 flex-1">
                     <div className="h-11 w-11 shrink-0 rounded-xl border border-slate-100 bg-white p-1 shadow-2xs flex items-center justify-center overflow-hidden">
@@ -186,12 +176,9 @@ export default function RecommendedJobsCarousel({
                         {job.title}
                       </h3>
                       <div className="mt-0.5 flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-                        <span className="truncate max-w-[110px]">{job.company}</span>
+                        <span className="truncate max-w-[130px]">{job.company}</span>
                         <span className="inline-flex items-center gap-0.5 text-amber-500 font-semibold text-[11px]">
                           ★ 3.8
-                        </span>
-                        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded-full border border-indigo-200/50">
-                          🎯 {matchPercentage}%
                         </span>
                       </div>
                     </div>
@@ -238,11 +225,11 @@ export default function RecommendedJobsCarousel({
                       <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 border border-amber-200/50">
                         ⚡ Urgent Hiring
                       </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-2 py-0.5 text-[11px] font-semibold text-indigo-700 border border-indigo-200/50">
-                        Top Recommendation
+                    ) : job.category === 'internship' || job.jobType === 'internship' ? (
+                      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 border border-emerald-200/50">
+                        Internship
                       </span>
-                    )}
+                    ) : null}
                   </div>
                   <span className="text-[11px] text-slate-400 font-medium shrink-0">{posted}</span>
                 </div>
