@@ -1,430 +1,748 @@
 'use client';
 
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ArrowRight, BarChart3, Bell, Bookmark, Briefcase, CalendarDays, CheckCircle2, Sparkles, Users, Target, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Briefcase,
+  GraduationCap,
+  FileText,
+  Upload,
+  Download,
+  Trash2,
+  Edit3,
+  CheckCircle2,
+  Plus,
+  X,
+  Sparkles,
+  Bookmark,
+  Layers,
+  Bell,
+  ArrowRight,
+  LogOut,
+  Camera,
+  Check,
+  ChevronRight,
+  ShieldCheck,
+  DollarSign,
+  TrendingUp,
+} from 'lucide-react';
+import { getStudentSession, logoutStudent } from '@/lib/student-auth';
 import { useAuth } from '@/lib/auth-context';
-import { useDashboardData } from '@/hooks/useDashboardData';
-import { logoutStudent, getStudentSession } from '@/lib/student-auth';
 import MobileBottomNav from '@/components/job-updates/MobileBottomNav';
-import { useState, useEffect } from 'react';
 
-const statusStyles: Record<string, string> = {
-  Applied: 'bg-sky-100 text-sky-700',
-  Screening: 'bg-amber-100 text-amber-700',
-  Interview: 'bg-indigo-100 text-indigo-700',
-  Offer: 'bg-emerald-100 text-emerald-700',
-  Recommended: 'bg-violet-100 text-violet-700',
-  Saved: 'bg-slate-100 text-slate-700',
-};
+interface ProfileState {
+  name: string;
+  headline: string;
+  email: string;
+  phone: string;
+  location: string;
+  experience: string;
+  college: string;
+  degree: string;
+  graduationYear: string;
+  skills: string[];
+  resumeName: string;
+  resumeDate: string;
+  preferredRoles: string;
+  preferredLocations: string;
+  expectedSalary: string;
+}
 
-const formatMetric = (value: number) => {
-  if (value >= 1000) {
-    return `${(value / 1000).toFixed(1)}k`;
-  }
+export default function ProfileDashboardPage() {
+  const router = useRouter();
+  const { logout } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  return value.toString();
-};
-
-export default function DashboardPage() {
-  const { user, isLoading, logout } = useAuth();
   const [student, setStudent] = useState<any>(null);
+  const [profile, setProfile] = useState<ProfileState>({
+    name: 'Karthik Reddy',
+    headline: 'B.Tech CSE | Aspiring Full-Stack Software Developer | React, Next.js, Node.js',
+    email: 'karthik@example.com',
+    phone: '+91 98765 43210',
+    location: 'Hyderabad, India',
+    experience: 'Fresher (0-1 Yrs)',
+    college: 'Vignan Institute of Technology & Science',
+    degree: 'B.Tech - Computer Science & Engineering',
+    graduationYear: '2026',
+    skills: ['React.js', 'Next.js', 'TypeScript', 'Node.js', 'Python', 'Tailwind CSS', 'SQL', 'Git & GitHub'],
+    resumeName: 'Karthik_Reddy_Resume_2026.pdf',
+    resumeDate: 'Nov 12, 2026',
+    preferredRoles: 'Software Developer, Frontend Engineer, Full-Stack Dev',
+    preferredLocations: 'Hyderabad, Bangalore, Remote',
+    expectedSalary: '₹ 6,00,000 - 14,00,000 LPA',
+  });
+
+  const [isEditingBasic, setIsEditingBasic] = useState(false);
+  const [isEditingEducation, setIsEditingEducation] = useState(false);
+  const [isEditingPreferences, setIsEditingPreferences] = useState(false);
+  const [newSkill, setNewSkill] = useState('');
+  const [showAddSkill, setShowAddSkill] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Counts for quick access cards
+  const [savedCount, setSavedCount] = useState(0);
+  const [applicationsCount, setApplicationsCount] = useState(0);
 
   useEffect(() => {
-    setStudent(getStudentSession());
+    const s = getStudentSession();
+    if (s) {
+      setStudent(s);
+      setProfile((prev) => ({
+        ...prev,
+        name: s.name || prev.name,
+        email: s.email || prev.email,
+        phone: s.phone || prev.phone,
+        college: s.collegeName || prev.college,
+      }));
+    }
+
+    // Load custom profile data from localStorage if exists
+    try {
+      const saved = localStorage.getItem('naukri_profile_data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setProfile((prev) => ({ ...prev, ...parsed }));
+      }
+    } catch {}
+
+    // Load saved count & application count
+    try {
+      const savedCache = localStorage.getItem('cached_saved_jobs');
+      if (savedCache) setSavedCount(JSON.parse(savedCache).length);
+      const appCache = localStorage.getItem('cached_applications');
+      if (appCache) setApplicationsCount(JSON.parse(appCache).length);
+    } catch {}
   }, []);
 
-  const handleLogout = () => {
-    logoutStudent();
-    if (logout) logout();
-    localStorage.removeItem('jobupdate_student_session');
-    localStorage.removeItem('admin_session');
-    window.dispatchEvent(new Event('studentLoggedOut'));
-    window.location.href = '/job-updates';
+  const saveProfileUpdate = (updates: Partial<ProfileState>) => {
+    setProfile((prev) => {
+      const updated = { ...prev, ...updates };
+      try {
+        localStorage.setItem('naukri_profile_data', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+    showToast('Profile updated successfully');
   };
 
-  const dashboard = useDashboardData(user || (student ? { id: student.id, name: student.name, email: student.email, role: 'candidate' as const } : null));
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
-  const effectiveName = student?.name || user?.name || 'Job Seeker';
-  const displayName = effectiveName.split(' ')[0] || 'there';
-  const roleLabel = user?.role === 'admin' ? 'Admin' : 'Candidate';
+  const handleLogout = () => {
+    if (confirm('Are you sure you want to log out of your account?')) {
+      logoutStudent();
+      if (logout) logout();
+      localStorage.removeItem('jobupdate_student_session');
+      localStorage.removeItem('admin_session');
+      window.dispatchEvent(new Event('studentLoggedOut'));
+      window.location.href = '/job-updates';
+    }
+  };
 
-  const activityItems = [
-    { label: 'Applied', value: dashboard.activity.applied, color: 'bg-sky-500' },
-    { label: 'Screening', value: dashboard.activity.screening, color: 'bg-amber-500' },
-    { label: 'Interview', value: dashboard.activity.interview, color: 'bg-indigo-500' },
-    { label: 'Offers', value: dashboard.activity.offers, color: 'bg-emerald-500' },
-  ];
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const now = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date());
+      saveProfileUpdate({
+        resumeName: file.name,
+        resumeDate: now,
+      });
+      showToast(`Uploaded ${file.name}`);
+    }
+  };
 
-  const summaryCards = [
-    { label: 'Saved jobs', value: formatMetric(dashboard.summary.savedJobs), icon: Bookmark },
-    { label: 'Interviews', value: formatMetric(dashboard.summary.interviewInvites), icon: CalendarDays },
-    { label: 'Profile views', value: formatMetric(dashboard.summary.profileViews), icon: Sparkles },
-    { label: 'Applications', value: formatMetric(dashboard.summary.applicationsThisWeek), icon: Briefcase },
-  ];
+  const handleAddSkill = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newSkill.trim() && !profile.skills.includes(newSkill.trim())) {
+      const updated = [...profile.skills, newSkill.trim()];
+      saveProfileUpdate({ skills: updated });
+      setNewSkill('');
+      setShowAddSkill(false);
+    }
+  };
+
+  const handleRemoveSkill = (skillToRemove: string) => {
+    const updated = profile.skills.filter((s) => s !== skillToRemove);
+    saveProfileUpdate({ skills: updated });
+  };
+
+  // Calculate profile completeness percentage (Naukri style)
+  const calculateCompleteness = () => {
+    let score = 40; // Base registration score
+    if (profile.headline) score += 10;
+    if (profile.resumeName) score += 20;
+    if (profile.skills.length >= 3) score += 10;
+    if (profile.college) score += 10;
+    if (profile.phone) score += 10;
+    return Math.min(100, score);
+  };
+
+  const completeness = calculateCompleteness();
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <section className="rounded-[2rem] border border-slate-200 bg-white px-6 py-8 shadow-sm shadow-slate-200/50 sm:px-10">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-3xl">
-              <p className="text-sm uppercase tracking-[0.3em] text-slate-500">{user?.role === 'admin' ? 'Admin dashboard' : 'Candidate dashboard'}</p>
-              <h1 className="mt-4 text-4xl font-semibold text-slate-950 sm:text-5xl">Welcome back, {displayName}.</h1>
-              <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
-                Your career control center for saved opportunities, application progress, and tailored role recommendations.
-              </p>
+    <main className="min-h-screen bg-[#F8FAFC] pb-28 text-slate-900">
+      {/* 1. Header (Naukri Style) */}
+      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3.5 shadow-2xs">
+        <div className="max-w-3xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg font-bold text-slate-900 tracking-tight">My Profile</h1>
+            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+              Verified Candidate
+            </span>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+            title="Log Out"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Log Out</span>
+          </button>
+        </div>
+      </header>
+
+      <div className="max-w-3xl mx-auto px-4 py-4 space-y-4">
+        {/* 2. Top Profile Summary Card (Naukri Style) */}
+        <section className="rounded-3xl border border-slate-200/90 bg-white p-5 shadow-xs relative overflow-hidden">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-4 min-w-0 flex-1">
+              {/* Avatar with edit badge */}
+              <div className="relative shrink-0">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white font-bold text-2xl flex items-center justify-center shadow-md">
+                  {profile.name.charAt(0).toUpperCase()}
+                </div>
+                <button
+                  onClick={() => setIsEditingBasic(true)}
+                  className="absolute -bottom-1 -right-1 p-1.5 rounded-full bg-white text-slate-600 shadow-md border border-slate-200 hover:text-blue-600"
+                  title="Edit Photo"
+                >
+                  <Camera className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Name & Headline */}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg sm:text-xl font-bold text-slate-950 truncate leading-snug">
+                    {profile.name}
+                  </h2>
+                  <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
+                </div>
+                <p className="mt-1 text-xs text-slate-600 leading-relaxed font-normal">
+                  {profile.headline}
+                </p>
+
+                {/* Contact Pills */}
+                <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-600 font-medium">
+                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
+                    <MapPin className="w-3 h-3 text-slate-400" />
+                    {profile.location}
+                  </span>
+                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
+                    <Briefcase className="w-3 h-3 text-slate-400" />
+                    {profile.experience}
+                  </span>
+                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
+                    <Phone className="w-3 h-3 text-emerald-600" />
+                    {profile.phone}
+                  </span>
+                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg">
+                    <Mail className="w-3 h-3 text-blue-600" />
+                    {profile.email}
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <div className="flex flex-wrap gap-3">
-              <span className="rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">
-                Role: {roleLabel}
-              </span>
-              <Link
-                href="/resume-match"
-                className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
-              >
-                <Target className="h-4 w-4" />
-                Resume Match
-              </Link>
-              <Link
-                href="/jobs"
-                className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
-              >
-                Browse roles
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+            <button
+              onClick={() => setIsEditingBasic(true)}
+              className="p-2 text-slate-400 hover:text-blue-600 transition-colors shrink-0 rounded-full hover:bg-slate-50"
+              title="Edit Basic Details"
+            >
+              <Edit3 className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Profile Completeness Gauge (Naukri style) */}
+          <div className="mt-5 pt-4 border-t border-slate-100">
+            <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
+              <span className="text-slate-800">Profile Completeness</span>
+              <span className="text-blue-600 font-bold">{completeness}%</span>
+            </div>
+            <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-blue-600 to-emerald-500 rounded-full transition-all duration-500"
+                style={{ width: `${completeness}%` }}
+              />
+            </div>
+            <p className="mt-1.5 text-[11px] text-slate-500 flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-amber-500 shrink-0" />
+              Recruiters view completed profiles 3x more often.
+            </p>
+          </div>
+        </section>
+
+        {/* 3. Resume Card (Naukri signature card) */}
+        <section className="rounded-3xl border border-slate-200/90 bg-white p-5 shadow-xs">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <FileText className="w-5 h-5 text-blue-600" />
+              <h3 className="text-sm font-bold text-slate-900">Resume</h3>
+            </div>
+            <span className="text-[11px] text-slate-400 font-medium">Updated: {profile.resumeDate}</span>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-white border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 shadow-2xs">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-slate-900 truncate">{profile.resumeName}</p>
+                <p className="text-[11px] text-slate-500">PDF Document • 450 KB</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                accept=".pdf,.doc,.docx"
+                className="hidden"
+              />
               <button
-                onClick={handleLogout}
-                className="inline-flex items-center gap-1.5 rounded-full bg-red-50 border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-100"
+                onClick={() => fileInputRef.current?.click()}
+                className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors shadow-2xs"
               >
-                <LogOut className="h-4 w-4" />
-                Log Out
+                <Upload className="w-3 h-3" />
+                <span>Update Resume</span>
               </button>
+            </div>
+          </div>
+
+          <p className="mt-2.5 text-[11px] text-slate-400">
+            Supported Formats: doc, docx, rtf, pdf, up to 2MB.
+          </p>
+        </section>
+
+        {/* 4. Key Skills (Naukri Style Tags) */}
+        <section className="rounded-3xl border border-slate-200/90 bg-white p-5 shadow-xs">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              <h3 className="text-sm font-bold text-slate-900">Key Skills</h3>
+            </div>
+            <button
+              onClick={() => setShowAddSkill((prev) => !prev)}
+              className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Add Skill</span>
+            </button>
+          </div>
+
+          {showAddSkill && (
+            <form onSubmit={handleAddSkill} className="mb-3 flex items-center gap-2">
+              <input
+                type="text"
+                value={newSkill}
+                onChange={(e) => setNewSkill(e.target.value)}
+                placeholder="Enter skill (e.g. Docker, Redux, Java)"
+                className="flex-1 h-9 px-3 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
+                autoFocus
+              />
+              <button
+                type="submit"
+                className="h-9 px-4 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-500"
+              >
+                Add
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAddSkill(false)}
+                className="h-9 px-3 text-slate-400 hover:text-slate-600 text-xs"
+              >
+                Cancel
+              </button>
+            </form>
+          )}
+
+          <div className="flex flex-wrap gap-2">
+            {profile.skills.map((skill) => (
+              <span
+                key={skill}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700 hover:bg-slate-100 transition-colors"
+              >
+                <span>{skill}</span>
+                <button
+                  onClick={() => handleRemoveSkill(skill)}
+                  className="text-slate-400 hover:text-red-500"
+                  title="Remove skill"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+        </section>
+
+        {/* 5. Quick Access Cards (Applications, Saved, Resume Match, Alerts) */}
+        <div className="grid grid-cols-2 gap-3">
+          <Link
+            href="/job-updates/tracker"
+            className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-sm transition-shadow flex items-center justify-between"
+          >
+            <div>
+              <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Tracker</p>
+              <p className="text-base font-bold text-slate-900 mt-0.5">
+                {applicationsCount} Applied
+              </p>
+            </div>
+            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <Layers className="w-4 h-4" />
+            </div>
+          </Link>
+
+          <Link
+            href="/job-updates/saved"
+            className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-sm transition-shadow flex items-center justify-between"
+          >
+            <div>
+              <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Bookmarks</p>
+              <p className="text-base font-bold text-slate-900 mt-0.5">
+                {savedCount} Saved
+              </p>
+            </div>
+            <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+              <Bookmark className="w-4 h-4" />
+            </div>
+          </Link>
+
+          <Link
+            href="/resume-match"
+            className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-sm transition-shadow flex items-center justify-between"
+          >
+            <div>
+              <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">AI Scanner</p>
+              <p className="text-base font-bold text-slate-900 mt-0.5">Resume Match</p>
+            </div>
+            <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+              <Sparkles className="w-4 h-4" />
+            </div>
+          </Link>
+
+          <Link
+            href="/job-updates/alerts"
+            className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-sm transition-shadow flex items-center justify-between"
+          >
+            <div>
+              <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Preferences</p>
+              <p className="text-base font-bold text-slate-900 mt-0.5">Job Alerts</p>
+            </div>
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <Bell className="w-4 h-4" />
+            </div>
+          </Link>
+        </div>
+
+        {/* 6. Education Details (Naukri Style) */}
+        <section className="rounded-3xl border border-slate-200/90 bg-white p-5 shadow-xs">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <GraduationCap className="w-5 h-5 text-indigo-600" />
+              <h3 className="text-sm font-bold text-slate-900">Education</h3>
+            </div>
+            <button
+              onClick={() => setIsEditingEducation(true)}
+              className="text-xs font-bold text-blue-600 hover:text-blue-700"
+            >
+              Edit
+            </button>
+          </div>
+
+          <div className="space-y-1">
+            <h4 className="text-sm font-bold text-slate-900">{profile.degree}</h4>
+            <p className="text-xs font-medium text-slate-600">{profile.college}</p>
+            <p className="text-[11px] text-slate-400">
+              Graduation: {profile.graduationYear} • Full Time
+            </p>
+          </div>
+        </section>
+
+        {/* 7. Career Preferences (Naukri Style) */}
+        <section className="rounded-3xl border border-slate-200/90 bg-white p-5 shadow-xs">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Briefcase className="w-5 h-5 text-emerald-600" />
+              <h3 className="text-sm font-bold text-slate-900">Career Preferences</h3>
+            </div>
+            <button
+              onClick={() => setIsEditingPreferences(true)}
+              className="text-xs font-bold text-blue-600 hover:text-blue-700"
+            >
+              Edit
+            </button>
+          </div>
+
+          <div className="grid gap-2.5 text-xs text-slate-700">
+            <div className="flex justify-between py-1 border-b border-slate-50">
+              <span className="text-slate-400">Preferred Roles</span>
+              <span className="font-semibold text-right max-w-[200px]">{profile.preferredRoles}</span>
+            </div>
+            <div className="flex justify-between py-1 border-b border-slate-50">
+              <span className="text-slate-400">Preferred Locations</span>
+              <span className="font-semibold text-right">{profile.preferredLocations}</span>
+            </div>
+            <div className="flex justify-between py-1">
+              <span className="text-slate-400">Expected Salary</span>
+              <span className="font-semibold text-right text-emerald-700">{profile.expectedSalary}</span>
             </div>
           </div>
         </section>
 
-        {user?.role === 'admin' ? (
-          <section className="mt-8 rounded-[2rem] border border-slate-200 bg-slate-950 px-6 py-8 shadow-sm shadow-slate-200/10 text-white sm:px-10">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div className="max-w-3xl">
-                <p className="text-sm uppercase tracking-[0.3em] text-sky-300">Admin dashboard</p>
-                <h2 className="mt-4 text-3xl font-semibold text-white">Admin quick actions</h2>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
-                  Manage platform users, job postings, notifications, and analytics from the admin workspace below.
-                </p>
-              </div>
-              <Link
-                href="/admin"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-slate-100"
-              >
-                Open admin console
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <Link
-                href="/admin/users"
-                className="group rounded-[1.75rem] border border-slate-800 bg-slate-900 p-5 transition hover:border-slate-700 hover:bg-slate-800"
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.24em] text-sky-300">Users</p>
-                    <p className="mt-3 text-lg font-semibold text-white">Manage candidates</p>
-                  </div>
-                  <Users className="h-7 w-7 text-sky-300" />
-                </div>
-                <p className="mt-4 text-sm text-slate-400">Approve or suspend user accounts and review new registrations.</p>
-              </Link>
-
-              <Link
-                href="/admin"
-                className="group rounded-[1.75rem] border border-slate-800 bg-slate-900 p-5 transition hover:border-slate-700 hover:bg-slate-800"
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.24em] text-sky-300">Listings</p>
-                    <p className="mt-3 text-lg font-semibold text-white">Review job posts</p>
-                  </div>
-                  <Briefcase className="h-7 w-7 text-sky-300" />
-                </div>
-                <p className="mt-4 text-sm text-slate-400">Publish or archive jobs, then handle recruiter requests and approvals.</p>
-              </Link>
-
-              <Link
-                href="/admin/notifications"
-                className="group rounded-[1.75rem] border border-slate-800 bg-slate-900 p-5 transition hover:border-slate-700 hover:bg-slate-800"
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.24em] text-sky-300">Notifications</p>
-                    <p className="mt-3 text-lg font-semibold text-white">Send alerts</p>
-                  </div>
-                  <Bell className="h-7 w-7 text-sky-300" />
-                </div>
-                <p className="mt-4 text-sm text-slate-400">Quickly create and dispatch system notifications to all users.</p>
-              </Link>
-
-              <Link
-                href="/admin"
-                className="group rounded-[1.75rem] border border-slate-800 bg-slate-900 p-5 transition hover:border-slate-700 hover:bg-slate-800"
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.24em] text-sky-300">Analytics</p>
-                    <p className="mt-3 text-lg font-semibold text-white">View reports</p>
-                  </div>
-                  <BarChart3 className="h-7 w-7 text-sky-300" />
-                </div>
-                <p className="mt-4 text-sm text-slate-400">Monitor site performance, candidate activity, and recruiter engagement.</p>
-              </Link>
-            </div>
-          </section>
-        ) : null}
-
-        {isLoading || dashboard.loading ? (
-          <section className="mt-8 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm shadow-slate-200/50">
-            <p className="text-sm text-slate-500">Loading your dashboard...</p>
-          </section>
-        ) : dashboard.error ? (
-          <section className="mt-8 rounded-[2rem] border border-rose-200 bg-rose-50 p-8 shadow-sm shadow-rose-200/50">
-            <p className="text-lg font-semibold text-rose-900">Unable to load dashboard</p>
-            <p className="mt-3 text-rose-700">{dashboard.error}</p>
-            <p className="mt-3 text-sm text-rose-700">Refresh the page or try again later.</p>
-          </section>
-        ) : !user ? (
-          <section className="mt-8 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm shadow-slate-200/50">
-            <p className="text-lg font-semibold text-slate-900">Sign in to access your dashboard</p>
-            <p className="mt-3 text-slate-600">Your personalized job insights and saved opportunities appear here once you sign in.</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/auth/login" className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-                Sign in
-              </Link>
-              <Link href="/auth/register" className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50">
-                Register
-              </Link>
-            </div>
-          </section>
-        ) : (
-          <div className="mt-8 grid gap-6 xl:grid-cols-[1.55fr_0.85fr]">
-            <div className="space-y-6">
-              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-                {summaryCards.map((card) => {
-                  const Icon = card.icon;
-                  return (
-                    <div key={card.label} className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/30">
-                      <div className="flex items-center justify-between gap-3">
-                        <div>
-                          <p className="text-sm uppercase tracking-[0.25em] text-slate-500">{card.label}</p>
-                          <p className="mt-4 text-3xl font-semibold text-slate-950">{card.value}</p>
-                        </div>
-                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-3xl bg-slate-100 text-slate-700">
-                          <Icon className="h-5 w-5" />
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/30">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.25em] text-slate-500">Career overview</p>
-                    <h2 className="mt-3 text-2xl font-semibold text-slate-950">Application and interview summary</h2>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-700">Next interview</span>
-                    <span className="rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-700">Smart recommendations</span>
-                  </div>
-                </div>
-
-                <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                  <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
-                    <p className="text-sm text-slate-500">Profile strength</p>
-                    <p className="mt-3 text-3xl font-semibold text-slate-950">{dashboard.profileCompletion}%</p>
-                  </div>
-                  <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
-                    <p className="text-sm text-slate-500">Saved jobs</p>
-                    <p className="mt-3 text-3xl font-semibold text-slate-950">{dashboard.summary.savedJobs}</p>
-                  </div>
-                  <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
-                    <p className="text-sm text-slate-500">Interviews scheduled</p>
-                    <p className="mt-3 text-3xl font-semibold text-slate-950">{dashboard.summary.nextInterview ? dashboard.summary.nextInterview.time : 'None'}</p>
-                  </div>
-                </div>
-              </section>
-
-              <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-                <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/30">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-sm uppercase tracking-[0.25em] text-slate-500">Applications</p>
-                      <h2 className="mt-3 text-2xl font-semibold text-slate-950">Recent applications</h2>
-                    </div>
-                    <Link href="/jobs" className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">
-                      View all
-                    </Link>
-                  </div>
-
-                  <div className="mt-6 space-y-4">
-                    {dashboard.applications.length > 0 ? (
-                      dashboard.applications.map((job) => (
-                        <article key={job.id} className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
-                          <div className="flex items-start justify-between gap-4">
-                            <div>
-                              <p className="text-lg font-semibold text-slate-950">{job.title}</p>
-                              <p className="mt-1 text-sm text-slate-500">{job.company}</p>
-                            </div>
-                            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[job.status] || 'bg-slate-100 text-slate-700'}`}>
-                              {job.status}
-                            </span>
-                          </div>
-                          {job.interviewTime ? (
-                            <p className="mt-4 text-sm text-slate-600">Interview scheduled for {job.interviewTime}</p>
-                          ) : null}
-                        </article>
-                      ))
-                    ) : (
-                      <div className="rounded-[1.75rem] border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-500">
-                        <p className="text-lg font-semibold text-slate-950">No applications tracked</p>
-                        <p className="mt-2 text-sm">Apply to jobs to see your progress update here automatically.</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/30">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-sm uppercase tracking-[0.25em] text-slate-500">Recommendations</p>
-                      <h2 className="mt-3 text-2xl font-semibold text-slate-950">Role matches</h2>
-                    </div>
-                    <Sparkles className="h-8 w-8 text-slate-500" />
-                  </div>
-
-                  <div className="mt-6 space-y-4">
-                    {dashboard.recommendations.length > 0 ? (
-                      dashboard.recommendations.map((job) => (
-                        <article key={job.id} className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
-                          <div className="flex items-start justify-between gap-4">
-                            <div>
-                              <p className="text-lg font-semibold text-slate-950">{job.title}</p>
-                              <p className="mt-1 text-sm text-slate-500">{job.company}</p>
-                            </div>
-                            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[job.status]}`}>
-                              {job.status}
-                            </span>
-                          </div>
-                          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-slate-600">
-                            <span>Location: {job.location}</span>
-                            <span>Recommended for you</span>
-                          </div>
-                        </article>
-                      ))
-                    ) : (
-                      <div className="rounded-[1.75rem] border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-500">
-                        <p className="text-lg font-semibold text-slate-950">No recommendations available</p>
-                        <p className="mt-2 text-sm">Complete your profile and save more jobs to receive tailored suggestions.</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </section>
-            </div>
-
-            <aside className="space-y-6">
-              <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/30">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-100 text-2xl font-semibold text-slate-900">
-                    {displayName.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.25em] text-slate-500">Your profile</p>
-                    <p className="mt-2 text-xl font-semibold text-slate-950">{user.name}</p>
-                    <p className="text-sm text-slate-500">{roleLabel}</p>
-                  </div>
-                </div>
-
-                <div className="mt-6 space-y-4">
-                  {dashboard.profileTasks.map((task) => (
-                    <div key={task.name} className="flex items-center justify-between rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3">
-                      <p className="text-sm text-slate-600">{task.name}</p>
-                      <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${task.done ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
-                        <CheckCircle2 className="h-3.5 w-3.5" />
-                        {task.done ? 'Complete' : 'Pending'}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs text-slate-500 font-medium">Session Active</span>
-                  <button
-                    onClick={handleLogout}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-xs transition-colors"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    Log Out
-                  </button>
-                </div>
-              </section>
-
-              <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/30">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.25em] text-slate-500">Saved jobs</p>
-                    <p className="mt-3 text-2xl font-semibold text-slate-950">{dashboard.summary.savedJobs}</p>
-                  </div>
-                  <Bookmark className="h-8 w-8 text-slate-500" />
-                </div>
-
-                {dashboard.savedJobs.length > 0 ? (
-                  <ul className="mt-6 space-y-3">
-                    {dashboard.savedJobs.map((job) => (
-                      <li key={job.id} className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-4">
-                        <p className="font-semibold text-slate-950">{job.title}</p>
-                        <p className="mt-1 text-sm text-slate-500">{job.company}</p>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="mt-6 rounded-[1.75rem] border border-dashed border-slate-300 bg-slate-50 p-6 text-sm text-slate-500">
-                    Save jobs from the marketplace to keep them within easy reach.
-                  </div>
-                )}
-              </section>
-
-              <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/30">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.25em] text-slate-500">Weekly activity</p>
-                    <p className="mt-1 text-2xl font-semibold text-slate-950">Progress</p>
-                  </div>
-                  <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">{dashboard.profileCompletion}%</span>
-                </div>
-
-                <div className="mt-6 space-y-4">
-                  {activityItems.map((item) => {
-                    const widthClass = item.value === 0 ? 'w-3' : item.value === 1 ? 'w-1/4' : item.value === 2 ? 'w-1/2' : item.value === 3 ? 'w-3/4' : 'w-full';
-                    return (
-                      <div key={item.label}>
-                        <div className="flex items-center justify-between text-sm text-slate-500">
-                          <span>{item.label}</span>
-                          <span>{item.value}</span>
-                        </div>
-                        <div className="mt-2 h-3 overflow-hidden rounded-full bg-slate-100">
-                          <div className={`${item.color} h-full rounded-full ${widthClass}`} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </section>
-            </aside>
-          </div>
-        )}
+        {/* 8. Log Out Card */}
+        <div className="pt-2 text-center">
+          <button
+            onClick={handleLogout}
+            className="w-full py-3.5 rounded-2xl bg-red-50 hover:bg-red-100 text-red-600 font-bold text-sm transition-colors flex items-center justify-center gap-2 border border-red-100 shadow-2xs"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Log Out of Geonixa NextJob</span>
+          </button>
+          <p className="mt-2 text-[11px] text-slate-400">
+            App Version 2.4.0 • Logged in securely
+          </p>
+        </div>
       </div>
+
+      {/* Basic Info Edit Modal */}
+      {isEditingBasic && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-md text-slate-900 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-bold text-slate-900">Edit Basic Details</h3>
+              <button onClick={() => setIsEditingBasic(false)} className="p-1 text-slate-400 hover:text-slate-700">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Full Name</label>
+                <input
+                  type="text"
+                  value={profile.name}
+                  onChange={(e) => setProfile((p) => ({ ...p, name: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Professional Headline</label>
+                <textarea
+                  rows={2}
+                  value={profile.headline}
+                  onChange={(e) => setProfile((p) => ({ ...p, headline: e.target.value }))}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Phone Number</label>
+                <input
+                  type="text"
+                  value={profile.phone}
+                  onChange={(e) => setProfile((p) => ({ ...p, phone: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Current Location</label>
+                <input
+                  type="text"
+                  value={profile.location}
+                  onChange={(e) => setProfile((p) => ({ ...p, location: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Experience Level</label>
+                <input
+                  type="text"
+                  value={profile.experience}
+                  onChange={(e) => setProfile((p) => ({ ...p, experience: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() => {
+                  saveProfileUpdate(profile);
+                  setIsEditingBasic(false);
+                }}
+                className="flex-1 py-2.5 rounded-full bg-blue-600 text-white font-bold text-xs hover:bg-blue-500"
+              >
+                Save Changes
+              </button>
+              <button
+                onClick={() => setIsEditingBasic(false)}
+                className="px-5 py-2.5 rounded-full border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Education Edit Modal */}
+      {isEditingEducation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-md text-slate-900 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-bold text-slate-900">Edit Education Details</h3>
+              <button onClick={() => setIsEditingEducation(false)} className="p-1 text-slate-400 hover:text-slate-700">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Degree & Major</label>
+                <input
+                  type="text"
+                  value={profile.degree}
+                  onChange={(e) => setProfile((p) => ({ ...p, degree: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">College / Institute Name</label>
+                <input
+                  type="text"
+                  value={profile.college}
+                  onChange={(e) => setProfile((p) => ({ ...p, college: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Year of Graduation</label>
+                <input
+                  type="text"
+                  value={profile.graduationYear}
+                  onChange={(e) => setProfile((p) => ({ ...p, graduationYear: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() => {
+                  saveProfileUpdate(profile);
+                  setIsEditingEducation(false);
+                }}
+                className="flex-1 py-2.5 rounded-full bg-blue-600 text-white font-bold text-xs hover:bg-blue-500"
+              >
+                Save Education
+              </button>
+              <button
+                onClick={() => setIsEditingEducation(false)}
+                className="px-5 py-2.5 rounded-full border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Preferences Edit Modal */}
+      {isEditingPreferences && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-md text-slate-900 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-bold text-slate-900">Edit Career Preferences</h3>
+              <button onClick={() => setIsEditingPreferences(false)} className="p-1 text-slate-400 hover:text-slate-700">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Preferred Job Roles</label>
+                <input
+                  type="text"
+                  value={profile.preferredRoles}
+                  onChange={(e) => setProfile((p) => ({ ...p, preferredRoles: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Preferred Job Locations</label>
+                <input
+                  type="text"
+                  value={profile.preferredLocations}
+                  onChange={(e) => setProfile((p) => ({ ...p, preferredLocations: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Expected Salary Range</label>
+                <input
+                  type="text"
+                  value={profile.expectedSalary}
+                  onChange={(e) => setProfile((p) => ({ ...p, expectedSalary: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() => {
+                  saveProfileUpdate(profile);
+                  setIsEditingPreferences(false);
+                }}
+                className="flex-1 py-2.5 rounded-full bg-blue-600 text-white font-bold text-xs hover:bg-blue-500"
+              >
+                Save Preferences
+              </button>
+              <button
+                onClick={() => setIsEditingPreferences(false)}
+                className="px-5 py-2.5 rounded-full border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-xl flex items-center gap-2">
+          <Check className="w-3.5 h-3.5 text-emerald-400" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
 
       {/* Persistent Mobile Bottom Navigation Bar */}
       <MobileBottomNav />

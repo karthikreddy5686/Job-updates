@@ -14,7 +14,7 @@ export default function MobileBottomNav() {
     !['/job-updates/tracker', '/job-updates/saved', '/job-updates/alerts', '/job-updates/referral'].includes(pathname);
   const isTracker = pathname === '/job-updates/tracker';
   const isSaved = pathname === '/job-updates/saved';
-  const isProfile = pathname === '/dashboard' || pathname.startsWith('/dashboard');
+  const isProfile = pathname === '/dashboard' || pathname.startsWith('/dashboard') || pathname === '/profile';
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 py-2 px-3 shadow-lg flex items-center justify-around lg:hidden">
