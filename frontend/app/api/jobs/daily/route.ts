@@ -464,6 +464,16 @@ async function fetchJSearch(query: string, category: string): Promise<Job[]> {
       salary = `₹${Math.round(j.job_min_salary / 100000)}–${Math.round(j.job_max_salary / 100000)} LPA`
     }
 
+    let directApplyLink = j.job_apply_link || ''
+    if (Array.isArray(j.apply_options) && j.apply_options.length > 0) {
+      const direct = j.apply_options.find((opt: any) => opt.is_direct && opt.apply_link)
+      if (direct?.apply_link) {
+        directApplyLink = direct.apply_link
+      } else if (!directApplyLink && j.apply_options[0]?.apply_link) {
+        directApplyLink = j.apply_options[0].apply_link
+      }
+    }
+
     const job = makeJob(
       `jsearch-${j.job_id || Date.now() + Math.random()}`,
       j.job_title,
@@ -471,7 +481,7 @@ async function fetchJSearch(query: string, category: string): Promise<Job[]> {
       location,
       jobType,
       category,
-      j.job_apply_link || '',
+      directApplyLink,
       'JSearch',
       salary,
       j.job_posted_at_datetime_utc,
@@ -767,8 +777,8 @@ async function fetchInternships(): Promise<Job[]> {
       'Tech, design, marketing internship opportunities'),
   ].filter(Boolean) as Job[]
 
-  const freshJobs = await fetchNewSources('internship', 'internship', 'intern')
-  return dedupe([...all, ...fallback, ...freshJobs]).slice(0, 60)
+  const freshJobs = await fetchNewSources('internship in India', 'internship', 'intern')
+  return dedupe([...freshJobs, ...all, ...fallback]).slice(0, 60)
 }
 
 async function fetchMNCJobs(): Promise<Job[]> {
@@ -946,12 +956,11 @@ async function fetchBankingJobs(): Promise<Job[]> {
 async function fetchGovernmentJobs(): Promise<Job[]> {
   const [hardcoded, fresh] = await Promise.allSettled([
     fetchIndiaGovtJobs(),
-    fetchJSearch('government jobs sarkari naukri recruitment', 'government'),
+    fetchJSearch('government jobs recruitment in India', 'government'),
   ])
-  return dedupe([
-    ...(hardcoded.status === 'fulfilled' ? hardcoded.value : []),
-    ...(fresh.status === 'fulfilled' ? fresh.value : []),
-  ]).slice(0, 50)
+  const freshGovt = fresh.status === 'fulfilled' ? fresh.value : []
+  const hardcodedGovt = hardcoded.status === 'fulfilled' ? hardcoded.value : []
+  return dedupe([...freshGovt, ...hardcodedGovt]).slice(0, 50)
 }
 
 async function fetchStartupJobs(): Promise<Job[]> {
@@ -1081,8 +1090,8 @@ async function fetchCATMBAJobs(): Promise<Job[]> {
       'Product, operations and business roles for MBAs'),
   ].filter(Boolean) as Job[]
 
-  const freshJobs = await fetchNewSources('MBA management trainee business analyst', 'cat-mba')
-  return dedupe([...apiJobs, ...fallback, ...freshJobs]).slice(0, 60)
+  const freshJobs = await fetchNewSources('management trainee MBA in India', 'cat-mba')
+  return dedupe([...freshJobs, ...apiJobs, ...fallback]).slice(0, 60)
 }
 
 async function fetchCoreJobs(): Promise<Job[]> {
@@ -1129,8 +1138,8 @@ async function fetchCoreJobs(): Promise<Job[]> {
       'SoC design, verification, and hardware engineering'),
   ].filter(Boolean) as Job[]
 
-  const freshJobs = await fetchNewSources('embedded systems VLSI ECE EEE hardware electronics', 'core')
-  return dedupe([...apiJobs, ...fallback, ...freshJobs]).slice(0, 60)
+  const freshJobs = await fetchNewSources('embedded engineer in India', 'core')
+  return dedupe([...freshJobs, ...apiJobs, ...fallback]).slice(0, 60)
 }
 
 async function fetchCivilJobs(): Promise<Job[]> {
@@ -1171,8 +1180,8 @@ async function fetchCivilJobs(): Promise<Job[]> {
       'Government mechanical engineering positions through GATE 2026'),
   ].filter(Boolean) as Job[]
 
-  const freshJobs = await fetchNewSources('civil mechanical engineering construction structural autocad design manufacturing', 'civil')
-  return dedupe([...apiJobs, ...fallback, ...freshJobs]).slice(0, 60)
+  const freshJobs = await fetchNewSources('civil engineer in India', 'civil')
+  return dedupe([...freshJobs, ...apiJobs, ...fallback]).slice(0, 60)
 }
 
 // ════════════════════════════════════════════

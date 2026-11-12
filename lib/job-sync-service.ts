@@ -8,14 +8,14 @@ interface SyncCategoryConfig {
 }
 
 const CATEGORY_CONFIGS: SyncCategoryConfig[] = [
-  { category: 'internships', query: 'internship trainee fresher in India' },
-  { category: 'mnc', query: 'software engineer developer IT tech in India' },
-  { category: 'banking', query: 'banking finance analyst relationship manager in India' },
+  { category: 'internships', query: 'internship in India' },
+  { category: 'mnc', query: 'software engineer in India' },
+  { category: 'banking', query: 'banking finance analyst in India' },
   { category: 'government', query: 'government jobs recruitment in India' },
-  { category: 'startup', query: 'startup developer product engineer tech in India' },
-  { category: 'cat-mba', query: 'MBA business management trainee analyst in India' },
-  { category: 'core', query: 'embedded systems VLSI ECE EEE hardware electronics in India' },
-  { category: 'civil', query: 'civil mechanical engineer construction design in India' },
+  { category: 'startup', query: 'startup software engineer in India' },
+  { category: 'cat-mba', query: 'management trainee MBA in India' },
+  { category: 'core', query: 'embedded engineer in India' },
+  { category: 'civil', query: 'civil engineer in India' },
 ];
 
 async function safeFetchWithTimeout(url: string, headers: Record<string, string>, timeout = 10000) {
@@ -80,6 +80,16 @@ async function fetchJSearchCategory(query: string, category: string): Promise<Ad
           salary = `₹${Math.round(item.job_min_salary / 100000)}–${Math.round(item.job_max_salary / 100000)} LPA`;
         }
 
+        let directApplyLink = item.job_apply_link || '';
+        if (Array.isArray(item.apply_options) && item.apply_options.length > 0) {
+          const direct = item.apply_options.find((opt: any) => opt.is_direct && opt.apply_link);
+          if (direct?.apply_link) {
+            directApplyLink = direct.apply_link;
+          } else if (!directApplyLink && item.apply_options[0]?.apply_link) {
+            directApplyLink = item.apply_options[0].apply_link;
+          }
+        }
+
         results.push({
           id: `jsearch-${item.job_id || Math.random().toString(36).slice(2, 9)}`,
           title: item.job_title.trim(),
@@ -89,7 +99,7 @@ async function fetchJSearchCategory(query: string, category: string): Promise<Ad
           jobType,
           category,
           salary,
-          applyLink: item.job_apply_link,
+          applyLink: directApplyLink,
           deadline,
           description: item.job_description?.slice(0, 300) || '',
           isActive: true,
